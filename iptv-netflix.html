@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Minha TV</title>
+<title>Minha TV • Fire TV Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0e1118;--panel:#181c27;--line:#2a3042;--text:#f1f3f9;--mute:#8d95b1;--accent:#ff4d6d}
+:root{--bg:#0e1118;--panel:#181c27;--line:#2a3042;--text:#f1f3f9;--mute:#8d95b1;--accent:#52dcf0;--gold:#f4c46c;--good:#46d2a0}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.4 Manrope,system-ui,sans-serif}
 button,input{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none}
 :focus{outline:none}
 :focus-visible,.card:focus{outline:3px solid #fff;outline-offset:2px}
-header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:12px 4vw;background:linear-gradient(var(--bg),#0e1118cc)}
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:12px 4vw;background:linear-gradient(110deg,#0c101b,#101928f5)}
 .brand{font-weight:800;font-size:22px;color:var(--accent);margin-right:auto}
 .btn{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font-weight:600}
-.btn.main{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.main{background:var(--accent);border-color:var(--accent);color:#061322}
 .btn:focus{outline:3px solid #fff}
 #hero{margin:8px 4vw 8px;padding:6vw 5vw;border-radius:14px;background:linear-gradient(100deg,#2a1d3b,#14233a);display:flex;gap:24px;align-items:center;min-height:200px}
 #hero img{width:min(22vw,160px);height:min(22vw,160px);object-fit:contain;background:#ffffff14;border-radius:14px;padding:10px}
@@ -56,21 +56,39 @@ textarea{height:90px}
 .row2{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
 #err{color:var(--accent);min-height:1.3em;margin-top:8px}
 .hint{color:var(--mute);font-size:13px;margin:4px 0 0}
+
+/* TV edition: foco, legibilidade, busca e atalhos */
+html{scroll-behavior:smooth}body{background:radial-gradient(ellipse 90% 60% at 80% -20%,#174158 0%,transparent 65%),#0b1019;min-height:100vh}
+header{gap:10px;flex-wrap:wrap;border-bottom:1px solid #243245;box-shadow:0 8px 30px #0005} .brand{letter-spacing:.06em;white-space:nowrap}
+.btn{min-height:46px;border-radius:12px;transition:background .16s,transform .16s} .btn:hover{background:#303c55}
+.btn.main:hover{background:#7ae7f5} .btn:focus-visible,.card:focus,.row h3 button:focus-visible,input:focus-visible{outline:3px solid #f7d27b;outline-offset:3px;box-shadow:0 0 0 7px #f4c46c22}
+#hero{position:relative;overflow:hidden;border:1px solid #294459;box-shadow:0 18px 65px #0007;background:linear-gradient(105deg,#113449,#182b45 60%,#112034);min-height:260px}
+#hero:before{content:"";position:absolute;right:-60px;top:-100px;height:320px;width:320px;border-radius:50%;background:#52dcf01b;filter:blur(45px);pointer-events:none}
+#hero img{width:min(24vw,210px);height:min(24vw,210px);z-index:1}#hero>div{z-index:1}#hero h2{font-weight:800;letter-spacing:-.04em}
+.row h3{color:#eaf5fb;font-size:21px;letter-spacing:-.02em;margin-bottom:10px}.row h3 button{color:inherit}
+.card{background:linear-gradient(145deg,#1c2839,#131d2c);border:1px solid #2d4052;min-height:148px;position:relative}.card:hover,.card:focus{transform:scale(1.06);border-color:#f4c46c;z-index:3;box-shadow:0 8px 24px #000b}
+.card img{background:#ffffff0b}.card span{font-weight:600}.favstar{position:absolute;top:7px;right:7px;background:#061322db;border:1px solid #466276;color:var(--gold);font-size:19px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;cursor:pointer;z-index:2}
+.favstar:focus-visible{outline:3px solid var(--gold)}.toolrow{display:flex;align-items:center;gap:14px;padding:16px 4vw 4px;flex-wrap:wrap}.toolrow input{max-width:560px;min-width:230px;flex:1;background:#111b2a;border:1px solid #304358;min-height:48px;border-radius:12px;padding:0 14px}.searchlabel{margin:0;color:#b7d0de}.toolrow #counter{font-size:13px;color:#93a8b6}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#163749;color:#fff;border:1px solid #448399;padding:12px 24px;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:100}#toast.show{opacity:1}
+#webcontrols{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);display:flex;gap:9px;opacity:.8}#webcontrols .btn{background:#17243cdb}
+#pmsg{font-size:22px;text-shadow:0 2px 8px #000;white-space:pre-line}
+@media(max-width:650px){header{padding:9px 3vw}.brand{width:100%;font-size:18px}.btn{padding:8px 10px;font-size:13px;min-height:42px}#hero{margin:12px 3vw;min-height:180px;padding:25px 15px}#hero img{width:110px;height:110px}#hero h2{font-size:22px}.toolrow{padding:12px 3vw 4px}.strip{padding-left:3vw}.row h3{margin-left:3vw}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
 <body>
 <header>
-  <span class="brand">Minha TV</span>
+  <span class="brand">◈ MINHA TV <small style="font-size:10px;color:#93a5ba;font-weight:600">FIRE EDITION</small></span>
   <button class="btn" id="tl" hidden>Ao vivo</button><button class="btn" id="tm" hidden>Filmes</button><button class="btn" id="ts" hidden>Séries</button>
-  <button class="btn" id="home">Início</button>
+  <button class="btn" id="home">Início</button><button class="btn" id="favbtn">★ Favoritos</button><button class="btn" id="recentbtn">↺ Recentes</button>
   <button class="btn main" id="imp">Importar</button>
 </header>
-<div id="app"></div>
+<div class="toolrow"><label class="searchlabel" for="search">⌕ Buscar</label><input id="search" type="text" placeholder="Buscar canais, filmes ou séries" autocomplete="off"><span id="counter" aria-live="polite"></span></div><div id="app"></div><div id="toast" role="status" aria-live="polite"></div>
 
 <div id="player">
   <video id="v" autoplay playsinline controls></video>
   <div id="bar"><button class="btn" id="back">Voltar</button><div id="pt"></div></div>
-  <div id="pmsg"></div>
+  <div id="pmsg"></div><div id="webcontrols"><button class="btn" id="prevchan">↑ Anterior</button><button class="btn" id="nextchan">↓ Próximo</button><button class="btn" id="webfav">☆ Favorito</button></div>
 </div>
 
 <dialog id="dlg">
@@ -104,8 +122,18 @@ textarea{height:90px}
 <script>
 const $=s=>document.querySelector(s);
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let favoriteOnly=false,recentOnly=false,query='';
 let channels=[],view=null,hls=null,queue=[],qi=0,tab='m3u',movies=null,series=null,xt=null,mode='live',detail=null,loading=false;
 
+/* Preferências armazenadas no aparelho, sem serviço externo */
+function loadArray(k){try{const a=JSON.parse(store.get(k)||'[]');return Array.isArray(a)?a:[]}catch(e){return []}}
+let favorites=loadArray('tv_favorites'),recent=loadArray('tv_recent');
+function keyOf(c){return c.url||('series:'+c.id)||c.name}
+function isFav(c){return favorites.includes(keyOf(c))}
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2500)}
+function markRecent(c){const k=keyOf(c);recent=[k,...recent.filter(x=>x!==k)].slice(0,40);store.set('tv_recent',JSON.stringify(recent))}
+function toggleFav(c){const k=keyOf(c);favorites=isFav(c)?favorites.filter(x=>x!==k):[...favorites,k];store.set('tv_favorites',JSON.stringify(favorites));toast(isFav(c)?'Adicionado aos favoritos':'Removido dos favoritos');render()}
+function selectList(all){if(favoriteOnly)return all.filter(isFav);if(recentOnly)return recent.map(k=>all.find(c=>keyOf(c)===k)).filter(Boolean);return all}
 /* ---------- Ponte com o app Android (se existir) ---------- */
 const NATIVE=!!window.Android;
 function nativeGet(u){return new Promise((ok,no)=>{const id='c'+Date.now()+Math.floor(Math.random()*1e4);window[id]=(good,d)=>{delete window[id];good?ok(d):no(new Error('http'))};Android.get(u,id)})}
@@ -146,7 +174,7 @@ async function importFrom(src){
     if(src.text&&src.text.length<3e6)src.keep=true;
   }
   if(!list.length)throw new Error('empty');
-  channels=list;view=null;movies=null;series=null;detail=null;mode='live';
+  channels=list;favoriteOnly=false;recentOnly=false;query='';$('#search').value='';view=null;movies=null;series=null;detail=null;mode='live';
   store.set('src',JSON.stringify(src.type==='xt'||src.url?src:{type:'m3u',text:src.text}));
   render();
 }
@@ -161,12 +189,15 @@ function updateTabs(){
 }
 function cur(){return mode==='movies'?movies:mode==='series'?series:channels}
 function card(c,list){
-  const b=document.createElement('button');b.className='card'+(c.kind==='movie'||c.kind==='series'?' poster':'');b.setAttribute('aria-label',c.name);
+  const b=document.createElement('div');b.tabIndex=0;b.setAttribute('role','button');b.className='card'+(c.kind==='movie'||c.kind==='series'?' poster':'');b.setAttribute('aria-label',c.name);
   const i=document.createElement('img');i.loading='lazy';i.alt='';if(c.logo)i.src=c.logo;i.onerror=()=>i.removeAttribute('src');
   const s=document.createElement('span');s.textContent=c.name;
-  b.append(i,s);b.onclick=()=>openItem(c,list);return b;
+  b.append(i,s);b.onclick=()=>openItem(c,list);b.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openItem(c,list)}};
+  const star=document.createElement('button');star.className='favstar';star.textContent=isFav(c)?'★':'☆';star.setAttribute('aria-label',(isFav(c)?'Remover favorito: ':'Favoritar: ')+c.name);
+  star.onclick=e=>{e.preventDefault();e.stopPropagation();toggleFav(c)};b.append(star);return b;
 }
 function openItem(c,list){
+  markRecent(c);
   if(c.kind==='series')openSeries(c);
   else if(c.kind==='movie')play([c],0,true);
   else if(c.kind==='ep')play(list,list.indexOf(c),true);
@@ -178,10 +209,10 @@ function render(){
   const app=$('#app');app.innerHTML='';
   if(loading){emptyMsg(app,'Carregando…','Listas grandes podem levar alguns segundos.');return}
   if(detail){renderDetail(app);return}
-  const all=cur()||[];
+  let all=selectList(cur()||[]);if(query){const q=query.toLocaleLowerCase('pt-BR');all=all.filter(c=>(c.name+' '+c.group).toLocaleLowerCase('pt-BR').includes(q))}$('#counter').textContent=all.length+' itens';
   if(!all.length){
     if(mode==='live'&&!channels.length)emptyMsg(app,'Nenhuma lista carregada','Toque em Importar e informe sua lista M3U ou os dados Xtream.');
-    else emptyMsg(app,'Nada por aqui','Sua conta não tem este conteúdo ou não foi possível carregar.');
+    else emptyMsg(app,'Nenhum resultado','Altere a busca, os filtros ou escolha outra categoria.');
     return;
   }
   const groups=byGroup(all);
@@ -258,15 +289,18 @@ async function setMode(m){
   render();scrollTo(0,0);
 }
 $('#tl').onclick=()=>setMode('live');$('#tm').onclick=()=>setMode('movies');$('#ts').onclick=()=>setMode('series');
-function focusFirst(){const e=$('#app .btn, #app .card');if(e)e.focus({preventScroll:true})}
+$('#favbtn').onclick=()=>{favoriteOnly=!favoriteOnly;recentOnly=false;view=null;$('#favbtn').setAttribute('aria-pressed',favoriteOnly);$('#recentbtn').setAttribute('aria-pressed',false);render()};
+$('#recentbtn').onclick=()=>{recentOnly=!recentOnly;favoriteOnly=false;view=null;$('#recentbtn').setAttribute('aria-pressed',recentOnly);$('#favbtn').setAttribute('aria-pressed',false);render()};
+$('#search').oninput=e=>{query=e.target.value;view=null;render()};
+function focusFirst(){if(document.activeElement===$('#search'))return;const e=$('#app .btn, #app .card');if(e)e.focus({preventScroll:true})}
 
 /* ---------- Player ---------- */
 function play(list,i,vod){
-  if(NATIVE){const a=Math.max(0,i-250),j=JSON.stringify(list.slice(a,i+250).map(c=>[c.name,c.url]));if(vod&&Android.playVod)Android.playVod(j,i-a);else Android.play(j,i-a);return}
+  if(NATIVE){if(list[i])markRecent(list[i]);const a=Math.max(0,i-250),j=JSON.stringify(list.slice(a,i+250).map(c=>[c.name,c.url]));if(vod&&Android.playVod)Android.playVod(j,i-a);else Android.play(j,i-a);return}
   queue=list;qi=i;start()
 }
 function start(){
-  const c=queue[qi];if(!c)return;
+  const c=queue[qi];if(!c)return;markRecent(c);$('#webfav').textContent=isFav(c)?'★ Favorito':'☆ Favorito';
   const v=$('#v');$('#player').classList.add('on');$('#pt').textContent=c.name;
   const m=$('#pmsg');m.style.display='grid';m.textContent='Carregando…';
   if(hls){hls.destroy();hls=null}
@@ -282,12 +316,12 @@ function stop(){
   const v=$('#v');if(hls){hls.destroy();hls=null}v.pause();v.removeAttribute('src');v.load();
   $('#player').classList.remove('on');focusFirst();
 }
-$('#back').onclick=stop;
+$('#back').onclick=stop;$('#prevchan').onclick=()=>{qi=(qi-1+queue.length)%queue.length;start()};$('#nextchan').onclick=()=>{qi=(qi+1)%queue.length;start()};$('#webfav').onclick=()=>{const c=queue[qi];if(c)toggleFav(c)};
 
 /* ---------- Controle remoto (setas / Enter / Voltar) ---------- */
 document.addEventListener('keydown',e=>{
   const k=e.key,pl=$('#player').classList.contains('on');
-  if(['Escape','GoBack','BrowserBack'].includes(k)||e.keyCode===4){
+  if(['Escape','GoBack','BrowserBack','Backspace'].includes(k)||e.keyCode===4){
     if(NATIVE)return;
     if($('#dlg').open)return;
     if(pl){e.preventDefault();stop()}else if(goBack()){e.preventDefault()}return;
@@ -301,7 +335,7 @@ document.addEventListener('keydown',e=>{
   if($('#dlg').open||!k.startsWith('Arrow'))return;
   const el=document.activeElement;
   if(el&&/INPUT|TEXTAREA/.test(el.tagName))return;
-  const all=[...document.querySelectorAll('header .btn,#hero .btn,#app .card,.row h3 button')].filter(o=>o.offsetParent!==null);
+  const all=[...document.querySelectorAll('header .btn,#search,#hero .btn,#app .card,#app .favstar,.row h3 button')].filter(o=>o.offsetParent!==null);
   if(!all.length)return;
   if(!all.includes(el)){all[0].focus();e.preventDefault();return}
   const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let best=null,bs=1e9;
