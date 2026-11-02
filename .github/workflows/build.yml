@@ -22,8 +22,10 @@ jobs:
           set -e
           HTML=$(grep -l "window.Android" *.html | head -1)
           test -n "$HTML" || { echo "Envie o HTML novo (iptv-netflix.html) para o repositório"; exit 1; }
-          mkdir -p proj/app/src/main/assets proj/app/src/main/java/com/nicotv/app
+          mkdir -p proj/app/src/main/assets proj/app/src/main/java/com/nicotv/app proj/app/src/main/res/drawable-nodpi
           cp "$HTML" proj/app/src/main/assets/index.html
+          cp nico-icon.png proj/app/src/main/res/drawable-nodpi/nico_icon.png
+          cp nico-banner.png proj/app/src/main/res/drawable-nodpi/nico_banner.png
           cd proj
           cat > settings.gradle <<'SETTINGS'
           pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
@@ -46,8 +48,8 @@ jobs:
               applicationId 'com.nicotv.app'
               minSdk 21
               targetSdk 33
-              versionCode 3
-              versionName '1.2'
+              versionCode 4
+              versionName '1.3'
             }
             compileOptions {
               sourceCompatibility JavaVersion.VERSION_1_8
@@ -65,7 +67,7 @@ jobs:
             <uses-permission android:name="android.permission.INTERNET"/>
             <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
             <uses-feature android:name="android.software.leanback" android:required="false"/>
-            <application android:label="Nico TV" android:icon="@android:drawable/sym_def_app_icon" android:banner="@android:drawable/sym_def_app_icon" android:usesCleartextTraffic="true" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+            <application android:label="Nico TV" android:icon="@drawable/nico_icon" android:banner="@drawable/nico_banner" android:usesCleartextTraffic="true" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
               <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden">
                 <intent-filter>
                   <action android:name="android.intent.action.MAIN"/>
