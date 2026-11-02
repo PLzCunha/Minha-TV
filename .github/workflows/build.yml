@@ -42,7 +42,7 @@ jobs:
           android {
             namespace 'com.minhatv.app'
             compileSdk 34
-            defaultConfig { applicationId 'com.minhatv.app'; minSdk 21; targetSdk 33; versionCode 1; versionName '1.0' }
+            defaultConfig { applicationId 'com.minhatv.app'; minSdk 21; targetSdk 33; versionCode 2; versionName '1.1' }
             compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }
           }
           dependencies {
@@ -167,7 +167,7 @@ jobs:
           import androidx.media3.ui.PlayerView;
           import org.json.JSONArray;
           public class PlayerActivity extends Activity {
-            ExoPlayer p; PlayerView pv; TextView title; JSONArray list; int i; boolean vod;
+            ExoPlayer p; PlayerView pv; TextView title; TextView status; JSONArray list; int i; boolean vod;
             Handler h = new Handler();
             Runnable hide = () -> title.setVisibility(android.view.View.INVISIBLE);
             @Override protected void onCreate(Bundle b) {
@@ -184,6 +184,11 @@ jobs:
               title.setBackgroundColor(0xAA000000);
               title.setPadding(40, 24, 40, 24);
               root.addView(title, new FrameLayout.LayoutParams(-1, -2, Gravity.TOP));
+              status = new TextView(this);
+              status.setTextColor(0xFFE0F6FF);status.setTextSize(18);
+              status.setBackgroundColor(0xBB0C2235);status.setPadding(24,18,24,18);
+              FrameLayout.LayoutParams sp = new FrameLayout.LayoutParams(-2,-2,Gravity.CENTER);
+              root.addView(status,sp);status.setVisibility(android.view.View.GONE);
               setContentView(root);
               try {
                 list = new JSONArray(getIntent().getStringExtra("list"));
@@ -195,7 +200,12 @@ jobs:
               p = new ExoPlayer.Builder(this).setMediaSourceFactory(new DefaultMediaSourceFactory(df)).build();
               pv.setPlayer(p);
               p.addListener(new Player.Listener() {
-                @Override public void onPlayerError(PlaybackException e) { show("Canal indisponível. Use CIMA ou BAIXO para trocar."); }
+                @Override public void onPlayerError(PlaybackException e) { status.setText("Não foi possível reproduzir.\nPressione OK para tentar novamente ou ↑ ↓ para trocar.");status.setVisibility(android.view.View.VISIBLE);show("Falha de reprodução: "+nm()); }
+                @Override public void onPlaybackStateChanged(int state){
+                  if(state==Player.STATE_BUFFERING){status.setText("Carregando transmissão…");status.setVisibility(android.view.View.VISIBLE);}
+                  else if(state==Player.STATE_READY){status.setVisibility(android.view.View.GONE);}
+                  else if(state==Player.STATE_ENDED && !vod){status.setText("Transmissão encerrada. Pressione OK para tentar novamente.");status.setVisibility(android.view.View.VISIBLE);}
+                }
               });
               go(0);
             }
@@ -204,13 +214,14 @@ jobs:
                 i = (i + d + list.length()) % list.length();
                 JSONArray c = list.getJSONArray(i);
                 p.setMediaItem(MediaItem.fromUri(c.getString(1)));
+                status.setText("Carregando transmissão…");status.setVisibility(android.view.View.VISIBLE);
                 p.prepare();
                 p.play();
                 show(c.getString(0));
               } catch (Exception e) { }
             }
             void show(String t) {
-              title.setText(t);
+              title.setText(t + (vod ? "   ◀ ▶ avançar 10s • OK pausar" : "   ↑ ↓ trocar • OK detalhes"));
               title.setVisibility(android.view.View.VISIBLE);
               h.removeCallbacks(hide);
               h.postDelayed(hide, 3500);
@@ -235,7 +246,7 @@ jobs:
                 if (vod) {
                   if (p.isPlaying()) p.pause(); else p.play();
                   show(nm() + "  " + tm(p.getCurrentPosition()) + " / " + tm(p.getDuration()) + (p.getPlayWhenReady() ? "" : "  (pausado)"));
-                } else show(nm());
+                } else {if(p.getPlaybackState()==Player.STATE_IDLE || p.getPlayerError()!=null || p.getPlaybackState()==Player.STATE_ENDED)go(0);else show(nm());}
                 return true;
               }
               return super.onKeyDown(k, e);
