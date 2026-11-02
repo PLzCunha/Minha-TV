@@ -108,6 +108,13 @@ jobs:
                   runOnUiThread(() -> w.evaluateJavascript(js, null));
                 }).start();
               }
+              @JavascriptInterface public void playVod(String json, int i) {
+                Intent t = new Intent(MainActivity.this, PlayerActivity.class);
+                t.putExtra("list", json);
+                t.putExtra("i", i);
+                t.putExtra("vod", true);
+                startActivity(t);
+              }
               @JavascriptInterface public void play(String json, int i) {
                 Intent t = new Intent(MainActivity.this, PlayerActivity.class);
                 t.putExtra("list", json);
@@ -160,7 +167,7 @@ jobs:
           import androidx.media3.ui.PlayerView;
           import org.json.JSONArray;
           public class PlayerActivity extends Activity {
-            ExoPlayer p; PlayerView pv; TextView title; JSONArray list; int i;
+            ExoPlayer p; PlayerView pv; TextView title; JSONArray list; int i; boolean vod;
             Handler h = new Handler();
             Runnable hide = () -> title.setVisibility(android.view.View.INVISIBLE);
             @Override protected void onCreate(Bundle b) {
@@ -181,6 +188,7 @@ jobs:
               try {
                 list = new JSONArray(getIntent().getStringExtra("list"));
                 i = getIntent().getIntExtra("i", 0);
+                vod = getIntent().getBooleanExtra("vod", false);
               } catch (Exception e) { finish(); return; }
               DefaultHttpDataSource.Factory df = new DefaultHttpDataSource.Factory()
                 .setUserAgent("MinhaTV/1.0 (Android)").setAllowCrossProtocolRedirects(true);
@@ -207,11 +215,27 @@ jobs:
               h.removeCallbacks(hide);
               h.postDelayed(hide, 3500);
             }
+            String nm() { try { return list.getJSONArray(i).getString(0); } catch (Exception x) { return ""; } }
+            String tm(long ms) { long s = Math.max(0, ms / 1000); return String.format("%d:%02d", s / 60, s % 60); }
             @Override public boolean onKeyDown(int k, KeyEvent e) {
-              if (k == KeyEvent.KEYCODE_DPAD_UP || k == KeyEvent.KEYCODE_CHANNEL_UP) { go(-1); return true; }
-              if (k == KeyEvent.KEYCODE_DPAD_DOWN || k == KeyEvent.KEYCODE_CHANNEL_DOWN) { go(1); return true; }
-              if (k == KeyEvent.KEYCODE_DPAD_CENTER || k == KeyEvent.KEYCODE_ENTER) {
-                try { show(list.getJSONArray(i).getString(0)); } catch (Exception x) { }
+              boolean multi = list != null && list.length() > 1;
+              if (k == KeyEvent.KEYCODE_DPAD_UP || k == KeyEvent.KEYCODE_CHANNEL_UP) { if (multi) go(-1); return true; }
+              if (k == KeyEvent.KEYCODE_DPAD_DOWN || k == KeyEvent.KEYCODE_CHANNEL_DOWN) { if (multi) go(1); return true; }
+              if (vod && (k == KeyEvent.KEYCODE_DPAD_LEFT || k == KeyEvent.KEYCODE_MEDIA_REWIND)) {
+                p.seekTo(Math.max(0, p.getCurrentPosition() - 10000));
+                show(nm() + "  " + tm(p.getCurrentPosition()) + " / " + tm(p.getDuration()));
+                return true;
+              }
+              if (vod && (k == KeyEvent.KEYCODE_DPAD_RIGHT || k == KeyEvent.KEYCODE_MEDIA_FAST_FORWARD)) {
+                p.seekTo(p.getCurrentPosition() + 10000);
+                show(nm() + "  " + tm(p.getCurrentPosition()) + " / " + tm(p.getDuration()));
+                return true;
+              }
+              if (k == KeyEvent.KEYCODE_DPAD_CENTER || k == KeyEvent.KEYCODE_ENTER || k == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
+                if (vod) {
+                  if (p.isPlaying()) p.pause(); else p.play();
+                  show(nm() + "  " + tm(p.getCurrentPosition()) + " / " + tm(p.getDuration()) + (p.getPlayWhenReady() ? "" : "  (pausado)"));
+                } else show(nm());
                 return true;
               }
               return super.onKeyDown(k, e);
