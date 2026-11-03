@@ -308,6 +308,19 @@ textarea{min-height:96px;resize:vertical}
 .ep-track{height:4px;border-radius:3px;background:#36455d;overflow:hidden;margin-top:8px;max-width:300px}.ep-track>span{height:100%;display:block;background:#e4c16d}
 .history-chip{background:rgba(228,193,109,.10);border:1px solid #665533;color:#f0d28c;padding:8px 12px;border-radius:12px;display:inline-block;margin-top:6px}
 @media(max-width:620px){.continue-card{flex-basis:190px}.continue-poster{height:104px}}
+
+/* Nico TV 1.5.0: live filters with remote-friendly focus targets */
+.live-filter-wrap{margin:12px 0 24px;padding:16px;border-radius:22px;border:1px solid #293a54;background:linear-gradient(120deg,#101b2b,#0d1421)}
+.live-filter-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;color:#f4f6fa;font-weight:750;font-size:18px}
+.live-filter-caption{font-size:12px;color:#a1b0c8;font-weight:500}
+.live-filter-list{display:flex;gap:9px;overflow-x:auto;padding:5px 2px 12px;scrollbar-width:thin;scroll-snap-type:x proximity}
+.live-filter-chip{scroll-snap-align:start;flex:0 0 auto;min-height:44px;border:1px solid #344967;border-radius:13px;background:#131f31;color:#e0e8f3;padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.live-filter-chip.active{border-color:#e4c16d;background:#e4c16d;color:#171b22}
+.live-filter-chip:focus-visible{outline:3px solid #f6e0a1;outline-offset:3px}
+.live-filter-count{color:#9fb0c9;font-size:12px}
+.live-group-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.live-filter-empty{padding:24px 10px;color:#a1b0c8}
+@media(max-width:700px){.live-filter-wrap{padding:12px;border-radius:16px}.live-filter-chip{font-size:13px;min-height:42px;padding:8px 12px}}
 </style>
 </head>
 <body>
@@ -429,7 +442,7 @@ const state={
   channels:[], movies:null, series:null, xt:null,
   mode:'live', view:null, detail:null, detailSeason:0,
   favorites:loadArray('nico_favorites'), recent:loadArray('nico_recent'),
-  favoriteOnly:false, recentOnly:false, query:'',
+  favoriteOnly:false, recentOnly:false, query:'', liveGroup:'all', liveRecent:loadArray('nico_live_recent'),
   loading:false, queue:[], qi:0, hls:null, drawer:false, pageSize:60, vod:false, episodes:false, webTracks:false,
   epg:new Map(), epgSource:null, epgEntries:new Map(), tab:'m3u'
 };
@@ -439,6 +452,34 @@ function keyOf(c){ return c.url || (c.kind==='series' ? 'series:'+c.id : c.kind=
 function isFav(c){ return state.favorites.includes(keyOf(c)); }
 function toast(msg){ const el=$('#toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove('show'),2400); }
 function markRecent(c){ const k=keyOf(c); state.recent=[k,...state.recent.filter(x=>x!==k)].slice(0,40); saveState(); }
+function markLiveRecent(c){
+ if(!c?.url || c.kind==='movie' || c.kind==='ep' || c.kind==='series')return;
+ const k=keyOf(c);state.liveRecent=[k,...state.liveRecent.filter(x=>x!==k)].slice(0,24);
+ store.set('nico_live_recent',JSON.stringify(state.liveRecent));
+}
+function liveFiltered(list){
+ if(state.mode!=='live')return list;
+ if(state.liveGroup==='fav')return list.filter(isFav);
+ if(state.liveGroup==='recent')return state.liveRecent.map(k=>list.find(c=>keyOf(c)===k)).filter(Boolean);
+ if(state.liveGroup!=='all')return list.filter(c=>(c.group||'Outros')===state.liveGroup);
+ return list;
+}
+function liveFilterPanel(app,unfiltered){
+ if(state.mode!=='live'||state.view||state.detail)return;
+ const groups=groupBy(unfiltered);const count=unfiltered.length;
+ const host=document.createElement('section');host.className='live-filter-wrap';
+ const headline=document.createElement('div');headline.className='live-filter-heading';
+ headline.innerHTML='<span>📺 Explorar canais</span><span class="live-filter-caption">Selecione uma categoria pelo controle remoto</span>';
+ const list=document.createElement('div');list.className='live-filter-list';list.setAttribute('aria-label','Filtros de canais');
+ const values=[['all','Todos',count],['fav','★ Favoritos',unfiltered.filter(isFav).length],['recent','↺ Últimos vistos',state.liveRecent.filter(k=>unfiltered.some(c=>keyOf(c)===k)).length],...Array.from(groups,([group,items])=>[group,group,items.length])];
+ values.forEach(([key,label,n])=>{
+  const b=document.createElement('button');b.className='live-filter-chip'+(state.liveGroup===key?' active':'');b.type='button';
+  b.textContent=label+' · '+n;b.setAttribute('aria-pressed',state.liveGroup===key?'true':'false');
+  b.onclick=()=>{state.liveGroup=key;render();const next=[...document.querySelectorAll('.live-filter-chip')].find(x=>x.textContent===b.textContent);next?.focus({preventScroll:true});};
+  list.append(b);
+ });
+ host.append(headline,list);app.append(host);
+}
 function toggleFav(c){ const k=keyOf(c); const had=isFav(c); state.favorites = had ? state.favorites.filter(x=>x!==k) : [...state.favorites,k]; saveState(); toast(had?'Removido dos favoritos':'Adicionado aos favoritos'); render(); updatePlayerFav(); }
 function updatePlayerFav(){ const c=state.queue[state.qi]; $('#playerFavBtn').textContent=c&&isFav(c)?'★ Favorito':'☆ Favorito'; }
 function selectList(list){ if(state.favoriteOnly) return list.filter(isFav); if(state.recentOnly) return state.recent.map(k=>list.find(x=>keyOf(x)===k)).filter(Boolean); return list; }
@@ -596,7 +637,7 @@ async function importFrom(src){
       if(src.text && src.text.length<3e6) src.keep=true;
     }
     if(!list.length) throw new Error('empty');
-    state.channels=list; state.movies=null; state.series=null; state.mode='live'; state.view=null; state.detail=null; state.query=''; state.favoriteOnly=false; state.recentOnly=false; $('#search').value='';
+    state.channels=list; state.movies=null; state.series=null; state.mode='live'; state.view=null; state.detail=null; state.query=''; state.favoriteOnly=false; state.recentOnly=false; state.liveGroup='all';state.liveRecent=[];store.set('nico_live_recent','[]'); $('#search').value='';
     store.set('nico_source',JSON.stringify(src.type==='xt'||src.url||src.epgUrl?src:{type:'m3u',text:src.text}));
     if(epgUrl) await loadEpg(epgUrl);
     render();
@@ -659,14 +700,14 @@ function renderContinue(app){
 window.nicoNativeHistoryChanged=()=>{nativeHistoryCache=null;if(!$('#player').classList.contains('on'))render();};
 
 /* UI */
-function setMode(mode){ state.mode=mode; state.view=null; state.detail=null; state.favoriteOnly=false; state.recentOnly=false; $('#favNav').setAttribute('aria-pressed','false'); $('#recentNav').setAttribute('aria-pressed','false'); updateNav(); if(mode==='movies'&&!state.movies) return loadVod().then(()=>render()); if(mode==='series'&&!state.series) return loadSeries().then(()=>render()); render(); }
+function setMode(mode){ state.mode=mode; state.view=null; state.detail=null; state.favoriteOnly=false; state.recentOnly=false; if(mode!=='live')state.liveGroup='all'; $('#favNav').setAttribute('aria-pressed','false'); $('#recentNav').setAttribute('aria-pressed','false'); updateNav(); if(mode==='movies'&&!state.movies) return loadVod().then(()=>render()); if(mode==='series'&&!state.series) return loadSeries().then(()=>render()); render(); }
 function updateNav(){
   const map={homeNav:!state.view&&!state.detail&&!state.favoriteOnly&&!state.recentOnly&&state.mode==='live',liveNav:state.mode==='live',movieNav:state.mode==='movies',seriesNav:state.mode==='series'};
   Object.entries(map).forEach(([id,val])=>{ const el=$('#'+id); if(el) el.classList.toggle('active',!!val); });
   $('#movieNav').classList.toggle('hidden',!state.xt); $('#seriesNav').classList.toggle('hidden',!state.xt);
 }
 function groupBy(list){ const m=new Map(); list.forEach(c=>{ if(!m.has(c.group)) m.set(c.group,[]); m.get(c.group).push(c); }); return m; }
-function searchFiltered(list){ const base=selectList(list); if(!state.query) return base; const q=state.query.toLocaleLowerCase('pt-BR'); return base.filter(c=>`${c.name} ${c.group}`.toLocaleLowerCase('pt-BR').includes(q)); }
+function searchFiltered(list){ const base=liveFiltered(selectList(list)); if(!state.query) return base; const q=state.query.toLocaleLowerCase('pt-BR'); return base.filter(c=>`${c.name} ${c.group}`.toLocaleLowerCase('pt-BR').includes(q)); }
 function placeholderFrom(c){ return c.kind==='movie'?'🎬':c.kind==='series'?'📺':'◈'; }
 function card(c,list){
   const div=document.createElement('div'); div.className='card'+((c.kind==='movie'||c.kind==='series')?' poster':''); div.tabIndex=0; div.setAttribute('role','button'); div.setAttribute('aria-label',c.name);
@@ -736,16 +777,18 @@ function appendRow(app,title,list,opts={}){
 function render(){
   updateNav();
   const app=$('#app'); app.innerHTML='';
-  const all=searchFiltered(currentList()); $('#counter').textContent=`${all.length} itens`;
+  const all=searchFiltered(currentList());const baseLive=state.mode==='live'?selectList(state.channels):[]; $('#counter').textContent=`${all.length} itens`;
   if(state.loading){ empty(app,'Carregando…','Listas grandes podem levar alguns segundos.'); return; }
   if(state.detail){ renderDetail(app); return; }
   if(state.view){ renderSingleView(app,all); return; }
   if(!all.length){
+    if(state.mode==='live')liveFilterPanel(app,baseLive);
     renderContinue(app);
     const msg=document.createElement('div');msg.className='empty';msg.innerHTML=(!state.channels.length&&state.mode==='live')?'<h2>Bem-vindo ao Nico TV</h2><p>Importe sua lista M3U ou faça login Xtream para começar.</p>':'<h2>Nenhum resultado</h2><p>Tente alterar a busca, os filtros ou trocar de categoria.</p>';app.append(msg);
     return;
   }
   const label=state.mode==='movies'?'filmes':state.mode==='series'?'séries':'canais';
+  if(state.mode==='live')liveFilterPanel(app,baseLive);
   app.insertAdjacentHTML('beforeend', heroFor(all[0], all.length, label));
   $('#heroPlayBtn').onclick=()=>openItem(all[0],all); $('#heroFavBtn').onclick=()=>toggleFav(all[0]); if($('#heroGuideBtn'))$('#heroGuideBtn').onclick=openGuide;
 
@@ -754,6 +797,7 @@ function render(){
   const favoriteItems=all.filter(isFav);
   appendRow(app,'Assistidos recentemente',recentItems,{subtitle:'Seu histórico de aberturas',limit:18});
   appendRow(app,'Favoritos',favoriteItems,{subtitle:'Seus atalhos principais',limit:18});
+  if(state.mode==='live' && state.liveGroup==='all')appendRow(app,'Últimos canais',state.liveRecent.map(k=>all.find(x=>keyOf(x)===k)).filter(Boolean),{subtitle:'Volte aos canais que você assistiu',limit:18});
 
   if(state.mode==='live'){
     const groups=groupBy(all);
@@ -821,6 +865,7 @@ async function openMovieInfo(c){
 }
 /* Player premium — navegador; o Android usa ExoPlayer nativo. */
 function play(list,i,vod){
+  if(!vod && list[i])markLiveRecent(list[i]);
   if(NATIVE){
     if(list[i]) markRecent(list[i]);
     const a=Math.max(0,i-250);
@@ -979,6 +1024,7 @@ function hideIdlePlayerControls(){
  $('#playerBar').classList.add('hide');
 }
 function startPlayback(){
+  if(!state.vod && state.queue[state.qi])markLiveRecent(state.queue[state.qi]);
   const c=state.queue[state.qi];if(!c)return;
   markRecent(c);updatePlayerFav();
   const player=$('#player'),v=$('#video'), msg=$('#playerMsg');
@@ -1034,7 +1080,7 @@ function renderDrawer(){
     const c=state.queue[idx],item=document.createElement('button');
     item.className='drawer-item'+(idx===state.qi?' active':'');
     const title=document.createElement('div');title.textContent=`${idx+1}. ${c.name}`;
-    const sub=document.createElement('div');sub.className='small';sub.textContent=epgFor(c)?.current?.title||c.group||'Ao vivo';
+    const sub=document.createElement('div');sub.className='small';const ep=epgFor(c);sub.textContent=ep?.current?(timeFmt(ep.current.start)+'–'+timeFmt(ep.current.stop)+' · '+ep.current.title):c.group||'Programação indisponível';
     item.append(title,sub);
     item.onclick=()=>{savePlaybackProgress(true);state.qi=idx;startPlayback();};list.append(item);
   }
