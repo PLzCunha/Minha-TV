@@ -252,6 +252,44 @@ textarea{min-height:96px;resize:vertical}
 #player.controls-hidden{cursor:none}
 #player.controls-hidden #drawer,#player.controls-hidden #trackPanel,#player.controls-hidden #nextEpisodeCard{cursor:auto}
 @media(max-width:650px){#webcontrols{max-width:calc(100vw - 14px);padding:5px;gap:3px}#webcontrols .btn{font-size:11px!important;padding:0 7px!important;min-height:34px!important}#webcontrols .btn.main{min-width:62px!important}#playbackTimeline{bottom:70px;width:calc(100vw - 18px)}}
+
+/* Nico TV v1.3.14 — controles flutuantes, compactos e com ocultação confiável */
+#player #webcontrols {
+  position:absolute!important; left:50%!important; right:auto!important; bottom:18px!important;
+  transform:translateX(-50%)!important; display:flex!important; flex-direction:row!important;
+  flex-wrap:nowrap!important; align-items:center!important; justify-content:center!important;
+  width:max-content!important; max-width:calc(100vw - 20px)!important; height:auto!important;
+  box-sizing:border-box!important; gap:5px!important; padding:7px!important;
+  background:rgba(8,14,25,.74)!important; border:1px solid rgba(228,193,109,.24)!important;
+  border-radius:14px!important; box-shadow:0 12px 30px rgba(0,0,0,.55)!important;
+  transition:opacity .22s ease,visibility .22s ease!important; visibility:visible;
+}
+#player #webcontrols > button.btn {
+  display:inline-flex!important; flex:0 0 auto!important; width:auto!important; max-width:none!important;
+  min-width:0!important; height:36px!important; min-height:36px!important;
+  padding:0 10px!important; align-items:center!important; justify-content:center!important;
+  font-size:13px!important; line-height:1!important; white-space:nowrap!important;
+  border-radius:9px!important; margin:0!important;
+}
+#player #webcontrols > button.btn.main {min-width:88px!important}
+#player #webcontrols > button[hidden] {display:none!important}
+#player #playbackTimeline {left:50%!important; right:auto!important; bottom:73px!important;
+  transform:translateX(-50%)!important; width:min(710px,calc(100vw - 20px))!important;
+  padding:7px 12px!important; gap:3px!important; border-radius:12px!important;
+  background:rgba(8,14,25,.74)!important; transition:opacity .22s ease,visibility .22s ease!important;
+}
+#player.controls-hidden #webcontrols,#player.controls-hidden #playbackTimeline,#player.controls-hidden #playerBar {
+  opacity:0!important; visibility:hidden!important; pointer-events:none!important;
+}
+#player:not(.controls-hidden) #webcontrols {opacity:1!important;visibility:visible!important;pointer-events:auto!important}
+#player:not(.controls-hidden) #playbackTimeline:not([hidden]) {opacity:1!important;visibility:visible!important;pointer-events:auto!important}
+@media (max-width:660px){
+  #player #webcontrols {bottom:10px!important;gap:2px!important;padding:4px!important}
+  #player #webcontrols > button.btn {font-size:11px!important;padding:0 6px!important;height:33px!important;min-height:33px!important}
+  #player #webcontrols > button.btn.main {min-width:68px!important}
+  #player #playbackTimeline {bottom:54px!important}
+}
+
 </style>
 </head>
 <body>
@@ -840,26 +878,33 @@ function updatePlaybackControls(){
  $('#playPauseBtn').textContent=v.paused?'▶ Play':'Ⅱ Pausar';
  $('#nextEpisodeBtn').hidden=!canNextEpisode();updatePlaybackTimeline();
 }
+// Timer de inatividade independente do foco persistente em botões.
+let lastRealPlayerInteraction=0;
+const PLAYER_IDLE_MS=3000;
+function playerMenuActive(){
+ return state.drawer||!$('#trackPanel').hidden||!$('#nextEpisodeCard').hidden||
+        $('#playbackSeek').dataset.dragging==='1';
+}
 function showPlayerBar(){
-  const player=$('#player');
-  if(!player.classList.contains('on'))return;
-  $('#playerBar').classList.remove('hide');player.classList.remove('controls-hidden');
-  clearTimeout(showPlayerBar.t);
-  showPlayerBar.t=setTimeout(()=>{
-    // Mantenha os controles ao usar menus, manipular a barra ou focar botões.
-    if(state.drawer||!$('#trackPanel').hidden||!$('#nextEpisodeCard').hidden||
-       $('#playbackSeek').dataset.dragging==='1'||
-       ($('#player').dataset.keyboardNav==='1' && document.activeElement?.closest('#webcontrols,#playerBar,#playbackTimeline'))){
-      showPlayerBar.t=setTimeout(()=>hideIdlePlayerControls(),1800);return;
-    }
-    hideIdlePlayerControls();
-  },3200);
+ const player=$('#player');
+ if(!player.classList.contains('on'))return;
+ lastRealPlayerInteraction=Date.now();
+ $('#playerBar').classList.remove('hide');
+ player.classList.remove('controls-hidden');
+ clearTimeout(showPlayerBar.t);
+ showPlayerBar.t=setTimeout(hideIdlePlayerControls,PLAYER_IDLE_MS+60);
 }
 function hideIdlePlayerControls(){
-  if(state.drawer||!$('#trackPanel').hidden||!$('#nextEpisodeCard').hidden||
-     $('#playbackSeek').dataset.dragging==='1'||
-     ($('#player').dataset.keyboardNav==='1' && document.activeElement?.closest('#webcontrols,#playerBar,#playbackTimeline')))return;
-  $('#playerBar').classList.add('hide');$('#player').classList.add('controls-hidden');
+ const player=$('#player');
+ if(!player.classList.contains('on'))return;
+ const remaining=PLAYER_IDLE_MS-(Date.now()-lastRealPlayerInteraction);
+ if(remaining>0){showPlayerBar.t=setTimeout(hideIdlePlayerControls,remaining+60);return;}
+ if(playerMenuActive()){
+   showPlayerBar.t=setTimeout(hideIdlePlayerControls,500);
+   return;
+ }
+ $('#playerBar').classList.add('hide');
+ player.classList.add('controls-hidden');
 }
 function startPlayback(){
   const c=state.queue[state.qi];if(!c)return;
@@ -970,7 +1015,15 @@ $('#infoWatch').onclick=()=>{const fn=infoPlayAction;$('#infoDialog').close(); i
 $('#audioBtn').onclick=()=>showTracks('audio');
 $('#subtitleBtn').onclick=()=>showTracks('subtitle');
 $('#closeTracksBtn').onclick=closeTrackPanel;
-$('#player').addEventListener('pointermove',()=>{delete $('#player').dataset.keyboardNav;showPlayerBar();});
+// Emuladores podem emitir pointermove repetidamente mesmo com o cursor parado.
+let lastPointerPosition=null;
+$('#player').addEventListener('pointermove',e=>{
+  const x=e.clientX,y=e.clientY;
+  if(lastPointerPosition&&Math.hypot(x-lastPointerPosition.x,y-lastPointerPosition.y)<4)return;
+  lastPointerPosition={x,y};
+  delete $('#player').dataset.keyboardNav;
+  showPlayerBar();
+});
 $('#player').addEventListener('pointerdown',()=>{delete $('#player').dataset.keyboardNav;showPlayerBar();});
 $('#playbackSeek').addEventListener('pointerdown',()=>{$('#playbackSeek').dataset.dragging='1';showPlayerBar();});
 window.addEventListener('pointerup',()=>{if($('#playbackSeek').dataset.dragging){delete $('#playbackSeek').dataset.dragging;showPlayerBar();}});
