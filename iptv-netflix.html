@@ -151,7 +151,7 @@ a{text-decoration:none;color:inherit}
 .player-actions{display:flex;gap:10px;flex-wrap:wrap}
 #playerMsg{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;color:#fff;text-align:center;padding:20px;font-size:24px;text-shadow:0 2px 10px rgba(0,0,0,.8);white-space:pre-line}
 
-/* Nico TV 1.3.12 — tempo, busca e retomada */
+/* Nico TV 1.3.13 — tempo, busca e retomada */
 #playbackTimeline{position:absolute;bottom:110px;left:50%;transform:translateX(-50%);width:min(94vw,820px);z-index:13;border:1px solid rgba(228,193,109,.42);border-radius:16px;background:rgba(9,16,28,.94);padding:12px 16px;box-shadow:0 12px 34px #0009;display:grid;gap:7px}
 #playbackTimeline[hidden]{display:none!important}
 #playbackTimeline input[type=range]{width:100%;height:18px;accent-color:#e4c16d;cursor:pointer}
@@ -239,6 +239,19 @@ textarea{min-height:96px;resize:vertical}
 .info-dialog::backdrop{background:#03060bde}.info-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.info-dialog h2{font-size:26px;margin:9px 0}.info-dialog p{color:#d0dbea;line-height:1.6}.info-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.info-chip{padding:6px 10px;border:1px solid #38506a;border-radius:30px;font-size:12px}
 .guide-empty{padding:26px;color:#b8c9db;text-align:center}
 
+
+/* Nico TV v1.3.13 — sobreposição discreta do player para mouse e controle remoto */
+#webcontrols{box-sizing:border-box;width:max-content;max-width:calc(100vw - 32px);padding:7px 9px;gap:6px;flex-wrap:nowrap;bottom:18px;border-radius:16px;background:rgba(8,14,25,.78);border:1px solid rgba(228,193,109,.22);box-shadow:0 8px 26px #0009}
+#webcontrols .btn{flex:0 0 auto!important;width:auto!important;min-width:0!important;min-height:36px!important;padding:0 11px!important;font-size:13px!important;border-radius:10px!important;white-space:nowrap}
+#webcontrols .btn.main{min-width:90px!important}
+#webcontrols [hidden]{display:none!important}
+#playbackTimeline{box-sizing:border-box;bottom:78px;width:min(740px,calc(100vw - 32px));padding:8px 14px;gap:2px;border-radius:12px;background:rgba(8,14,25,.76);border-color:rgba(228,193,109,.20);box-shadow:0 8px 26px #0008;transition:opacity .25s}
+#playbackTimeline input[type=range]{height:14px;margin:0;cursor:pointer}
+.timeline-info{font-size:12px}.timeline-info strong{font-size:13px}
+#player.controls-hidden #playbackTimeline,#player.controls-hidden #playerBar{opacity:0;pointer-events:none}
+#player.controls-hidden{cursor:none}
+#player.controls-hidden #drawer,#player.controls-hidden #trackPanel,#player.controls-hidden #nextEpisodeCard{cursor:auto}
+@media(max-width:650px){#webcontrols{max-width:calc(100vw - 14px);padding:5px;gap:3px}#webcontrols .btn{font-size:11px!important;padding:0 7px!important;min-height:34px!important}#webcontrols .btn.main{min-width:62px!important}#playbackTimeline{bottom:70px;width:calc(100vw - 18px)}}
 </style>
 </head>
 <body>
@@ -284,7 +297,7 @@ textarea{min-height:96px;resize:vertical}
 <dialog id="infoDialog" class="info-dialog" aria-label="Informações do conteúdo"><div id="infoContent"></div><div class="info-actions"><button class="btn main" id="infoWatch">▶ Assistir</button><button class="btn" id="infoClose">Fechar</button></div></dialog>
 
 <div id="player">
-  <video id="video" autoplay playsinline controls></video>
+  <video id="video" autoplay playsinline></video>
   <div id="playerBar">
     <div class="player-meta">
       <div id="playerTitle"></div>
@@ -828,12 +841,25 @@ function updatePlaybackControls(){
  $('#nextEpisodeBtn').hidden=!canNextEpisode();updatePlaybackTimeline();
 }
 function showPlayerBar(){
-  $('#playerBar').classList.remove('hide');$('#player').classList.remove('controls-hidden');
+  const player=$('#player');
+  if(!player.classList.contains('on'))return;
+  $('#playerBar').classList.remove('hide');player.classList.remove('controls-hidden');
   clearTimeout(showPlayerBar.t);
   showPlayerBar.t=setTimeout(()=>{
-    if(state.drawer||!$('#trackPanel').hidden||document.activeElement?.closest('#playerBar'))return;
-    $('#playerBar').classList.add('hide');
-  },4500);
+    // Mantenha os controles ao usar menus, manipular a barra ou focar botões.
+    if(state.drawer||!$('#trackPanel').hidden||!$('#nextEpisodeCard').hidden||
+       $('#playbackSeek').dataset.dragging==='1'||
+       ($('#player').dataset.keyboardNav==='1' && document.activeElement?.closest('#webcontrols,#playerBar,#playbackTimeline'))){
+      showPlayerBar.t=setTimeout(()=>hideIdlePlayerControls(),1800);return;
+    }
+    hideIdlePlayerControls();
+  },3200);
+}
+function hideIdlePlayerControls(){
+  if(state.drawer||!$('#trackPanel').hidden||!$('#nextEpisodeCard').hidden||
+     $('#playbackSeek').dataset.dragging==='1'||
+     ($('#player').dataset.keyboardNav==='1' && document.activeElement?.closest('#webcontrols,#playerBar,#playbackTimeline')))return;
+  $('#playerBar').classList.add('hide');$('#player').classList.add('controls-hidden');
 }
 function startPlayback(){
   const c=state.queue[state.qi];if(!c)return;
@@ -944,8 +970,10 @@ $('#infoWatch').onclick=()=>{const fn=infoPlayAction;$('#infoDialog').close(); i
 $('#audioBtn').onclick=()=>showTracks('audio');
 $('#subtitleBtn').onclick=()=>showTracks('subtitle');
 $('#closeTracksBtn').onclick=closeTrackPanel;
-$('#video').addEventListener('pointermove',showPlayerBar);
-$('#player').addEventListener('pointermove',showPlayerBar);
+$('#player').addEventListener('pointermove',()=>{delete $('#player').dataset.keyboardNav;showPlayerBar();});
+$('#player').addEventListener('pointerdown',()=>{delete $('#player').dataset.keyboardNav;showPlayerBar();});
+$('#playbackSeek').addEventListener('pointerdown',()=>{$('#playbackSeek').dataset.dragging='1';showPlayerBar();});
+window.addEventListener('pointerup',()=>{if($('#playbackSeek').dataset.dragging){delete $('#playbackSeek').dataset.dragging;showPlayerBar();}});
 document.addEventListener('fullscreenchange',syncFullscreenButton);
 document.addEventListener('webkitfullscreenchange',syncFullscreenButton);
 
