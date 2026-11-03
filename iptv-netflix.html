@@ -49,13 +49,14 @@ a{text-decoration:none;color:inherit}
 .sidebar .spacer{flex:1}
 .main{padding:22px 28px 28px;min-width:0}
 .topbar{display:flex;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
-.brandpanel{display:flex;align-items:center;gap:16px;padding:10px 16px 10px 10px;border-radius:24px;background:linear-gradient(145deg,rgba(18,27,41,.95),rgba(10,16,25,.82));border:1px solid #23324a;box-shadow:0 12px 32px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.04)}
-.brandicon{width:62px;height:62px;border-radius:18px;object-fit:cover;border:1px solid rgba(228,193,109,.30);box-shadow:0 0 0 4px rgba(228,193,109,.05)}
+.brandpanel{display:flex;align-items:center;gap:14px;padding:10px 16px;border-radius:28px;background:linear-gradient(145deg,rgba(18,27,41,.92),rgba(10,16,25,.78));border:1px solid #23324a;box-shadow:0 12px 32px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.04)}
+.brandvisual{display:flex;flex-direction:column;gap:8px;min-width:min(46vw,580px)}
+.brandbanner{display:block;width:min(46vw,540px);max-width:100%;height:auto;border-radius:18px;object-fit:contain;box-shadow:0 10px 24px rgba(0,0,0,.24)}
 .brandcopy{display:flex;flex-direction:column;gap:4px;min-width:0}
 .brand-eyebrow{font-size:10px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:#8ea0ba}
 .appname{font-size:34px;font-weight:900;letter-spacing:-.05em;line-height:.95;display:flex;align-items:baseline;gap:2px}
 .appname .muted{color:var(--gold)}
-.subtitle{color:var(--muted);font-size:14px;margin-top:0}
+.subtitle{color:var(--muted);font-size:14px;margin-top:0;padding-left:2px}
 .searchwrap{margin-left:auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .search{display:flex;align-items:center;gap:10px;min-width:280px;max-width:540px;flex:1;background:linear-gradient(145deg,#101826,#121d2d);border:1px solid #27364d;border-radius:18px;padding:0 14px;height:54px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
 .search input{width:100%;background:none;border:0;color:var(--text)}
@@ -182,7 +183,7 @@ textarea{min-height:96px;resize:vertical}
   .sidebar{position:sticky;height:auto;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));padding:12px;border-right:0;border-bottom:1px solid #1f2b3f;gap:10px}
   .logo{grid-column:1/-1;height:78px;padding:8px}
   .nav{display:contents}.sidebar .spacer{display:none}.navlabel{display:none}
-  .main{padding:16px}.topbar{align-items:flex-start}.brandpanel{width:100%}.searchwrap{margin-left:0;width:100%}.search{max-width:none;min-width:0}.appname{font-size:28px}.brandicon{width:54px;height:54px}.control-grid{grid-template-columns:1fr}.card{width:200px}.card.poster{width:160px}
+  .main{padding:16px}.topbar{align-items:flex-start}.brandpanel{width:100%}.brandvisual{min-width:0;width:100%}.brandbanner{width:100%}.searchwrap{margin-left:0;width:100%}.search{max-width:none;min-width:0}.appname{font-size:28px}.control-grid{grid-template-columns:1fr}.card{width:200px}.card.poster{width:160px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
@@ -208,11 +209,9 @@ textarea{min-height:96px;resize:vertical}
   <main class="main">
     <div class="topbar">
       <div class="brandpanel" aria-label="Nico TV">
-        <img class="brandicon" id="brandIcon" alt="Mascote Nico TV">
-        <div class="brandcopy">
-          <div class="brand-eyebrow">Fire Edition</div>
-          <div class="appname">Nico <span class="muted">TV</span></div>
-          <div class="subtitle">experiência premium otimizada para TV e Fire Stick</div>
+        <div class="brandvisual">
+          <img class="brandbanner" id="brandBanner" alt="Nico TV">
+          <div class="subtitle">Fire Edition · experiência premium otimizada para TV e Fire Stick</div>
         </div>
       </div>
       <div class="searchwrap">
@@ -286,6 +285,8 @@ textarea{min-height:96px;resize:vertical}
 <script>
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
+// Usa a mesma imagem incorporada da barra lateral, antes de qualquer interação.
+$('#brandIcon').src = $('.logo img').src;
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 const state={
   channels:[], movies:null, series:null, xt:null,
@@ -644,7 +645,6 @@ document.addEventListener('keydown',e=>{
   const el=document.activeElement;
   if(el && /INPUT|TEXTAREA/.test(el.tagName) && !k.startsWith('Arrow')) return;
   if(!k.startsWith('Arrow')) return;
-  document.getElementById('brandIcon').src=document.querySelector('.logo img').src;
   const nodes=[...document.querySelectorAll('.sidebar .navbtn,.topbar .btn,#search,#app .btn,#app .card,.favstar,.season-btn,.ep-item')].filter(o=>o.offsetParent!==null);
   if(!nodes.length) return;
   if(!nodes.includes(el)){ nodes[0].focus(); e.preventDefault(); return; }
