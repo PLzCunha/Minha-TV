@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nico TV • Fire Edition</title>
+<title>Nico TV v1.4.0 • Fire Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -291,6 +291,23 @@ textarea{min-height:96px;resize:vertical}
 .password-field .password-toggle{flex:0 0 auto;padding:0 14px;min-height:50px}
 #dlg input:focus-visible,#dlg textarea:focus-visible,#dlg button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 #dlg{max-height:min(90vh,900px);overflow-y:auto;overscroll-behavior:contain}
+
+/* Nico TV 1.4.0 — biblioteca pessoal */
+.continue-grid{display:flex;gap:17px;overflow-x:auto;padding:8px 4px 19px;scroll-snap-type:x proximity}
+.continue-card{flex:0 0 244px;min-width:0;background:#111b2b;border:1px solid #2d3b51;border-radius:20px;overflow:hidden;cursor:pointer;scroll-snap-align:start;color:#fff;text-align:left;padding:0;transition:border-color .18s,transform .18s}
+.continue-card:focus-visible,.continue-card:hover{outline:3px solid #e4c16d;outline-offset:2px;transform:translateY(-2px)}
+.continue-poster{height:123px;background:linear-gradient(120deg,#1b3041,#0e1522);position:relative;overflow:hidden}
+.continue-poster img{width:100%;height:100%;object-fit:cover}
+.continue-progress{height:5px;background:#46516a;position:absolute;bottom:0;left:0;right:0}
+.continue-progress span{display:block;height:100%;background:#e4c16d}
+.continue-detail{padding:12px 14px;display:grid;gap:5px}
+.continue-title{font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.continue-meta{font-size:12px;color:#a3b2c5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.continue-empty{color:#9caac0;font-size:14px}
+.ep-item.completed{border-color:#3a654d}.ep-watch{color:#e4c16d;font-size:12px;margin-top:4px}.ep-item.completed .ep-watch{color:#87d4a8}
+.ep-track{height:4px;border-radius:3px;background:#36455d;overflow:hidden;margin-top:8px;max-width:300px}.ep-track>span{height:100%;display:block;background:#e4c16d}
+.history-chip{background:rgba(228,193,109,.10);border:1px solid #665533;color:#f0d28c;padding:8px 12px;border-radius:12px;display:inline-block;margin-top:6px}
+@media(max-width:620px){.continue-card{flex-basis:190px}.continue-poster{height:104px}}
 </style>
 </head>
 <body>
@@ -340,7 +357,7 @@ textarea{min-height:96px;resize:vertical}
   <div id="playerBar">
     <div class="player-meta">
       <div id="playerTitle"></div>
-      <div id="playerSub"></div><div style="font-size:10px;color:#acb8ce;opacity:.7">Nico TV 1.3.15</div>
+      <div id="playerSub"></div><div style="font-size:10px;color:#acb8ce;opacity:.7">Nico TV 1.4.0</div>
     </div>
     <div class="player-actions">
       <button class="btn" id="backBtn">Voltar</button>
@@ -589,6 +606,58 @@ async function importFrom(src){
   } finally { state.loading=false; render(); }
 }
 
+/* Histórico compartilhado: navegador e ExoPlayer nativo */
+const HISTORY_KEY='nico_watch_history_v2';
+function readHistory(){try{const v=JSON.parse(store.get(HISTORY_KEY)||'{}');return v&&typeof v==='object'?v:{};}catch(e){return {};}}
+let nativeHistoryCache=null;
+function nativeHistory(){if(!NATIVE||!Android.getWatchHistory)return {};if(nativeHistoryCache)return nativeHistoryCache;
+ try{const v=JSON.parse(Android.getWatchHistory());nativeHistoryCache=v&&typeof v==='object'?v:{};}catch(e){nativeHistoryCache={};}return nativeHistoryCache;}
+function combinedHistory(){return {...readHistory(),...nativeHistory()};}
+function historyKey(c){return c?.url?'v:'+hashUrl(c.url):null;}
+function hashUrl(value){let n=2166136261;for(let i=0;i<value.length;i++){n^=value.charCodeAt(i);n=Math.imul(n,16777619);}return (n>>>0).toString(16);}
+function saveHistory(c,pos,duration,completed=false){
+  if(!c?.url||!Number.isFinite(duration)||duration<=0)return;
+  const all=readHistory(),key=historyKey(c),percent=Math.max(0,Math.min(100,Math.round(pos/duration*100)));
+  const old=all[key]||{};
+  all[key]={kind:c.kind||old.kind||'movie',name:c.name||old.name||'Conteúdo',logo:c.logo||old.logo||'',url:c.url,
+    seriesName:c.seriesName||old.seriesName||'',seriesId:c.seriesId||old.seriesId||'',season:c.season||old.season||'',episode:c.episode||old.episode||'',
+    position:completed?duration:Math.floor(pos),duration:Math.floor(duration),completed:!!completed,percent:completed?100:percent,when:Date.now()};
+  const keys=Object.keys(all);if(keys.length>240)keys.sort((a,b)=>(all[a].when||0)-(all[b].when||0)).slice(0,keys.length-240).forEach(k=>delete all[k]);
+  store.set(HISTORY_KEY,JSON.stringify(all));
+}
+function entryFor(c){return c?.url?combinedHistory()[historyKey(c)]:null;}
+function watchPercent(entry){return Math.max(0,Math.min(100,Number(entry?.percent)||0));}
+function continueEntries(){return Object.values(combinedHistory()).filter(v=>v&&v.url&&!v.completed&&v.position>=3&&v.duration>0&&v.position<v.duration-8)
+ .sort((a,b)=>(b.when||0)-(a.when||0)).slice(0,30);}
+function completeEpisodeCount(d){return d.seasons.reduce((n,s)=>n+s.eps.filter(e=>entryFor(e)?.completed).length,0);}
+async function resumeHistoryEntry(entry){
+  if(entry.kind==='ep'&&entry.seriesId&&state.xt){
+    const prev=state.mode;state.mode='series';
+    if(!state.series)await loadSeries();
+    const original=(state.series||[]).find(s=>String(s.id)===String(entry.seriesId));
+    if(original){await openSeries(original);if(state.detail){
+      const flat=state.detail.seasons.flatMap(s=>s.eps);const idx=flat.findIndex(e=>e.url===entry.url);
+      if(idx>=0){play(flat,idx,true);return;}
+    }}
+    state.mode=prev;
+  }
+  play([{kind:entry.kind||'movie',name:entry.name||'Continuar',url:entry.url,logo:entry.logo||'',seriesName:entry.seriesName,seriesId:entry.seriesId,season:entry.season,episode:entry.episode}],0,true);
+}
+function renderContinue(app){
+  const entries=continueEntries();if(!entries.length)return;
+  const section=document.createElement('section');section.className='row';section.innerHTML='<div class="row-head"><div><div class="row-title">▶ Continuar Assistindo</div><div class="row-subcount">Retome exatamente de onde parou neste dispositivo</div></div></div>';
+  const strip=document.createElement('div');strip.className='continue-grid';
+  entries.forEach(entry=>{
+    const b=document.createElement('button');b.className='continue-card';b.type='button';
+    const label=entry.kind==='ep'?[entry.seriesName||entry.name,entry.season?'T'+entry.season:'',entry.episode?'E'+entry.episode:''].filter(Boolean).join(' · '):entry.name;
+    b.setAttribute('aria-label','Continuar '+label+' de '+clock(entry.position));
+    b.innerHTML=`<div class="continue-poster">${entry.logo?`<img loading="lazy" alt="" src="${escapeHtml(entry.logo)}">`:''}<div class="continue-progress"><span style="width:${watchPercent(entry)}%"></span></div></div><div class="continue-detail"><div class="continue-title">${escapeHtml(label)}</div><div class="continue-meta">${clock(entry.position)} / ${clock(entry.duration)} · ${watchPercent(entry)}% assistido</div></div>`;
+    b.onclick=()=>resumeHistoryEntry(entry);strip.append(b);
+  });
+  section.append(strip);app.append(section);
+}
+window.nicoNativeHistoryChanged=()=>{nativeHistoryCache=null;if(!$('#player').classList.contains('on'))render();};
+
 /* UI */
 function setMode(mode){ state.mode=mode; state.view=null; state.detail=null; state.favoriteOnly=false; state.recentOnly=false; $('#favNav').setAttribute('aria-pressed','false'); $('#recentNav').setAttribute('aria-pressed','false'); updateNav(); if(mode==='movies'&&!state.movies) return loadVod().then(()=>render()); if(mode==='series'&&!state.series) return loadSeries().then(()=>render()); render(); }
 function updateNav(){
@@ -611,7 +680,7 @@ function card(c,list){
     </div>`;
   const img=div.querySelector('img'); if(img) img.onerror=()=>img.parentElement.innerHTML=`<div class="placeholder">${placeholderFrom(c)}</div>`;
   div.onclick=e=>{ if(e.target.closest('.favstar')) return; openItem(c,list); };
-  div.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openItem(c,list); } };
+  div.onkeydown=e=>{ if(e.target!==div)return; if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openItem(c,list); } };
   div.querySelector('.favstar').onclick=e=>{ e.preventDefault(); e.stopPropagation(); toggleFav(c); };
   return div;
 }
@@ -672,17 +741,18 @@ function render(){
   if(state.detail){ renderDetail(app); return; }
   if(state.view){ renderSingleView(app,all); return; }
   if(!all.length){
-    if(!state.channels.length && state.mode==='live') empty(app,'Bem-vindo ao Nico TV','Importe sua lista M3U ou faça login Xtream para começar.');
-    else empty(app,'Nenhum resultado','Tente alterar a busca, os filtros ou trocar de categoria.');
+    renderContinue(app);
+    const msg=document.createElement('div');msg.className='empty';msg.innerHTML=(!state.channels.length&&state.mode==='live')?'<h2>Bem-vindo ao Nico TV</h2><p>Importe sua lista M3U ou faça login Xtream para começar.</p>':'<h2>Nenhum resultado</h2><p>Tente alterar a busca, os filtros ou trocar de categoria.</p>';app.append(msg);
     return;
   }
   const label=state.mode==='movies'?'filmes':state.mode==='series'?'séries':'canais';
   app.insertAdjacentHTML('beforeend', heroFor(all[0], all.length, label));
   $('#heroPlayBtn').onclick=()=>openItem(all[0],all); $('#heroFavBtn').onclick=()=>toggleFav(all[0]); if($('#heroGuideBtn'))$('#heroGuideBtn').onclick=openGuide;
 
+  renderContinue(app);
   const recentItems=state.recent.map(k=>all.find(x=>keyOf(x)===k)).filter(Boolean);
   const favoriteItems=all.filter(isFav);
-  appendRow(app,'Continuar assistindo',recentItems,{subtitle:'Retome seus últimos conteúdos',limit:18});
+  appendRow(app,'Assistidos recentemente',recentItems,{subtitle:'Seu histórico de aberturas',limit:18});
   appendRow(app,'Favoritos',favoriteItems,{subtitle:'Seus atalhos principais',limit:18});
 
   if(state.mode==='live'){
@@ -720,18 +790,18 @@ function renderDetail(app){
   wrap.innerHTML=`<aside class="detail-side">
       <div class="poster-lg">${d.logo?`<img alt="" src="${d.logo}">`:''}</div>
       <div class="detail-title">${escapeHtml(d.name)}</div>
-      <div class="detail-sub">${d.seasons.length} temporada(s) · ${d.seasons.reduce((a,s)=>a+s.eps.length,0)} episódios</div><p style="color:#c8d6e8;line-height:1.5">${escapeHtml(d.description||'Sinopse não fornecida pelo serviço.')}</p><div class="info-tags">${[d.genre,d.year,d.rating?'★ '+d.rating:''].filter(Boolean).map(x=>`<span class="info-chip">${escapeHtml(x)}</span>`).join('')}</div>
+      <div class="detail-sub">${d.seasons.length} temporada(s) · ${d.seasons.reduce((a,s)=>a+s.eps.length,0)} episódios · ${completeEpisodeCount(d)} concluídos</div><p style="color:#c8d6e8;line-height:1.5">${escapeHtml(d.description||'Sinopse não fornecida pelo serviço.')}</p><div class="info-tags">${[d.genre,d.year,d.rating?'★ '+d.rating:''].filter(Boolean).map(x=>`<span class="info-chip">${escapeHtml(x)}</span>`).join('')}</div>
       <div class="badges"><span class="chip accent">Continuar TV</span><span class="chip">Experiência premium</span><span class="chip">Foco para controle remoto</span></div>
-      <button class="btn main" id="playFirstEpisode">Assistir primeiro episódio</button>
+      <button class="btn main" id="playFirstEpisode">▶ Continuar série</button>
     </aside>
     <section class="detail-main">
       <div class="season-row" id="seasonRow"></div>
       <div class="ep-list" id="episodeList"></div>
     </section>`;
   app.append(wrap);
-  $('#playFirstEpisode').onclick=()=>{ const flat=[].concat(...d.seasons.map(s=>s.eps)); openItem(flat[0],flat); };
+  $('#playFirstEpisode').onclick=()=>{ const flat=[].concat(...d.seasons.map(s=>s.eps));const next=flat.find(e=>!entryFor(e)?.completed)||flat[0];if(next)openItem(next,flat); };
   const row=$('#seasonRow'); d.seasons.forEach((s,idx)=>{ const b=document.createElement('button'); b.className='season-btn'+(idx===state.detailSeason?' active':''); b.textContent=`Temporada ${s.n}`; b.onclick=()=>{ state.detailSeason=idx; render(); }; row.append(b); });
-  const list=$('#episodeList'); season.eps.forEach((ep,idx)=>{ const item=document.createElement('div'); item.className='ep-item'; item.tabIndex=0; item.innerHTML=`<div class="ep-thumb"></div><div><div class="ep-name">${escapeHtml(ep.name)}</div><div class="ep-meta">Temporada ${season.n} · Episódio ${idx+1}</div></div><button class="btn main">Assistir</button>`; item.onclick=()=>openItem(ep,[].concat(...d.seasons.map(s=>s.eps))); item.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); item.click(); } }; item.querySelector('button').onclick=e=>{ e.stopPropagation(); item.click(); }; list.append(item); });
+  const list=$('#episodeList'); season.eps.forEach((ep,idx)=>{ const item=document.createElement('div'); item.className='ep-item'; item.tabIndex=0; const history=entryFor(ep),pct=watchPercent(history);item.classList.toggle('completed',!!history?.completed);item.innerHTML=`<div class="ep-thumb"></div><div><div class="ep-name">${escapeHtml(ep.name)}</div><div class="ep-meta">Temporada ${season.n} · Episódio ${idx+1}</div><div class="ep-watch">${history?.completed?'✓ Concluído':pct>0?`▶ Em andamento · ${pct}%`:'Não assistido'}</div>${pct>0?`<div class="ep-track"><span style="width:${pct}%"></span></div>`:''}</div><button class="btn main">${history?.completed?'Rever':pct>0?'Continuar':'Assistir'}</button>`; item.onclick=()=>openItem(ep,[].concat(...d.seasons.map(s=>s.eps))); item.onkeydown=e=>{ if(e.target!==item)return; if(e.key==='Enter'||e.key===' '){ e.preventDefault(); item.click(); } }; item.querySelector('button').onclick=e=>{ e.stopPropagation(); item.click(); }; list.append(item); });
   focusFirst();
 }
 function openItem(c,list){ markRecent(c); if(c.kind==='series'){ openSeries(c); } else if(c.kind==='movie'){ openMovieInfo(c); } else if(c.kind==='ep'){ play(list,list.indexOf(c),true); } else { play(list,list.indexOf(c),false); } }
@@ -740,7 +810,7 @@ function openItem(c,list){ markRecent(c); if(c.kind==='series'){ openSeries(c); 
 async function fetchCats(action){ const cs=await getJSON(state.xt.api+'&action='+action), out={}; (Array.isArray(cs)?cs:[]).forEach(c=>out[c.category_id]=c.category_name); return out; }
 async function loadVod(){ state.loading=true; render(); try{ const [n,st]=await Promise.all([fetchCats('get_vod_categories'),getJSON(state.xt.api+'&action=get_vod_streams')]); state.movies=(Array.isArray(st)?st:[]).map(s=>({kind:'movie',name:s.name||'Sem nome',logo:s.stream_icon||'',group:n[s.category_id]||'Outros',id:s.stream_id,description:s.plot||'',year:s.year||'',rating:s.rating||'',genre:s.genre||'',url:`${state.xt.base}/movie/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${s.stream_id}.${s.container_extension||'mp4'}`})); } catch(e){ state.movies=[]; } state.loading=false; }
 async function loadSeries(){ state.loading=true; render(); try{ const [n,st]=await Promise.all([fetchCats('get_series_categories'),getJSON(state.xt.api+'&action=get_series')]); state.series=(Array.isArray(st)?st:[]).map(s=>({kind:'series',id:s.series_id,name:s.name||'Sem nome',logo:s.cover||'',group:n[s.category_id]||'Outros',description:s.plot||'',year:s.releaseDate||'',rating:s.rating||'',genre:s.genre||''})); } catch(e){ state.series=[]; } state.loading=false; }
-async function openSeries(c){ state.loading=true; render(); try{ const d=await getJSON(`${state.xt.api}&action=get_series_info&series_id=${c.id}`); const seasons=Object.keys(d.episodes||{}).sort((a,b)=>a-b).map(n=>({n,eps:d.episodes[n].map(e=>({kind:'ep',name:(`E${e.episode_num}. ${e.title||''}`).trim(),logo:(e.info&&e.info.movie_image)||c.logo,url:`${state.xt.base}/series/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${e.id}.${e.container_extension||'mp4'}`}))})); state.detail=seasons.length?{name:c.name,logo:c.logo,seasons,description:d.info?.plot||c.description||'',genre:d.info?.genre||c.genre||'',year:d.info?.releaseDate||c.year||'',rating:d.info?.rating||c.rating||''}:null; state.detailSeason=0; } catch(e){ state.detail=null; } state.loading=false; render(); }
+async function openSeries(c){ state.loading=true; render(); try{ const d=await getJSON(`${state.xt.api}&action=get_series_info&series_id=${c.id}`); const seasons=Object.keys(d.episodes||{}).sort((a,b)=>a-b).map(n=>({n,eps:d.episodes[n].map(e=>({kind:'ep',name:(`E${e.episode_num}. ${e.title||''}`).trim(),logo:(e.info&&e.info.movie_image)||c.logo,seriesId:c.id,seriesName:c.name,season:n,episode:e.episode_num,url:`${state.xt.base}/series/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${e.id}.${e.container_extension||'mp4'}`}))})); state.detail=seasons.length?{name:c.name,logo:c.logo,seasons,description:d.info?.plot||c.description||'',genre:d.info?.genre||c.genre||'',year:d.info?.releaseDate||c.year||'',rating:d.info?.rating||c.rating||''}:null; state.detailSeason=0; } catch(e){ state.detail=null; } state.loading=false; render(); }
 
 async function openMovieInfo(c){
   let metadata={...c};
@@ -754,7 +824,7 @@ function play(list,i,vod){
   if(NATIVE){
     if(list[i]) markRecent(list[i]);
     const a=Math.max(0,i-250);
-    const j=JSON.stringify(list.slice(a,i+250).map(c=>[c.name,c.url,currentProgramText(c)]));
+    const j=JSON.stringify(list.slice(a,i+250).map(c=>[c.name,c.url,currentProgramText(c),c.kind||'',c.logo||'',c.seriesName||'',String(c.seriesId||''),String(c.season||''),String(c.episode||'')]));
     if(vod&&list[i]?.kind==='ep'&&Android.playEpisodes) Android.playEpisodes(j,i-a); else if(vod&&Android.playVod) Android.playVod(j,i-a); else Android.play(j,i-a);
     return;
   }
@@ -826,6 +896,7 @@ function savePlaybackProgress(force=false){
  else if(position>=3)all[key]={position:Math.floor(position),duration:Math.floor(duration),when:Date.now()};
  const keys=Object.keys(all);if(keys.length>150)keys.sort((a,b)=>(all[a].when||0)-(all[b].when||0)).slice(0,keys.length-150).forEach(k=>delete all[k]);
  store.set(PROGRESS_KEY,JSON.stringify(all));
+ saveHistory(c,position,duration,position>=duration-8||v.ended);
 }
 function clearPlaybackProgress(c){const key=progressId(c);if(!key)return;const all=getProgressMap();delete all[key];store.set(PROGRESS_KEY,JSON.stringify(all));}
 function clock(sec){if(!Number.isFinite(sec)||sec<0)return '--:--';sec=Math.floor(sec);const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return (h?`${h}:${String(m).padStart(2,'0')}`:String(m).padStart(2,'0'))+':'+String(s).padStart(2,'0');}
@@ -920,7 +991,7 @@ function startPlayback(){
   $('#playbackTimeline').hidden=true;
   const fail=()=>{msg.style.display='grid';msg.textContent='Não foi possível reproduzir.\nTente novamente ou selecione outro canal.';showPlayerBar();};
   v.onplaying=()=>{msg.style.display='none';showPlayerBar();updatePlaybackControls();};
-  v.onended=()=>{clearPlaybackProgress(c);updatePlaybackControls();offerNextEpisode();};
+  v.onended=()=>{saveHistory(c,v.duration,v.duration,true);clearPlaybackProgress(c);updatePlaybackControls();offerNextEpisode();};
   v.onloadedmetadata=()=>{restorePlaybackProgress(c,v);updatePlaybackTimeline();};
   v.ontimeupdate=()=>{updatePlaybackTimeline();savePlaybackProgress();};
   v.onerror=fail;
@@ -952,7 +1023,7 @@ function stopPlayback(){
   v.pause();v.removeAttribute('src');v.load();$('#playbackTimeline').hidden=true;
   if(document.fullscreenElement===$('#player'))document.exitFullscreen?.().catch(()=>{});
   $('#player').classList.remove('on');clearInterval(playerIdleWatchdog);playerIdleWatchdog=null;$('#drawer').classList.remove('on');state.drawer=false;closeTrackPanel();
-  focusFirst();
+  render();focusFirst();
 }
 function renderDrawer(){
   const list=$('#drawerList');list.textContent='';
@@ -1127,15 +1198,15 @@ document.addEventListener('keydown',e=>{
 
   if(el && /INPUT|TEXTAREA/.test(el.tagName) && !k.startsWith('Arrow')) return;
   if(!k.startsWith('Arrow')) return;
-  const nodes=[...document.querySelectorAll('.sidebar .navbtn,.topbar .btn,#search,#app .btn,#app .card,.favstar,.season-btn,.ep-item')].filter(o=>o.offsetParent!==null);
+  const nodes=[...document.querySelectorAll('.sidebar .navbtn,.topbar .btn,#search,#app button,#app .card,#app .ep-item')].filter(o=>o.offsetParent!==null);
   if(!nodes.length) return;
   if(!nodes.includes(el)){ nodes[0].focus(); e.preventDefault(); return; }
   const r=el.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2; let best=null, bestScore=1e9;
   for(const o of nodes){ if(o===el) continue; const q=o.getBoundingClientRect(), ox=q.left+q.width/2, oy=q.top+q.height/2, dx=ox-cx, dy=oy-cy; let ok=false, score=1e9; if(k==='ArrowRight'){ ok=dx>4; score=dx+Math.abs(dy)*2.2; } else if(k==='ArrowLeft'){ ok=dx<-4; score=-dx+Math.abs(dy)*2.2; } else if(k==='ArrowDown'){ ok=dy>8; score=dy+Math.abs(dx)*1.5; } else if(k==='ArrowUp'){ ok=dy<-8; score=-dy+Math.abs(dx)*1.5; } if(ok && score<bestScore){ best=o; bestScore=score; } }
-  if(best){ e.preventDefault(); best.focus({preventScroll:true}); best.scrollIntoView({block:'center',inline:'center',behavior:'smooth'}); }
+  if(best){ e.preventDefault(); best.focus({preventScroll:true}); best.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'}); }
 });
 
-function focusFirst(){ if(document.activeElement===$('#search')) return; const el=document.querySelector('#app .btn,#app .card,.sidebar .navbtn'); if(el) el.focus({preventScroll:true}); }
+function focusFirst(){ if(document.activeElement===$('#search')||desktopPointerMode)return; const el=document.querySelector('#app .btn,#app .card,.sidebar .navbtn'); if(el) el.focus({preventScroll:true}); }
 function escapeHtml(s){ return String(s??'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
 function escapeAttr(s){ return String(s??'').replace(/[^\w\-]+/g,'_'); }
 
