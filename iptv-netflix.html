@@ -284,6 +284,13 @@ textarea{min-height:96px;resize:vertical}
  #player #playbackTimeline{bottom:51px!important}
 }
 
+
+/* v1.3.16 - Campos otimizados para teclado virtual Fire TV */
+.password-field{display:flex;align-items:stretch;gap:8px}
+.password-field input{min-width:0;flex:1}
+.password-field .password-toggle{flex:0 0 auto;padding:0 14px;min-height:50px}
+#dlg input:focus-visible,#dlg textarea:focus-visible,#dlg button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+#dlg{max-height:min(90vh,900px);overflow-y:auto;overscroll-behavior:contain}
 </style>
 </head>
 <body>
@@ -384,11 +391,11 @@ textarea{min-height:96px;resize:vertical}
   </div>
   <div class="pane" id="pane-xt">
     <label for="xtServer">Servidor</label>
-    <input type="text" id="xtServer" placeholder="http://servidor:porta">
+    <input type="url" id="xtServer" placeholder="http://servidor:porta" inputmode="url" autocomplete="url" enterkeyhint="next">
     <label for="xtUser">Usuário</label>
-    <input type="text" id="xtUser" autocomplete="off">
+    <input type="text" id="xtUser" autocomplete="username" enterkeyhint="next" autocapitalize="none" spellcheck="false">
     <label for="xtPass">Senha</label>
-    <input type="password" id="xtPass" autocomplete="off">
+    <div class="password-field"><input type="password" id="xtPass" autocomplete="current-password" enterkeyhint="done" autocapitalize="none" spellcheck="false"><button type="button" id="toggleXtPass" class="btn password-toggle" aria-label="Mostrar senha" aria-pressed="false">Mostrar</button></div>
   </div>
   <p class="hint">Use apenas listas ou serviços que você assina ou tem direito de assistir.</p>
   <div id="err" role="alert"></div>
@@ -1025,6 +1032,46 @@ $('#playbackSeek').addEventListener('pointerdown',()=>{$('#playbackSeek').datase
 window.addEventListener('pointerup',()=>{if($('#playbackSeek').dataset.dragging){delete $('#playbackSeek').dataset.dragging;showPlayerBar();}});
 document.addEventListener('fullscreenchange',syncFullscreenButton);
 document.addEventListener('webkitfullscreenchange',syncFullscreenButton);
+
+
+/* Teclado virtual: foco no campo de texto precisa acionar IME no Android/Fire OS. */
+const importFields=['m3uUrl','m3uText','epgUrl','xtServer','xtUser','xtPass'];
+importFields.forEach(id=>{
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.addEventListener('focus',()=>{
+    if(window.Android && typeof window.Android.showKeyboard==='function'){
+      // Espera o WebView atualizar seu editor de texto antes de solicitar o IME.
+      setTimeout(()=>{if(document.activeElement===el)window.Android.showKeyboard();},120);
+    }
+    setTimeout(()=>{if(document.activeElement===el)el.scrollIntoView({block:'nearest'});},180);
+  });
+});
+$('#toggleXtPass').onclick=()=>{
+  const el=$('#xtPass'),shown=el.type==='password';
+  el.type=shown?'text':'password';
+  $('#toggleXtPass').textContent=shown?'Ocultar':'Mostrar';
+  $('#toggleXtPass').setAttribute('aria-pressed',String(shown));
+  $('#toggleXtPass').setAttribute('aria-label',shown?'Ocultar senha':'Mostrar senha');
+};
+// Chamado pelo botão Voltar nativo: fecha painel/modal antes de sair do aplicativo.
+window.__back=()=>{
+  if($('#dlg').open){
+    const a=document.activeElement;
+    if(a && /^(INPUT|TEXTAREA)$/.test(a.tagName)){
+      a.blur();
+      if(window.Android && typeof window.Android.hideKeyboard==='function')window.Android.hideKeyboard();
+      return true;
+    }
+    $('#dlg').close(); return true;
+  }
+  if($('#guideDialog').open){$('#guideDialog').close();return true;}
+  if($('#infoDialog').open){$('#infoDialog').close();return true;}
+  if($('#player').classList.contains('on')){stopPlayback();return true;}
+  if(state.detail){state.detail=null;render();return true;}
+  if(state.view){state.view=null;render();return true;}
+  return false;
+};
 
 function openImport(){ $('#err').textContent=''; $('#dlg').showModal(); }
 $('#cancelImport').onclick=()=>$('#dlg').close();
