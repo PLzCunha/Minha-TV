@@ -68,7 +68,7 @@ jobs:
             <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
             <uses-feature android:name="android.software.leanback" android:required="false"/>
             <application android:label="Nico TV" android:icon="@drawable/nico_icon" android:banner="@drawable/nico_banner" android:usesCleartextTraffic="true" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
-              <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden">
+              <activity android:name=".MainActivity" android:exported="true" android:windowSoftInputMode="adjustResize" android:configChanges="orientation|screenSize|keyboardHidden">
                 <intent-filter>
                   <action android:name="android.intent.action.MAIN"/>
                   <category android:name="android.intent.category.LAUNCHER"/>
@@ -88,6 +88,10 @@ jobs:
           import android.webkit.WebSettings;
           import android.webkit.WebView;
           import android.webkit.WebViewClient;
+          import android.view.inputmethod.InputMethodManager;
+          import android.content.Context;
+          import android.view.View;
+          import android.view.WindowManager;
           import org.json.JSONObject;
           import java.io.BufferedReader;
           import java.io.IOException;
@@ -99,7 +103,10 @@ jobs:
             @Override protected void onCreate(Bundle b) {
               super.onCreate(b);
               w = new WebView(this);
+              w.setFocusable(true);
+              w.setFocusableInTouchMode(true);
               setContentView(w);
+              getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
               WebSettings s = w.getSettings();
               s.setJavaScriptEnabled(true);
               s.setDomStorageEnabled(true);
@@ -111,6 +118,22 @@ jobs:
               w.loadUrl("file:///android_asset/index.html");
             }
             class Bridge {
+              @JavascriptInterface public void showKeyboard() {
+                runOnUiThread(() -> {
+                  w.requestFocus();
+                  w.postDelayed(() -> {
+                    InputMethodManager imm=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if(imm!=null)imm.showSoftInput(w, InputMethodManager.SHOW_IMPLICIT);
+                  }, 80);
+                });
+              }
+              @JavascriptInterface public void hideKeyboard() {
+                runOnUiThread(() -> {
+                  InputMethodManager imm=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                  if(imm!=null)imm.hideSoftInputFromWindow(w.getWindowToken(),0);
+                });
+              }
+
               @JavascriptInterface public void get(final String u, final String cb) {
                 new Thread(() -> {
                   String res; boolean ok = true;
