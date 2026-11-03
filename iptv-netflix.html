@@ -202,6 +202,25 @@ textarea{min-height:96px;resize:vertical}
   .main{padding:16px}.topbar{align-items:flex-start}.brandpanel{width:100%}.brandvisual{min-width:0;width:100%}.brandbanner{width:100%}.searchwrap{margin-left:0;width:100%}.search{max-width:none;min-width:0}.appname{font-size:28px}.control-grid{grid-template-columns:1fr}.card{width:200px}.card.poster{width:160px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* v1.3.9 — Guia premium e metadados */
+.guide-modal{border:1px solid #374965;background:#0b1423;color:#edf3fa;border-radius:22px;width:min(1120px,94vw);max-height:88vh;padding:0;box-shadow:0 24px 90px #000b}
+.guide-modal::backdrop{background:#02050bdc}
+.guide-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;border-bottom:1px solid #30405b;position:sticky;top:0;background:#101b2c;z-index:1}
+.guide-header h2{margin:0;font-size:23px;color:#e9c879}
+.guide-content{overflow:auto;max-height:70vh;padding:15px 22px 25px}
+.guide-channel{border:1px solid #263a52;background:#111e30;border-radius:15px;margin:12px 0;overflow:hidden}
+.guide-name{font-weight:750;padding:14px 17px;border-bottom:1px solid #2b3d54;display:flex;gap:12px;align-items:center}
+.guide-programs{display:flex;overflow-x:auto;gap:10px;padding:12px}
+.guide-program{min-width:220px;max-width:280px;flex:1;text-align:left;color:#e7effa;background:#16263b;border:1px solid #344764;border-radius:12px;padding:13px;cursor:pointer}
+.guide-program.current{border-color:#dbb76a;background:#293045}
+.guide-program strong,.guide-program small{display:block;margin-top:7px}
+.guide-program small{font-size:12px;color:#acbfd1;line-height:1.45;max-height:5em;overflow:hidden}
+.guide-progress{height:5px;border-radius:5px;background:#394c63;overflow:hidden;margin-top:12px}.guide-progress>span{display:block;background:#e8c674;height:100%}
+.info-dialog{border:1px solid #354a65;background:linear-gradient(135deg,#16243a,#090f1b);color:#edf2fa;border-radius:22px;max-width:min(720px,92vw);padding:26px;box-shadow:0 22px 90px #000c}
+.info-dialog::backdrop{background:#03060bde}.info-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.info-dialog h2{font-size:26px;margin:9px 0}.info-dialog p{color:#d0dbea;line-height:1.6}.info-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.info-chip{padding:6px 10px;border:1px solid #38506a;border-radius:30px;font-size:12px}
+.guide-empty{padding:26px;color:#b8c9db;text-align:center}
+
 </style>
 </head>
 <body>
@@ -243,6 +262,9 @@ textarea{min-height:96px;resize:vertical}
   </main>
 </div>
 
+<dialog id="guideDialog" class="guide-modal" aria-label="Guia de programação"><div class="guide-header"><h2>▦ Guia de programação</h2><button class="btn" id="guideClose">Fechar</button></div><div id="guideContent" class="guide-content"></div></dialog>
+<dialog id="infoDialog" class="info-dialog" aria-label="Informações do conteúdo"><div id="infoContent"></div><div class="info-actions"><button class="btn main" id="infoWatch">▶ Assistir</button><button class="btn" id="infoClose">Fechar</button></div></dialog>
+
 <div id="player">
   <video id="video" autoplay playsinline controls></video>
   <div id="playerBar">
@@ -255,6 +277,7 @@ textarea{min-height:96px;resize:vertical}
       <button class="btn" id="prevBtn">↑ Anterior</button>
       <button class="btn" id="nextBtn">↓ Próximo</button>
       <button class="btn" id="drawerBtn">☷ Canais</button>
+      <button class="btn" id="guidePlayerBtn">▦ Guia</button>
       <button class="btn" id="audioBtn">♫ Áudio</button>
       <button class="btn" id="subtitleBtn">▤ Legendas</button>
       <button class="btn" id="fullscreenBtn" aria-pressed="false">⛶ Tela cheia</button>
@@ -316,7 +339,7 @@ const state={
   favorites:loadArray('nico_favorites'), recent:loadArray('nico_recent'),
   favoriteOnly:false, recentOnly:false, query:'',
   loading:false, queue:[], qi:0, hls:null, drawer:false, pageSize:60, vod:false, webTracks:false,
-  epg:new Map(), epgSource:null, tab:'m3u'
+  epg:new Map(), epgSource:null, epgEntries:new Map(), tab:'m3u'
 };
 function loadArray(k){ try{ const a=JSON.parse(store.get(k)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
 function saveState(){ store.set('nico_favorites',JSON.stringify(state.favorites)); store.set('nico_recent',JSON.stringify(state.recent)); }
@@ -378,7 +401,7 @@ function parseEpg(xml){
     if(stop < new Date(now.getTime()-2*60*60*1000) || start > new Date(now.getTime()+18*60*60*1000)) continue;
     const ch=(p.getAttribute('channel')||'').trim(); if(!ch) continue;
     const title=(p.querySelector('title')?.textContent||'Sem título').trim();
-    const entry={start,stop,title};
+    const entry={start,stop,title,desc:(p.querySelector('desc')?.textContent||'').trim(),category:(p.querySelector('category')?.textContent||'').trim()};
     if(!buckets.has(ch)) buckets.set(ch,[]);
     buckets.get(ch).push(entry);
   }
@@ -389,7 +412,7 @@ function parseEpg(xml){
     const next=list.find(x=>x.start>now) || null;
     map.set(ch,{current,next});
   }
-  state.epg=map;
+  state.epg=map; state.epgEntries=buckets;
 }
 async function loadEpg(url){
   if(!url) return;
@@ -398,7 +421,39 @@ async function loadEpg(url){
 }
 function epgFor(c){
   const id=(c.tvgId||c.name||'').trim();
+  const list=state.epgEntries.get(id)||state.epgEntries.get(c.name);
+  if(list){ const now=Date.now();return {current:list.find(x=>+x.start<=now&&+x.stop>now)||null,next:list.find(x=>+x.start>now)||null}; }
   return state.epg.get(id) || state.epg.get(c.name) || null;
+}
+function getGuideList(c){return state.epgEntries.get((c.tvgId||c.name||'').trim())||state.epgEntries.get(c.name)||[];}
+function programPercent(p){return Math.max(0,Math.min(100,Math.round((Date.now()-+p.start)/(+p.stop-+p.start)*100)||0));}
+function guideProgramButton(p){
+  const cur=Date.now()>=+p.start && Date.now()<+p.stop;
+  return `<button class="guide-program${cur?' current':''}" type="button"><span>${timeFmt(p.start)}–${timeFmt(p.stop)}</span><strong>${escapeHtml(p.title)}</strong>${p.category?`<small>${escapeHtml(p.category)}</small>`:''}<small>${escapeHtml(p.desc||'Sinopse não fornecida no guia.')}</small>${cur?`<div class="guide-progress"><span style="width:${programPercent(p)}%"></span></div>`:''}</button>`;
+}
+function openGuide(){
+  const root=$('#guideContent');root.innerHTML='';
+  const channels=state.channels.filter(c=>getGuideList(c).length);
+  if(!channels.length){root.innerHTML='<div class="guide-empty">Nenhuma programação disponível. Importe um XMLTV na tela de importação para exibir horários e sinopses fornecidos pela fonte.</div>';}
+  const now=Date.now();
+  for(const c of channels.slice(0,150)){
+    const programmes=getGuideList(c).filter(p=>+p.stop>now-3600000).slice(0,14);
+    if(!programmes.length)continue;
+    const el=document.createElement('section');el.className='guide-channel';
+    el.innerHTML=`<div class="guide-name">${escapeHtml(c.name)}</div><div class="guide-programs">${programmes.map(guideProgramButton).join('')}</div>`;
+    el.querySelectorAll('.guide-program').forEach((b,i)=>{b.onclick=()=>showInfo({name:programmes[i].title,description:programmes[i].desc,category:programmes[i].category,year:`${timeFmt(programmes[i].start)}–${timeFmt(programmes[i].stop)}`},()=>{ $('#guideDialog').close();play(state.channels,state.channels.indexOf(c),false);});});
+    root.append(el);
+  }
+  $('#guideDialog').showModal();
+}
+let infoPlayAction=null;
+function showInfo(c,playAction){
+  infoPlayAction=playAction;
+  const description=c.description||c.plot||c.info?.plot||'';
+  const tags=[c.group||c.category,c.year||c.releaseDate,c.genre,c.rating?`★ ${c.rating}`:'',c.duration].filter(Boolean);
+  $('#infoContent').innerHTML=`<h2>${escapeHtml(c.name||'Informações')}</h2><div class="info-tags">${tags.map(t=>`<span class="info-chip">${escapeHtml(String(t))}</span>`).join('')}</div><p>${escapeHtml(String(description||'Sinopse não disponível na fonte IPTV.'))}</p>`;
+  $('#infoWatch').hidden=!playAction;
+  $('#infoDialog').showModal();
 }
 function currentProgramText(c){
   const epg=epgFor(c); if(!epg) return '';
@@ -420,7 +475,7 @@ async function loadXtream(server,user,pass){
 }
 async function importFrom(src){
   state.loading=true; render();
-  state.xt=null; state.epg=new Map(); state.epgSource=null;
+  state.xt=null; state.epg=new Map(); state.epgEntries=new Map(); state.epgSource=null;
   try{
     let list=[]; let epgUrl='';
     if(src.type==='xt'){
@@ -484,6 +539,7 @@ function heroFor(item,count,label){
       <div class="hero-actions">
         <button class="btn main" id="heroPlayBtn">${item.kind==='series'?'Abrir série':'Assistir agora'}</button>
         <button class="btn" id="heroFavBtn">${isFav(item)?'★ Favoritado':'☆ Favoritar'}</button>
+        ${state.mode==='live'?'<button class="btn" id="heroGuideBtn">▦ Guia de programação</button>':''}
       </div>
     </div>
     <div class="hero-media">
@@ -528,7 +584,7 @@ function render(){
   }
   const label=state.mode==='movies'?'filmes':state.mode==='series'?'séries':'canais';
   app.insertAdjacentHTML('beforeend', heroFor(all[0], all.length, label));
-  $('#heroPlayBtn').onclick=()=>openItem(all[0],all); $('#heroFavBtn').onclick=()=>toggleFav(all[0]);
+  $('#heroPlayBtn').onclick=()=>openItem(all[0],all); $('#heroFavBtn').onclick=()=>toggleFav(all[0]); if($('#heroGuideBtn'))$('#heroGuideBtn').onclick=openGuide;
 
   const recentItems=state.recent.map(k=>all.find(x=>keyOf(x)===k)).filter(Boolean);
   const favoriteItems=all.filter(isFav);
@@ -570,7 +626,7 @@ function renderDetail(app){
   wrap.innerHTML=`<aside class="detail-side">
       <div class="poster-lg">${d.logo?`<img alt="" src="${d.logo}">`:''}</div>
       <div class="detail-title">${escapeHtml(d.name)}</div>
-      <div class="detail-sub">${d.seasons.length} temporada(s) · ${d.seasons.reduce((a,s)=>a+s.eps.length,0)} episódios</div>
+      <div class="detail-sub">${d.seasons.length} temporada(s) · ${d.seasons.reduce((a,s)=>a+s.eps.length,0)} episódios</div><p style="color:#c8d6e8;line-height:1.5">${escapeHtml(d.description||'Sinopse não fornecida pelo serviço.')}</p><div class="info-tags">${[d.genre,d.year,d.rating?'★ '+d.rating:''].filter(Boolean).map(x=>`<span class="info-chip">${escapeHtml(x)}</span>`).join('')}</div>
       <div class="badges"><span class="chip accent">Continuar TV</span><span class="chip">Experiência premium</span><span class="chip">Foco para controle remoto</span></div>
       <button class="btn main" id="playFirstEpisode">Assistir primeiro episódio</button>
     </aside>
@@ -584,14 +640,21 @@ function renderDetail(app){
   const list=$('#episodeList'); season.eps.forEach((ep,idx)=>{ const item=document.createElement('div'); item.className='ep-item'; item.tabIndex=0; item.innerHTML=`<div class="ep-thumb"></div><div><div class="ep-name">${escapeHtml(ep.name)}</div><div class="ep-meta">Temporada ${season.n} · Episódio ${idx+1}</div></div><button class="btn main">Assistir</button>`; item.onclick=()=>openItem(ep,[].concat(...d.seasons.map(s=>s.eps))); item.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); item.click(); } }; item.querySelector('button').onclick=e=>{ e.stopPropagation(); item.click(); }; list.append(item); });
   focusFirst();
 }
-function openItem(c,list){ markRecent(c); if(c.kind==='series'){ openSeries(c); } else if(c.kind==='movie'){ play([c],0,true); } else if(c.kind==='ep'){ play(list,list.indexOf(c),true); } else { play(list,list.indexOf(c),false); } }
+function openItem(c,list){ markRecent(c); if(c.kind==='series'){ openSeries(c); } else if(c.kind==='movie'){ openMovieInfo(c); } else if(c.kind==='ep'){ play(list,list.indexOf(c),true); } else { play(list,list.indexOf(c),false); } }
 
 /* VOD / series */
 async function fetchCats(action){ const cs=await getJSON(state.xt.api+'&action='+action), out={}; (Array.isArray(cs)?cs:[]).forEach(c=>out[c.category_id]=c.category_name); return out; }
-async function loadVod(){ state.loading=true; render(); try{ const [n,st]=await Promise.all([fetchCats('get_vod_categories'),getJSON(state.xt.api+'&action=get_vod_streams')]); state.movies=(Array.isArray(st)?st:[]).map(s=>({kind:'movie',name:s.name||'Sem nome',logo:s.stream_icon||'',group:n[s.category_id]||'Outros',url:`${state.xt.base}/movie/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${s.stream_id}.${s.container_extension||'mp4'}`})); } catch(e){ state.movies=[]; } state.loading=false; }
-async function loadSeries(){ state.loading=true; render(); try{ const [n,st]=await Promise.all([fetchCats('get_series_categories'),getJSON(state.xt.api+'&action=get_series')]); state.series=(Array.isArray(st)?st:[]).map(s=>({kind:'series',id:s.series_id,name:s.name||'Sem nome',logo:s.cover||'',group:n[s.category_id]||'Outros'})); } catch(e){ state.series=[]; } state.loading=false; }
-async function openSeries(c){ state.loading=true; render(); try{ const d=await getJSON(`${state.xt.api}&action=get_series_info&series_id=${c.id}`); const seasons=Object.keys(d.episodes||{}).sort((a,b)=>a-b).map(n=>({n,eps:d.episodes[n].map(e=>({kind:'ep',name:(`E${e.episode_num}. ${e.title||''}`).trim(),logo:(e.info&&e.info.movie_image)||c.logo,url:`${state.xt.base}/series/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${e.id}.${e.container_extension||'mp4'}`}))})); state.detail=seasons.length?{name:c.name,logo:c.logo,seasons}:null; state.detailSeason=0; } catch(e){ state.detail=null; } state.loading=false; render(); }
+async function loadVod(){ state.loading=true; render(); try{ const [n,st]=await Promise.all([fetchCats('get_vod_categories'),getJSON(state.xt.api+'&action=get_vod_streams')]); state.movies=(Array.isArray(st)?st:[]).map(s=>({kind:'movie',name:s.name||'Sem nome',logo:s.stream_icon||'',group:n[s.category_id]||'Outros',id:s.stream_id,description:s.plot||'',year:s.year||'',rating:s.rating||'',genre:s.genre||'',url:`${state.xt.base}/movie/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${s.stream_id}.${s.container_extension||'mp4'}`})); } catch(e){ state.movies=[]; } state.loading=false; }
+async function loadSeries(){ state.loading=true; render(); try{ const [n,st]=await Promise.all([fetchCats('get_series_categories'),getJSON(state.xt.api+'&action=get_series')]); state.series=(Array.isArray(st)?st:[]).map(s=>({kind:'series',id:s.series_id,name:s.name||'Sem nome',logo:s.cover||'',group:n[s.category_id]||'Outros',description:s.plot||'',year:s.releaseDate||'',rating:s.rating||'',genre:s.genre||''})); } catch(e){ state.series=[]; } state.loading=false; }
+async function openSeries(c){ state.loading=true; render(); try{ const d=await getJSON(`${state.xt.api}&action=get_series_info&series_id=${c.id}`); const seasons=Object.keys(d.episodes||{}).sort((a,b)=>a-b).map(n=>({n,eps:d.episodes[n].map(e=>({kind:'ep',name:(`E${e.episode_num}. ${e.title||''}`).trim(),logo:(e.info&&e.info.movie_image)||c.logo,url:`${state.xt.base}/series/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${e.id}.${e.container_extension||'mp4'}`}))})); state.detail=seasons.length?{name:c.name,logo:c.logo,seasons,description:d.info?.plot||c.description||'',genre:d.info?.genre||c.genre||'',year:d.info?.releaseDate||c.year||'',rating:d.info?.rating||c.rating||''}:null; state.detailSeason=0; } catch(e){ state.detail=null; } state.loading=false; render(); }
 
+async function openMovieInfo(c){
+  let metadata={...c};
+  if(state.xt&&c.id){
+    try{const d=await getJSON(`${state.xt.api}&action=get_vod_info&vod_id=${encodeURIComponent(c.id)}`);const info=d.info||{};metadata={...metadata,description:info.plot||info.description||metadata.description,genre:info.genre||metadata.genre,year:info.releasedate||info.releaseDate||metadata.year,rating:info.rating||metadata.rating,duration:info.duration||''};}catch(e){/* Exibe metadados básicos mesmo sem endpoint disponível */}
+  }
+  showInfo(metadata,()=>play([c],0,true));
+}
 /* Player premium — navegador; o Android usa ExoPlayer nativo. */
 function play(list,i,vod){
   if(NATIVE){
@@ -745,6 +808,10 @@ $('#drawerBtn').onclick=()=>toggleDrawer();$('#closeDrawerBtn').onclick=()=>togg
 $('#retryBtn').onclick=()=>startPlayback();
 $('#playerFavBtn').onclick=()=>{ const c=state.queue[state.qi];if(c)toggleFav(c); };
 $('#fullscreenBtn').onclick=()=>setFullscreen();
+$('#guidePlayerBtn').onclick=openGuide;
+$('#guideClose').onclick=()=>$('#guideDialog').close();
+$('#infoClose').onclick=()=>$('#infoDialog').close();
+$('#infoWatch').onclick=()=>{const fn=infoPlayAction;$('#infoDialog').close(); if(fn)fn();};
 $('#audioBtn').onclick=()=>showTracks('audio');
 $('#subtitleBtn').onclick=()=>showTracks('subtitle');
 $('#closeTracksBtn').onclick=closeTrackPanel;
@@ -799,7 +866,7 @@ document.addEventListener('keydown',e=>{
     else if(k==='s'||k==='S'){e.preventDefault();showTracks('subtitle');}
     return;
   }
-  if($('#dlg').open) return;
+  if($('#dlg').open||$('#guideDialog').open||$('#infoDialog').open) return;
   const el=document.activeElement;
   if(desktopPointerMode && (k==='ArrowDown'||k==='ArrowUp') && !(el && /INPUT|TEXTAREA/.test(el.tagName))){
     e.preventDefault(); window.scrollBy({top:(k==='ArrowDown'?1:-1)*Math.max(160,window.innerHeight*.4),behavior:'smooth'}); return;
