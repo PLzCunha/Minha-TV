@@ -150,9 +150,27 @@ a{text-decoration:none;color:inherit}
 #playerSub{font-size:14px;color:#d8e5ef}
 .player-actions{display:flex;gap:10px;flex-wrap:wrap}
 #playerMsg{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;color:#fff;text-align:center;padding:20px;font-size:24px;text-shadow:0 2px 10px rgba(0,0,0,.8);white-space:pre-line}
+
+/* Nico TV 1.3.12 — tempo, busca e retomada */
+#playbackTimeline{position:absolute;bottom:110px;left:50%;transform:translateX(-50%);width:min(94vw,820px);z-index:13;border:1px solid rgba(228,193,109,.42);border-radius:16px;background:rgba(9,16,28,.94);padding:12px 16px;box-shadow:0 12px 34px #0009;display:grid;gap:7px}
+#playbackTimeline[hidden]{display:none!important}
+#playbackTimeline input[type=range]{width:100%;height:18px;accent-color:#e4c16d;cursor:pointer}
+#playbackTimeline input[type=range]:disabled{cursor:default;opacity:.5}
+.timeline-info{display:flex;justify-content:space-between;align-items:center;color:#e8eaf0;font-size:14px;font-variant-numeric:tabular-nums}
+.timeline-info strong{color:#e4c16d;font-size:15px}
+@media(max-width:650px){#playbackTimeline{bottom:136px;width:96vw;padding:9px}.timeline-info{font-size:12px}}
+
 #webcontrols{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 #webcontrols .btn{background:#122036cc;backdrop-filter:blur(8px)}
-#webcontrols{transition:opacity .2s}
+#webcontrols{transition:opacity .2s;z-index:12;bottom:22px;width:min(96vw,760px);padding:12px;border:1px solid #665332;background:rgba(9,16,28,.94);border-radius:22px;box-shadow:0 16px 50px #000b;align-items:center}
+#webcontrols .btn{min-width:48px;cursor:pointer}
+#webcontrols .btn:disabled{opacity:.4;cursor:not-allowed}
+#webcontrols .btn.main{background:#e4c16d;color:#1a1408}
+#nextEpisodeCard{position:absolute;right:22px;bottom:112px;z-index:15;background:#0e1826ee;color:#fff;border:1px solid #d4ae60;border-radius:18px;padding:16px;max-width:min(430px,85vw);box-shadow:0 16px 44px #000b}
+#nextEpisodeCard[hidden]{display:none}
+#nextEpisodeCard .title{font-weight:800;font-size:18px;margin-bottom:6px}
+#nextEpisodeCard .actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+#player video{object-fit:contain}
 #player.controls-hidden #webcontrols{opacity:0;pointer-events:none}
 #player:fullscreen{width:100vw;height:100vh;background:#000}
 #player:-webkit-full-screen{width:100vw;height:100vh;background:#000}
@@ -293,7 +311,12 @@ textarea{min-height:96px;resize:vertical}
     <div class="drawer-head"><div class="drawer-title" id="trackPanelTitle">Faixas</div><button class="btn" id="closeTracksBtn">Fechar</button></div>
     <div id="trackOptions" class="track-options"></div>
   </div>
-  <div id="webcontrols"><button class="btn" id="retryBtn">↻ Tentar novamente</button></div>
+  <div id="nextEpisodeCard" hidden><div class="title">Próximo episódio</div><div id="nextEpisodeName"></div><div id="nextEpisodeCountdown" class="small">Reprodução automática em 8s</div><div class="actions"><button class="btn main" id="watchNextEpisode">▶ Assistir agora</button><button class="btn" id="cancelNextEpisode">Cancelar</button></div></div>
+  <div id="playbackTimeline" aria-label="Progresso do filme ou episódio" hidden>
+    <input type="range" id="playbackSeek" min="0" max="1000" value="0" step="1" aria-label="Avançar ou retroceder para um momento do vídeo">
+    <div class="timeline-info"><strong id="playbackElapsed">00:00</strong><span id="playbackRemaining">Restante: --:--</span><span id="playbackDuration">00:00</span></div>
+  </div>
+  <div id="webcontrols" role="toolbar" aria-label="Controles do player"><button class="btn" id="exitPlayerBtn" title="Voltar">← Voltar</button><button class="btn" id="rewind10Btn" title="Retroceder 10 segundos">↶ 10s</button><button class="btn main" id="playPauseBtn" title="Reproduzir ou pausar">Ⅱ Pausar</button><button class="btn" id="forward10Btn" title="Avançar 10 segundos">10s ↷</button><button class="btn" id="nextEpisodeBtn" hidden>Próximo episódio ▶</button><button class="btn" id="fullscreenBottomBtn" title="Tela cheia">⛶</button><button class="btn" id="retryBtn" title="Tentar novamente">↻</button></div>
 </div>
 
 <div id="toast" role="status" aria-live="polite"></div>
@@ -338,7 +361,7 @@ const state={
   mode:'live', view:null, detail:null, detailSeason:0,
   favorites:loadArray('nico_favorites'), recent:loadArray('nico_recent'),
   favoriteOnly:false, recentOnly:false, query:'',
-  loading:false, queue:[], qi:0, hls:null, drawer:false, pageSize:60, vod:false, webTracks:false,
+  loading:false, queue:[], qi:0, hls:null, drawer:false, pageSize:60, vod:false, episodes:false, webTracks:false,
   epg:new Map(), epgSource:null, epgEntries:new Map(), tab:'m3u'
 };
 function loadArray(k){ try{ const a=JSON.parse(store.get(k)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
@@ -680,7 +703,7 @@ function play(list,i,vod){
     if(list[i]) markRecent(list[i]);
     const a=Math.max(0,i-250);
     const j=JSON.stringify(list.slice(a,i+250).map(c=>[c.name,c.url,currentProgramText(c)]));
-    if(vod&&Android.playVod) Android.playVod(j,i-a); else Android.play(j,i-a);
+    if(vod&&list[i]?.kind==='ep'&&Android.playEpisodes) Android.playEpisodes(j,i-a); else if(vod&&Android.playVod) Android.playVod(j,i-a); else Android.play(j,i-a);
     return;
   }
   state.queue=list; state.qi=Math.max(0,i); state.vod=!!vod; state.drawer=false;
@@ -736,33 +759,105 @@ function showTracks(kind){
   }
   showPlayerBar();
 }
+// Posição salva somente no dispositivo; nunca envia histórico ao servidor.
+const PROGRESS_KEY='nico_playback_progress_v1';
+function getProgressMap(){try {const o=JSON.parse(store.get(PROGRESS_KEY)||'{}');return o&&typeof o==='object'?o:{};}catch(e){return {};}}
+function progressId(c){return c&&c.url?'media:'+c.url:null;}
+function savePlaybackProgress(force=false){
+ const v=$('#video'),c=state.queue[state.qi];if(!state.vod||!v||!c)return;
+ const duration=v.duration,position=v.currentTime;
+ if(!Number.isFinite(duration)||duration<=0||!Number.isFinite(position))return;
+ if(!force&&Date.now()-(savePlaybackProgress.last||0)<5000)return;
+ savePlaybackProgress.last=Date.now();
+ const key=progressId(c),all=getProgressMap();if(!key)return;
+ if(position>=duration-8 || v.ended)delete all[key];
+ else if(position>=3)all[key]={position:Math.floor(position),duration:Math.floor(duration),when:Date.now()};
+ const keys=Object.keys(all);if(keys.length>150)keys.sort((a,b)=>(all[a].when||0)-(all[b].when||0)).slice(0,keys.length-150).forEach(k=>delete all[k]);
+ store.set(PROGRESS_KEY,JSON.stringify(all));
+}
+function clearPlaybackProgress(c){const key=progressId(c);if(!key)return;const all=getProgressMap();delete all[key];store.set(PROGRESS_KEY,JSON.stringify(all));}
+function clock(sec){if(!Number.isFinite(sec)||sec<0)return '--:--';sec=Math.floor(sec);const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return (h?`${h}:${String(m).padStart(2,'0')}`:String(m).padStart(2,'0'))+':'+String(s).padStart(2,'0');}
+function updatePlaybackTimeline(){
+ const v=$('#video'),box=$('#playbackTimeline');
+ const eligible=state.vod&&Number.isFinite(v.duration)&&v.duration>0;
+ box.hidden=!eligible;if(!eligible)return;
+ const canSeek=v.seekable&&v.seekable.length>0;
+ const input=$('#playbackSeek');input.disabled=!canSeek;
+ if(!input.matches(':active')&&!input.dataset.dragging)input.value=String(Math.round((v.currentTime/v.duration)*1000)||0);
+ $('#playbackElapsed').textContent=clock(v.currentTime);
+ $('#playbackRemaining').textContent='Restante: '+clock(Math.max(0,v.duration-v.currentTime));
+ $('#playbackDuration').textContent=clock(v.duration);
+}
+function restorePlaybackProgress(c,v){
+ const data=getProgressMap()[progressId(c)];
+ if(!data||!state.vod||!Number.isFinite(v.duration)||v.duration<=0||!v.seekable?.length)return;
+ const position=Number(data.position);
+ if(position>5&&position<v.duration-12){v.currentTime=Math.min(position,v.duration-10);toast('Continuando de '+clock(position));}
+}
+
+let nextEpisodeTimer=null;
+function clearNextEpisode(){
+  if(nextEpisodeTimer){clearInterval(nextEpisodeTimer);nextEpisodeTimer=null;}
+  $('#nextEpisodeCard').hidden=true;
+}
+function canNextEpisode(){return state.episodes&&state.qi<state.queue.length-1;}
+function goNextEpisode(){
+  if(!canNextEpisode())return;
+  savePlaybackProgress(true);clearPlaybackProgress(state.queue[state.qi]);
+  clearNextEpisode();state.qi++;startPlayback();
+}
+function offerNextEpisode(){
+  if(!canNextEpisode())return;
+  clearNextEpisode();
+  $('#nextEpisodeName').textContent=state.queue[state.qi+1].name;
+  $('#nextEpisodeCard').hidden=false;
+  let remaining=8;
+  $('#nextEpisodeCountdown').textContent=`Reprodução automática em ${remaining}s`;
+  showPlayerBar();
+  nextEpisodeTimer=setInterval(()=>{
+    if($('#player').classList.contains('on')===false){clearNextEpisode();return;}
+    remaining--;
+    $('#nextEpisodeCountdown').textContent=`Reprodução automática em ${remaining}s`;
+    if(remaining<=0)goNextEpisode();
+  },1000);
+}
+function updatePlaybackControls(){
+ const v=$('#video'); const seek=state.vod&&Number.isFinite(v.duration)&&v.duration>0&&v.seekable.length>0;
+ $('#rewind10Btn').disabled=!seek;$('#forward10Btn').disabled=!seek;
+ $('#playPauseBtn').textContent=v.paused?'▶ Play':'Ⅱ Pausar';
+ $('#nextEpisodeBtn').hidden=!canNextEpisode();updatePlaybackTimeline();
+}
 function showPlayerBar(){
   $('#playerBar').classList.remove('hide');$('#player').classList.remove('controls-hidden');
   clearTimeout(showPlayerBar.t);
   showPlayerBar.t=setTimeout(()=>{
     if(state.drawer||!$('#trackPanel').hidden||document.activeElement?.closest('#playerBar'))return;
-    $('#playerBar').classList.add('hide');$('#player').classList.add('controls-hidden');
+    $('#playerBar').classList.add('hide');
   },4500);
 }
 function startPlayback(){
   const c=state.queue[state.qi];if(!c)return;
   markRecent(c);updatePlayerFav();
   const player=$('#player'),v=$('#video'), msg=$('#playerMsg');
-  player.classList.add('on');state.drawer=false;$('#drawer').classList.remove('on');closeTrackPanel();
+  clearNextEpisode();player.classList.add('on');state.drawer=false;$('#drawer').classList.remove('on');closeTrackPanel();
   $('#playerTitle').textContent=c.name;
   $('#playerSub').textContent=playerSubtitle(c,state.vod);
   msg.style.display='grid';msg.textContent='Carregando transmissão…';
   v.pause();v.removeAttribute('src');v.load();
   if(state.hls){state.hls.destroy();state.hls=null;}
+  $('#playbackTimeline').hidden=true;
   const fail=()=>{msg.style.display='grid';msg.textContent='Não foi possível reproduzir.\nTente novamente ou selecione outro canal.';showPlayerBar();};
-  v.onplaying=()=>{msg.style.display='none';showPlayerBar();};
+  v.onplaying=()=>{msg.style.display='none';showPlayerBar();updatePlaybackControls();};
+  v.onended=()=>{clearPlaybackProgress(c);updatePlaybackControls();offerNextEpisode();};
+  v.onloadedmetadata=()=>{restorePlaybackProgress(c,v);updatePlaybackTimeline();};
+  v.ontimeupdate=()=>{updatePlaybackTimeline();savePlaybackProgress();};
   v.onerror=fail;
   if(window.Hls&&Hls.isSupported()&&/\.m3u8(\?|$)/i.test(c.url)){
     const h=new Hls();state.hls=h;h.loadSource(c.url);h.attachMedia(v);
     h.on(Hls.Events.ERROR,(e,d)=>{if(d.fatal)fail();});
   }else v.src=c.url;
   v.play().catch(()=>{msg.style.display='grid';msg.textContent='Pressione reproduzir ou tente novamente.';});
-  showPlayerBar();renderDrawer();
+  showPlayerBar();renderDrawer();updatePlaybackControls();
 }
 async function setFullscreen(force){
   const el=$('#player'),active=!!document.fullscreenElement||!!document.webkitFullscreenElement;
@@ -781,8 +876,8 @@ function syncFullscreenButton(){
   $('#fullscreenBtn').setAttribute('aria-pressed',String(active));
 }
 function stopPlayback(){
-  const v=$('#video');if(state.hls){state.hls.destroy();state.hls=null;}
-  v.pause();v.removeAttribute('src');v.load();
+  savePlaybackProgress(true);clearNextEpisode(); const v=$('#video');if(state.hls){state.hls.destroy();state.hls=null;}
+  v.pause();v.removeAttribute('src');v.load();$('#playbackTimeline').hidden=true;
   if(document.fullscreenElement===$('#player'))document.exitFullscreen?.().catch(()=>{});
   $('#player').classList.remove('on');$('#drawer').classList.remove('on');state.drawer=false;closeTrackPanel();
   focusFirst();
@@ -798,7 +893,7 @@ function renderDrawer(){
     const title=document.createElement('div');title.textContent=`${idx+1}. ${c.name}`;
     const sub=document.createElement('div');sub.className='small';sub.textContent=epgFor(c)?.current?.title||c.group||'Ao vivo';
     item.append(title,sub);
-    item.onclick=()=>{state.qi=idx;startPlayback();};list.append(item);
+    item.onclick=()=>{savePlaybackProgress(true);state.qi=idx;startPlayback();};list.append(item);
   }
   if(end<state.queue.length){const note=document.createElement('div');note.className='track-note';note.textContent=`Mais ${state.queue.length-end} canais · use ↓ para avançar`;list.append(note);}
   const current=list.querySelector('.drawer-item.active');if(state.drawer && current)current.scrollIntoView({block:'nearest'});
@@ -821,10 +916,25 @@ $('#favNav').onclick=()=>{ state.favoriteOnly=!state.favoriteOnly; state.recentO
 $('#recentNav').onclick=()=>{ state.recentOnly=!state.recentOnly; state.favoriteOnly=false; state.view=null; $('#recentNav').setAttribute('aria-pressed',state.recentOnly); $('#favNav').setAttribute('aria-pressed','false'); render(); };
 $('#search').oninput=e=>{ state.query=e.target.value.trim(); state.view=null; render(); };
 $('#backBtn').onclick=stopPlayback;
-$('#prevBtn').onclick=()=>{if(state.queue.length){state.qi=(state.qi-1+state.queue.length)%state.queue.length;startPlayback();}};
-$('#nextBtn').onclick=()=>{if(state.queue.length){state.qi=(state.qi+1)%state.queue.length;startPlayback();}};
+$('#prevBtn').onclick=()=>{if(state.queue.length){savePlaybackProgress(true);state.qi=(state.qi-1+state.queue.length)%state.queue.length;startPlayback();}};
+$('#nextBtn').onclick=()=>{if(state.queue.length){savePlaybackProgress(true);state.qi=(state.qi+1)%state.queue.length;startPlayback();}};
 $('#drawerBtn').onclick=()=>toggleDrawer();$('#closeDrawerBtn').onclick=()=>toggleDrawer(false);
 $('#retryBtn').onclick=()=>startPlayback();
+$('#exitPlayerBtn').onclick=stopPlayback;
+$('#playPauseBtn').onclick=()=>{const v=$('#video'); if(v.paused)v.play().catch(()=>toast('Não foi possível iniciar a reprodução'));else v.pause();updatePlaybackControls();showPlayerBar();};
+function seekRelative(delta){const v=$('#video');if(!state.vod||!Number.isFinite(v.duration)||v.seekable.length===0)return;v.currentTime=Math.min(Math.max(0,v.currentTime+delta),v.duration);showPlayerBar();}
+$('#rewind10Btn').onclick=()=>seekRelative(-10);
+$('#forward10Btn').onclick=()=>seekRelative(10);
+$('#fullscreenBottomBtn').onclick=()=>setFullscreen();
+$('#nextEpisodeBtn').onclick=goNextEpisode;
+$('#watchNextEpisode').onclick=goNextEpisode;
+$('#cancelNextEpisode').onclick=clearNextEpisode;
+$('#video').addEventListener('pause',()=>{savePlaybackProgress(true);updatePlaybackControls();updatePlaybackTimeline();showPlayerBar();});
+$('#playbackSeek').addEventListener('input',e=>{const v=$('#video');if(state.vod&&Number.isFinite(v.duration)&&v.duration>0&&v.seekable?.length){v.currentTime=v.duration*Number(e.target.value)/1000;updatePlaybackTimeline();showPlayerBar();}});
+$('#playbackSeek').addEventListener('change',()=>savePlaybackProgress(true));
+$('#video').addEventListener('play',updatePlaybackControls);
+$('#video').addEventListener('durationchange',updatePlaybackControls);
+$('#video').addEventListener('loadedmetadata',updatePlaybackControls);
 $('#playerFavBtn').onclick=()=>{ const c=state.queue[state.qi];if(c)toggleFav(c); };
 $('#fullscreenBtn').onclick=()=>setFullscreen();
 $('#guidePlayerBtn').onclick=openGuide;
