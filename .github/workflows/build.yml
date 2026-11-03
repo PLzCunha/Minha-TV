@@ -231,7 +231,7 @@ jobs:
           import org.json.JSONObject;
           public class PlayerActivity extends Activity {
             ExoPlayer p; PlayerView pv; TextView title; TextView status; TextView footer; JSONArray list; int i; boolean vod; boolean episodes; LinearLayout controls; TextView playControl; TextView nextControl; TextView nextPrompt; Runnable autoNext; int countDown; SeekBar timeline; TextView elapsed; TextView durationLabel; LinearLayout timelineBox; boolean seekingTimeline=false; String mediaKey=null; long lastPositionSave=0;
-            FrameLayout panel; ScrollView panelScroll; LinearLayout panelRows; boolean panelVisible = false; int selection = 0;
+            FrameLayout panel; ScrollView panelScroll; LinearLayout panelRows; boolean panelVisible = false; int selection = 0; int previousChannel = -1; TextView previousControl;
             Handler h = new Handler();
             boolean overlayVisible = false; boolean expandedVideo = false; TextView fullscreenControl;
             Runnable hide = () -> {
@@ -322,12 +322,14 @@ jobs:
               cp.bottomMargin=dp(18);
               root.addView(controls,cp);
               addControl(controls,"‹", "Voltar", () -> finish());
+              previousControl = addControl(controls,"⇆", "Voltar ao canal anterior", () -> returnPreviousChannel());
               addControl(controls,"↶", "Retroceder 10 segundos", () -> seekSeconds(-10));
               playControl = addControl(controls,"Ⅱ", "Pausar ou reproduzir", () -> togglePlay());
               addControl(controls,"↷", "Avançar 10 segundos", () -> seekSeconds(10));
               nextControl = addControl(controls,"⏭", "Próximo episódio", () -> nextEpisode());
               fullscreenControl = addControl(controls,"⛶", "Expandir vídeo para preencher a tela", () -> toggleFullscreen());
               nextControl.setVisibility(View.GONE);
+              previousControl.setVisibility(View.GONE);
               controls.setVisibility(View.GONE);
 
               nextPrompt = new TextView(this);
@@ -523,8 +525,13 @@ jobs:
               if(duration>0)dest=Math.min(dest,duration);
               p.seekTo(dest);show(nm());
             }
+            void returnPreviousChannel(){
+              if(vod || previousChannel < 0 || previousChannel >= list.length() || previousChannel == i)return;
+              go(previousChannel-i);
+            }
             void go(int d) {
               savePosition(true);cancelNext();
+              if(!vod && d != 0)previousChannel=i;
               try {
                 i = (i + d + list.length()) % list.length();
                 JSONArray c = list.getJSONArray(i);
@@ -537,6 +544,7 @@ jobs:
                 p.play();
                 show(c.getString(0));
                 nextControl.setVisibility(episodes && i < list.length()-1 ? View.VISIBLE : View.GONE);
+                previousControl.setVisibility(!vod && previousChannel>=0 ? View.VISIBLE : View.GONE);
                 if (panelVisible) { selection = i; drawChannels(); }
               } catch (Exception e) { }
             }
@@ -555,7 +563,8 @@ jobs:
                 try {
                   JSONArray c = list.getJSONArray(n);
                   TextView entry = new TextView(this);
-                  entry.setText((n+1) + "  " + c.getString(0));
+                  String now=c.optString(2, "");
+                  entry.setText((n+1) + "  " + c.getString(0) + (now.isEmpty()?"":"\n     " + now));
                   entry.setTextSize(16);
                   entry.setTextColor(n == selection ? 0xFFFFE5A4 : Color.WHITE);
                   entry.setPadding(dp(14),dp(16),dp(14),dp(16));
@@ -579,13 +588,13 @@ jobs:
               show(nm());
             }
             void show(String t) {
-              title.setText(t + "  •  Nico TV 1.3.18");
+              title.setText(t + "  •  Nico TV 1.5.0");
               String program = "";
               try { program = list.getJSONArray(i).optString(2, ""); } catch(Exception ex) {}
               footer.setText(vod
                 ? "OK pausa/continua  •  ← → avança 10s"
                 : (list != null && list.length() > 1
-                    ? ("Canal " + (i + 1) + "/" + list.length() + "  •  → lista  •  ↑ ↓ troca" + (program.isEmpty() ? "" : "\n" + program))
+                    ? ("Canal " + (i + 1) + "/" + list.length() + "  •  → lista  •  ↑ ↓ troca  •  ⇆ anterior" + (program.isEmpty() ? "" : "\n" + program))
                     : "Voltar sai do player"));
               overlayVisible = true;
               title.setVisibility(View.VISIBLE);
