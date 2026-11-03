@@ -214,12 +214,13 @@ jobs:
           import androidx.media3.exoplayer.ExoPlayer;
           import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
           import androidx.media3.ui.PlayerView;
+          import androidx.media3.ui.AspectRatioFrameLayout;
           import org.json.JSONArray;
           public class PlayerActivity extends Activity {
             ExoPlayer p; PlayerView pv; TextView title; TextView status; TextView footer; JSONArray list; int i; boolean vod; boolean episodes; LinearLayout controls; TextView playControl; TextView nextControl; TextView nextPrompt; Runnable autoNext; int countDown; SeekBar timeline; TextView elapsed; TextView durationLabel; LinearLayout timelineBox; boolean seekingTimeline=false; String mediaKey=null; long lastPositionSave=0;
             FrameLayout panel; ScrollView panelScroll; LinearLayout panelRows; boolean panelVisible = false; int selection = 0;
             Handler h = new Handler();
-            boolean overlayVisible = false;
+            boolean overlayVisible = false; boolean expandedVideo = false; TextView fullscreenControl;
             Runnable hide = () -> {
               overlayVisible = false;
               title.setVisibility(View.GONE);
@@ -312,6 +313,7 @@ jobs:
               playControl = addControl(controls,"Ⅱ", "Pausar ou reproduzir", () -> togglePlay());
               addControl(controls,"↷", "Avançar 10 segundos", () -> seekSeconds(10));
               nextControl = addControl(controls,"⏭", "Próximo episódio", () -> nextEpisode());
+              fullscreenControl = addControl(controls,"⛶", "Expandir vídeo para preencher a tela", () -> toggleFullscreen());
               nextControl.setVisibility(View.GONE);
               controls.setVisibility(View.GONE);
 
@@ -388,6 +390,16 @@ jobs:
               });
               go(0);
               h.post(progressTick);
+            }
+            void toggleFullscreen() {
+              expandedVideo = !expandedVideo;
+              pv.setResizeMode(expandedVideo ? AspectRatioFrameLayout.RESIZE_MODE_ZOOM : AspectRatioFrameLayout.RESIZE_MODE_FIT);
+              fullscreenControl.setText(expandedVideo ? "⛶" : "⛶");
+              fullscreenControl.setContentDescription(expandedVideo ? "Ajustar vídeo à tela sem cortes" : "Expandir vídeo para preencher a tela");
+              getWindow().getDecorView().setSystemUiVisibility(expandedVideo
+                ? (View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+                : (View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY));
+              show(nm() + (expandedVideo ? "  •  Preencher tela (pode cortar bordas)" : "  •  Ajustar à tela"));
             }
             int dp(int x) { return (int) (x * getResources().getDisplayMetrics().density + 0.5f); }
             TextView addControl(LinearLayout row, String label, String description, Runnable action) {
@@ -525,7 +537,7 @@ jobs:
               show(nm());
             }
             void show(String t) {
-              title.setText(t + "  •  Nico TV 1.3.17");
+              title.setText(t + "  •  Nico TV 1.3.18");
               String program = "";
               try { program = list.getJSONArray(i).optString(2, ""); } catch(Exception ex) {}
               footer.setText(vod
