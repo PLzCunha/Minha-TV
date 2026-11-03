@@ -48,8 +48,8 @@ jobs:
               applicationId 'com.nicotv.app'
               minSdk 21
               targetSdk 33
-              versionCode 5
-              versionName '1.3.7'
+              versionCode 11
+              versionName '1.3.11'
             }
             compileOptions {
               sourceCompatibility JavaVersion.VERSION_1_8
@@ -126,6 +126,14 @@ jobs:
                 t.putExtra("vod", true);
                 startActivity(t);
               }
+              @JavascriptInterface public void playEpisodes(String json, int i) {
+                Intent t = new Intent(MainActivity.this, PlayerActivity.class);
+                t.putExtra("list", json);
+                t.putExtra("i", i);
+                t.putExtra("vod", true);
+                t.putExtra("episodes", true);
+                startActivity(t);
+              }
               @JavascriptInterface public void play(String json, int i) {
                 Intent t = new Intent(MainActivity.this, PlayerActivity.class);
                 t.putExtra("list", json);
@@ -170,7 +178,10 @@ jobs:
           import android.widget.FrameLayout;
           import android.widget.LinearLayout;
           import android.widget.ScrollView;
+          import android.widget.SeekBar;
+          import android.content.SharedPreferences;
           import android.widget.TextView;
+          import android.view.View;
           import androidx.media3.common.MediaItem;
           import androidx.media3.common.PlaybackException;
           import androidx.media3.common.Player;
@@ -180,10 +191,15 @@ jobs:
           import androidx.media3.ui.PlayerView;
           import org.json.JSONArray;
           public class PlayerActivity extends Activity {
-            ExoPlayer p; PlayerView pv; TextView title; TextView status; TextView footer; JSONArray list; int i; boolean vod;
+            ExoPlayer p; PlayerView pv; TextView title; TextView status; TextView footer; JSONArray list; int i; boolean vod; boolean episodes; LinearLayout controls; TextView playControl; TextView nextControl; TextView nextPrompt; Runnable autoNext; int countDown; SeekBar timeline; TextView elapsed; TextView durationLabel; LinearLayout timelineBox; boolean seekingTimeline=false; String mediaKey=null; long lastPositionSave=0;
             FrameLayout panel; ScrollView panelScroll; LinearLayout panelRows; boolean panelVisible = false; int selection = 0;
             Handler h = new Handler();
             Runnable hide = () -> { title.setVisibility(android.view.View.INVISIBLE); footer.setVisibility(android.view.View.INVISIBLE); };
+            Runnable progressTick = new Runnable() { @Override public void run() {
+              if(p == null)return;
+              refreshTimeline();savePosition(false);
+              h.postDelayed(this,1000);
+            }};
             @Override protected void onCreate(Bundle b) {
               super.onCreate(b);
               getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -206,9 +222,69 @@ jobs:
               footer.setBackgroundColor(0xBB0C2235);
               footer.setPadding(28, 16, 28, 16);
               FrameLayout.LayoutParams fp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
-              fp.bottomMargin = 28;
+              fp.bottomMargin = 88;
               root.addView(footer, fp);
               footer.setVisibility(android.view.View.INVISIBLE);
+
+              timelineBox = new LinearLayout(this);
+              timelineBox.setOrientation(LinearLayout.VERTICAL);
+              timelineBox.setPadding(dp(24),dp(10),dp(24),dp(5));
+              timelineBox.setBackgroundColor(0xE5111B29);
+              FrameLayout.LayoutParams tlp = new FrameLayout.LayoutParams(-1,-2,Gravity.BOTTOM);
+              tlp.bottomMargin = dp(75);
+              root.addView(timelineBox,tlp);
+              timeline = new SeekBar(this);
+              timeline.setMax(1000);
+              timeline.setProgressTintList(android.content.res.ColorStateList.valueOf(0xFFE4C16D));
+              timeline.setThumbTintList(android.content.res.ColorStateList.valueOf(0xFFE4C16D));
+              timelineBox.addView(timeline,new LinearLayout.LayoutParams(-1,dp(30)));
+              LinearLayout timeRow = new LinearLayout(this);
+              timeRow.setGravity(Gravity.CENTER_VERTICAL);
+              elapsed = new TextView(this);durationLabel=new TextView(this);
+              elapsed.setTextColor(0xFFE4C16D);durationLabel.setTextColor(Color.WHITE);
+              elapsed.setTextSize(15);durationLabel.setTextSize(15);
+              timeRow.addView(elapsed,new LinearLayout.LayoutParams(0,-2,1));
+              timeRow.addView(durationLabel);
+              timelineBox.addView(timeRow);
+              timelineBox.setVisibility(View.GONE);
+              timeline.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+                @Override public void onStartTrackingTouch(SeekBar bar){seekingTimeline=true;}
+                @Override public void onProgressChanged(SeekBar bar,int value,boolean fromUser){
+                  if(fromUser&&p!=null&&vod&&p.isCurrentMediaItemSeekable()&&p.getDuration()>0){
+                    long target=p.getDuration()*value/1000L;elapsed.setText(tm(target));
+                  }
+                }
+                @Override public void onStopTrackingTouch(SeekBar bar){
+                  if(p!=null&&vod&&p.isCurrentMediaItemSeekable()&&p.getDuration()>0)p.seekTo(p.getDuration()*bar.getProgress()/1000L);
+                  seekingTimeline=false;savePosition(true);refreshTimeline();
+                }
+              });
+
+              controls = new LinearLayout(this);
+              controls.setOrientation(LinearLayout.HORIZONTAL);
+              controls.setGravity(Gravity.CENTER);
+              controls.setPadding(dp(8),dp(10),dp(8),dp(10));
+              controls.setBackgroundColor(0xD9111B29);
+              FrameLayout.LayoutParams cp = new FrameLayout.LayoutParams(-1,-2,Gravity.BOTTOM);
+              root.addView(controls,cp);
+              addControl(controls,"← Voltar", () -> finish());
+              addControl(controls,"↶ 10s", () -> seekSeconds(-10));
+              playControl = addControl(controls,"Ⅱ Pausar", () -> togglePlay());
+              addControl(controls,"10s ↷", () -> seekSeconds(10));
+              nextControl = addControl(controls,"Próximo ▶", () -> nextEpisode());
+              nextControl.setVisibility(View.GONE);
+
+              nextPrompt = new TextView(this);
+              nextPrompt.setBackgroundColor(0xF20E1826);
+              nextPrompt.setTextColor(0xFFFFE1A1);
+              nextPrompt.setTextSize(17);
+              nextPrompt.setGravity(Gravity.CENTER);
+              nextPrompt.setPadding(dp(22),dp(18),dp(22),dp(18));
+              FrameLayout.LayoutParams np = new FrameLayout.LayoutParams(dp(430),-2,Gravity.RIGHT|Gravity.BOTTOM);
+              np.bottomMargin=dp(95);np.rightMargin=dp(24);
+              root.addView(nextPrompt,np);
+              nextPrompt.setVisibility(View.GONE);
+              nextPrompt.setOnClickListener(v -> nextEpisode());
 
               status = new TextView(this);
               status.setTextColor(0xFFE0F6FF);
@@ -236,6 +312,7 @@ jobs:
                 list = new JSONArray(getIntent().getStringExtra("list"));
                 i = getIntent().getIntExtra("i", 0);
                 vod = getIntent().getBooleanExtra("vod", false);
+                episodes = getIntent().getBooleanExtra("episodes", false);
               } catch (Exception e) { finish(); return; }
 
               DefaultHttpDataSource.Factory df = new DefaultHttpDataSource.Factory()
@@ -255,25 +332,109 @@ jobs:
                     status.setVisibility(android.view.View.VISIBLE);
                   } else if (state == Player.STATE_READY) {
                     status.setVisibility(android.view.View.GONE);
+                    if(p.getCurrentPosition()<1500)restorePosition();
+                    refreshTimeline();
+                  } else if (state == Player.STATE_ENDED && episodes) {
+                    clearPosition();offerNext();
                   } else if (state == Player.STATE_ENDED && !vod) {
                     status.setText("Transmissão encerrada. Pressione OK para tentar novamente.");
                     status.setVisibility(android.view.View.VISIBLE);
                   }
                 }
+                @Override public void onIsPlayingChanged(boolean playing) {
+                  if (playControl != null) playControl.setText(playing ? "Ⅱ Pausar" : "▶ Play");
+                }
               });
               go(0);
+              h.post(progressTick);
             }
             int dp(int x) { return (int) (x * getResources().getDisplayMetrics().density + 0.5f); }
+            TextView addControl(LinearLayout row, String label, Runnable action) {
+              TextView b = new TextView(this);
+              b.setText(label); b.setTextColor(0xFFFFF0CC); b.setTextSize(16);
+              b.setGravity(Gravity.CENTER); b.setFocusable(true);
+              b.setPadding(dp(12),dp(12),dp(12),dp(12));
+              b.setBackgroundColor(0xFF233047);
+              LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0,dp(55),1);
+              lp.setMargins(dp(4),0,dp(4),0);
+              row.addView(b,lp);
+              b.setOnClickListener(v -> action.run());
+              return b;
+            }
+            String currentMediaKey(){
+              try{return "vod_"+Integer.toHexString(list.getJSONArray(i).getString(1).hashCode());}
+              catch(Exception e){return null;}
+            }
+            SharedPreferences positions(){return getSharedPreferences("nico_resume_v1",MODE_PRIVATE);}
+            void savePosition(boolean force){
+              if(!vod||p==null||mediaKey==null)return;
+              if(!force && android.os.SystemClock.elapsedRealtime()-lastPositionSave < 5000)return;
+              lastPositionSave=android.os.SystemClock.elapsedRealtime();
+              long d=p.getDuration(),pos=p.getCurrentPosition();
+              if(d<=0||pos<0||d==androidx.media3.common.C.TIME_UNSET)return;
+              if(p.getPlaybackState()==Player.STATE_ENDED||pos>=d-8000){positions().edit().remove(mediaKey).apply();return;}
+              if(pos>3000)positions().edit().putLong(mediaKey,pos).apply();
+            }
+            void clearPosition(){if(mediaKey!=null)positions().edit().remove(mediaKey).apply();}
+            void restorePosition(){
+              if(!vod||p==null||mediaKey==null||!p.isCurrentMediaItemSeekable())return;
+              long d=p.getDuration(),pos=positions().getLong(mediaKey,0);
+              if(d>0&&pos>5000&&pos<d-12000){p.seekTo(pos);show(nm()+"  •  Retomando de "+tm(pos));}
+            }
+            void refreshTimeline(){
+              if(p==null||timelineBox==null)return;
+              long d=p.getDuration(),pos=p.getCurrentPosition();
+              boolean visible=vod&&d>0&&d!=androidx.media3.common.C.TIME_UNSET;
+              timelineBox.setVisibility(visible?View.VISIBLE:View.GONE);
+              if(!visible)return;
+              timeline.setEnabled(p.isCurrentMediaItemSeekable());
+              if(!seekingTimeline)timeline.setProgress((int)Math.min(1000,Math.max(0,(pos*1000L)/d)));
+              elapsed.setText(tm(pos));
+              durationLabel.setText("Restante "+tm(Math.max(0,d-pos))+"    /    "+tm(d));
+            }
+            void cancelNext() {
+              if(autoNext!=null){h.removeCallbacks(autoNext);autoNext=null;}
+              if(nextPrompt!=null)nextPrompt.setVisibility(View.GONE);
+            }
+            void nextEpisode(){ if(episodes && i<list.length()-1){clearPosition();go(1);} }
+            void offerNext(){
+              cancelNext();
+              if(!episodes||i>=list.length()-1)return;
+              countDown=8;
+              final int fromIndex=i;
+              autoNext=new Runnable(){
+                public void run(){
+                  if(p==null||i!=fromIndex){cancelNext();return;}
+                  nextPrompt.setText("Próximo episódio: " + list.optJSONArray(i+1).optString(0) + "\nReprodução automática em " + countDown + "s\nToque ou pressione → para assistir agora");
+                  nextPrompt.setVisibility(View.VISIBLE);
+                  if(countDown-- <= 0){nextEpisode();return;}
+                  h.postDelayed(this,1000);
+                }
+              };
+              h.post(autoNext);
+            }
+            void togglePlay(){if(p==null)return; if(p.isPlaying())p.pause();else p.play();show(nm());}
+            void seekSeconds(int secs){
+              if(!vod||p==null||!p.isCurrentMediaItemSeekable())return;
+              long duration=p.getDuration();
+              long dest=Math.max(0,p.getCurrentPosition()+secs*1000L);
+              if(duration>0)dest=Math.min(dest,duration);
+              p.seekTo(dest);show(nm());
+            }
             void go(int d) {
+              savePosition(true);cancelNext();
               try {
                 i = (i + d + list.length()) % list.length();
                 JSONArray c = list.getJSONArray(i);
+                mediaKey = vod ? currentMediaKey() : null;
+                timelineBox.setVisibility(View.GONE);
                 p.setMediaItem(MediaItem.fromUri(c.getString(1)));
                 status.setText("Carregando transmissão…");
                 status.setVisibility(android.view.View.VISIBLE);
                 p.prepare();
                 p.play();
                 show(c.getString(0));
+                nextControl.setVisibility(episodes && i < list.length()-1 ? View.VISIBLE : View.GONE);
                 if (panelVisible) { selection = i; drawChannels(); }
               } catch (Exception e) { }
             }
@@ -330,7 +491,7 @@ jobs:
               h.postDelayed(hide, 3800);
             }
             String nm() { try { return list.getJSONArray(i).getString(0); } catch (Exception x) { return ""; } }
-            String tm(long ms) { long s = Math.max(0, ms / 1000); return String.format("%d:%02d", s / 60, s % 60); }
+            String tm(long ms) { long s = Math.max(0, ms / 1000); return s >= 3600 ? String.format(java.util.Locale.US,"%d:%02d:%02d",s/3600,(s%3600)/60,s%60) : String.format(java.util.Locale.US,"%02d:%02d", s/60,s%60); }
             @Override public boolean onKeyDown(int k, KeyEvent e) {
               boolean multi = list != null && list.length() > 1;
               if (panelVisible) {
@@ -345,6 +506,9 @@ jobs:
               if (!vod && k == KeyEvent.KEYCODE_DPAD_RIGHT) { togglePanel(true); return true; }
               if (k == KeyEvent.KEYCODE_DPAD_UP || k == KeyEvent.KEYCODE_CHANNEL_UP) { if (multi) go(-1); return true; }
               if (k == KeyEvent.KEYCODE_DPAD_DOWN || k == KeyEvent.KEYCODE_CHANNEL_DOWN) { if (multi) go(1); return true; }
+              if (episodes && nextPrompt.getVisibility()==View.VISIBLE && (k==KeyEvent.KEYCODE_DPAD_RIGHT || k==KeyEvent.KEYCODE_DPAD_CENTER || k==KeyEvent.KEYCODE_ENTER)) {
+                nextEpisode(); return true;
+              }
               if (vod && (k == KeyEvent.KEYCODE_DPAD_LEFT || k == KeyEvent.KEYCODE_MEDIA_REWIND)) {
                 p.seekTo(Math.max(0, p.getCurrentPosition() - 10000));
                 show(nm() + "  " + tm(p.getCurrentPosition()) + " / " + tm(p.getDuration()));
@@ -369,6 +533,8 @@ jobs:
             }
             @Override protected void onStop() {
               super.onStop();
+              cancelNext(); h.removeCallbacks(hide);h.removeCallbacks(progressTick);
+              savePosition(true);
               if (p != null) { p.release(); p = null; }
               finish();
             }
