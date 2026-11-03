@@ -354,8 +354,21 @@ function currentList(){ return state.mode==='movies' ? (state.movies||[]) : stat
 
 /* Android bridge */
 const NATIVE = !!window.Android;
-function nativeGet(u){ return new Promise((ok,no)=>{ const id='cb'+Date.now()+Math.floor(Math.random()*1e4); window[id]=(good,d)=>{ delete window[id]; good ? ok(d) : no(new Error('http')); }; Android.get(u,id); }); }
-async function getText(u){ if(NATIVE) return nativeGet(u); const r=await fetch(u); if(!r.ok) throw new Error('http'); return r.text(); }
+function readableConnectionError(e){
+  const raw=String(e?.message||e||'Falha desconhecida');
+  const http=raw.match(/HTTP\s+(\d{3})/i);
+  if(http){const code=Number(http[1]);if(code===401||code===403)return `Acesso recusado pelo servidor (HTTP ${code}). Confira as credenciais e a autorização do serviço.`;if(code===404)return 'O servidor respondeu HTTP 404: endpoint Xtream não encontrado. Confira o endereço do servidor.';if(code===429)return 'O servidor limitou as tentativas (HTTP 429). Tente novamente mais tarde.';if(code>=500)return `O servidor apresentou falha interna (HTTP ${code}).`;return `Servidor respondeu HTTP ${code}. Verifique o endereço e a disponibilidade do serviço.`;}
+  if(/UnknownHostException|Unable to resolve host|ENOTFOUND|Name or service not known/i.test(raw))return 'Não foi possível localizar o servidor (DNS). Confira o endereço e a conexão de internet.';
+  if(/timed?\s*out|SocketTimeoutException/i.test(raw))return 'O servidor não respondeu no tempo esperado (timeout). Verifique se ele está online.';
+  if(/ConnectException|refused|ECONNREFUSED/i.test(raw))return 'A conexão foi recusada pelo servidor. Confira a porta e se o serviço está online.';
+  if(/SSL|certificate|handshake/i.test(raw))return 'Falha de segurança HTTPS/SSL. Verifique o certificado ou consulte o provedor.';
+  if(/Cleartext|CLEARTEXT/i.test(raw))return 'A conexão HTTP foi bloqueada pelo Android.';
+  if(/SyntaxError|JSON|Unexpected token/i.test(raw))return 'O endereço respondeu, mas não retornou dados Xtream válidos. Confira se é o servidor correto.';
+  if(/Failed to fetch|NetworkError|Load failed/i.test(raw))return 'O navegador bloqueou ou não conseguiu acessar o servidor (rede/CORS).';
+  return 'Não foi possível conectar ao serviço Xtream. Confira a disponibilidade do servidor e tente novamente.';
+}
+function nativeGet(u){ return new Promise((ok,no)=>{ const id='cb'+Date.now()+Math.floor(Math.random()*1e4); window[id]=(good,d)=>{ delete window[id]; good ? ok(d) : no(new Error(String(d||'Falha na conexão'))); }; Android.get(u,id); }); }
+async function getText(u){ if(NATIVE) return nativeGet(u); const r=await fetch(u); if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); }
 async function getJSON(u){ return JSON.parse(await getText(u)); }
 
 /* Parsing */
@@ -468,15 +481,18 @@ async function loadXtream(server,user,pass){
   let base=server.trim().replace(/\/+$/,''); if(!/^https?:\/\//i.test(base)) base='http://'+base;
   const api=`${base}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}`;
   state.xt={base,user,pass,api};
+  const auth=await getJSON(api);
+  if(auth?.user_info && String(auth.user_info.auth)==='0') throw new Error('auth');
   const [cats,streams]=await Promise.all([getJSON(api+'&action=get_live_categories'),getJSON(api+'&action=get_live_streams')]);
-  const names={}; (cats||[]).forEach(c=>names[c.category_id]=c.category_name);
+  const names={}; (Array.isArray(cats)?cats:[]).forEach(c=>names[c.category_id]=c.category_name);
   if(!Array.isArray(streams)) throw new Error('auth');
   return streams.map(s=>({ name:s.name||'Sem nome', logo:s.stream_icon||'', group:names[s.category_id]||'Outros', tvgId:String(s.epg_channel_id||s.name||''), url:`${base}/live/${encodeURIComponent(user)}/${encodeURIComponent(pass)}/${s.stream_id}.m3u8` }));
 }
 async function importFrom(src){
   state.loading=true; render();
-  state.xt=null; state.epg=new Map(); state.epgEntries=new Map(); state.epgSource=null;
+  const prior={xt:state.xt,epg:state.epg,epgEntries:state.epgEntries,epgSource:state.epgSource};
   try{
+    state.xt=null; state.epg=new Map(); state.epgEntries=new Map(); state.epgSource=null;
     let list=[]; let epgUrl='';
     if(src.type==='xt'){
       list=await loadXtream(src.server,src.user,src.pass);
@@ -492,6 +508,9 @@ async function importFrom(src){
     store.set('nico_source',JSON.stringify(src.type==='xt'||src.url||src.epgUrl?src:{type:'m3u',text:src.text}));
     if(epgUrl) await loadEpg(epgUrl);
     render();
+  } catch(e) {
+    Object.assign(state,prior);
+    throw e;
   } finally { state.loading=false; render(); }
 }
 
@@ -837,7 +856,7 @@ $('#confirmImport').onclick=async()=>{
     }
     await importFrom(src); $('#dlg').close();
   } catch(e){
-    err.textContent=e.message==='miss'?'Preencha os campos da aba escolhida.' : e.message==='empty'?'Nenhum item encontrado. Verifique se a lista está correta.' : e.message==='auth'?'Usuário ou senha não aceitos pelo servidor.' : (NATIVE?'Não foi possível conectar. Confira servidor, usuário, senha e internet.' : 'Não foi possível carregar. O servidor pode bloquear o navegador (CORS): baixe o M3U e use a opção de arquivo.');
+    err.textContent=e.message==='miss'?'Preencha os campos da aba escolhida.' : e.message==='empty'?'Nenhum item encontrado. Verifique se a lista está correta.' : e.message==='auth'?'Usuário ou senha não aceitos pelo servidor.' : readableConnectionError(e);
   }
 };
 
