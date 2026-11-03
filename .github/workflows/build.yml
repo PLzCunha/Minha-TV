@@ -142,6 +142,14 @@ jobs:
                   runOnUiThread(() -> w.evaluateJavascript(js, null));
                 }).start();
               }
+              @JavascriptInterface public String getWatchHistory() {
+                JSONObject out = new JSONObject();
+                android.content.SharedPreferences prefs = getSharedPreferences("nico_watch_history_v2", MODE_PRIVATE);
+                for (java.util.Map.Entry<String,?> e : prefs.getAll().entrySet()) {
+                  try { out.put(e.getKey(), new JSONObject(String.valueOf(e.getValue()))); } catch(Exception ex) { }
+                }
+                return out.toString();
+              }
               @JavascriptInterface public void playVod(String json, int i) {
                 Intent t = new Intent(MainActivity.this, PlayerActivity.class);
                 t.putExtra("list", json);
@@ -183,6 +191,10 @@ jobs:
               while ((k = r.read(buf)) > 0) sb.append(buf, 0, k);
               r.close();
               return sb.toString();
+            }
+            @Override protected void onResume() {
+              super.onResume();
+              if(w != null)w.post(() -> w.evaluateJavascript("window.nicoNativeHistoryChanged&&window.nicoNativeHistoryChanged()",null));
             }
             @Override public void onBackPressed() {
               w.evaluateJavascript("(window.__back&&window.__back())?'1':'0'", v -> { if (!"\"1\"".equals(v)) finish(); });
@@ -378,7 +390,9 @@ jobs:
                     if(p.getCurrentPosition()<1500)restorePosition();
                     refreshTimeline();
                   } else if (state == Player.STATE_ENDED && episodes) {
-                    clearPosition();offerNext();
+                    savePosition(true);clearPosition();offerNext();
+                  } else if (state == Player.STATE_ENDED && vod) {
+                    savePosition(true);
                   } else if (state == Player.STATE_ENDED && !vod) {
                     status.setText("Transmissão encerrada. Pressione OK para tentar novamente.");
                     status.setVisibility(android.view.View.VISIBLE);
@@ -426,13 +440,40 @@ jobs:
               catch(Exception e){return null;}
             }
             SharedPreferences positions(){return getSharedPreferences("nico_resume_v1",MODE_PRIVATE);}
+            // Persistência independente do player: acessível pela tela inicial via Bridge.
+            android.content.SharedPreferences watchHistory(){return getSharedPreferences("nico_watch_history_v2",MODE_PRIVATE);}
+            String historyKey(String url){
+              long n=2166136261L;
+              for(int j=0;j<url.length();j++){n ^= url.charAt(j);n=(n*16777619L)&0xffffffffL;}
+              return "v:"+Long.toHexString(n);
+            }
+            void recordWatchHistory(long pos,long d,boolean completed){
+              if(!vod||d<=0||pos<0||list==null)return;
+              try{
+                JSONArray c=list.getJSONArray(i);String url=c.getString(1);
+                String key=historyKey(url);
+                JSONObject entry=new JSONObject();
+                entry.put("url",url);entry.put("name",c.optString(0,"Conteúdo"));
+                entry.put("kind",c.optString(3,"movie"));entry.put("logo",c.optString(4,""));
+                entry.put("seriesName",c.optString(5,""));entry.put("seriesId",c.optString(6,""));
+                entry.put("season",c.optString(7,""));entry.put("episode",c.optString(8,""));
+                entry.put("position",completed?d/1000L:pos/1000L);
+                entry.put("duration",d/1000L);
+                entry.put("completed",completed);
+                entry.put("percent",completed?100:(int)Math.min(100,Math.max(0,pos*100L/d)));
+                entry.put("when",System.currentTimeMillis());
+                watchHistory().edit().putString(key,entry.toString()).apply();
+              } catch(Exception ignored) { }
+            }
             void savePosition(boolean force){
               if(!vod||p==null||mediaKey==null)return;
               if(!force && android.os.SystemClock.elapsedRealtime()-lastPositionSave < 5000)return;
               lastPositionSave=android.os.SystemClock.elapsedRealtime();
               long d=p.getDuration(),pos=p.getCurrentPosition();
               if(d<=0||pos<0||d==androidx.media3.common.C.TIME_UNSET)return;
-              if(p.getPlaybackState()==Player.STATE_ENDED||pos>=d-8000){positions().edit().remove(mediaKey).apply();return;}
+              boolean complete=p.getPlaybackState()==Player.STATE_ENDED||pos>=d-8000;
+              if(pos>3000||complete)recordWatchHistory(pos,d,complete);
+              if(complete){positions().edit().remove(mediaKey).apply();return;}
               if(pos>3000)positions().edit().putLong(mediaKey,pos).apply();
             }
             void clearPosition(){if(mediaKey!=null)positions().edit().remove(mediaKey).apply();}
