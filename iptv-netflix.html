@@ -318,6 +318,7 @@ textarea{min-height:96px;resize:vertical}
 .live-filter-chip.active{border-color:#e4c16d;background:#e4c16d;color:#171b22}
 .live-filter-chip:focus-visible{outline:3px solid #f6e0a1;outline-offset:3px}
 .live-filter-count{color:#9fb0c9;font-size:12px}
+.catalog-filter-label{font-size:13px;color:#e4c16d;font-weight:800;margin:10px 2px 2px;letter-spacing:.03em}
 .live-group-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .live-filter-empty{padding:24px 10px;color:#a1b0c8}
 @media(max-width:700px){.live-filter-wrap{padding:12px;border-radius:16px}.live-filter-chip{font-size:13px;min-height:42px;padding:8px 12px}}
@@ -443,7 +444,7 @@ const state={
   mode:'live', view:null, detail:null, detailSeason:0,
   favorites:loadArray('nico_favorites'), recent:loadArray('nico_recent'),
   favoriteOnly:false, recentOnly:false, query:'', liveGroup:'all', liveRecent:loadArray('nico_live_recent'),
-  loading:false, queue:[], qi:0, hls:null, drawer:false, pageSize:60, vod:false, episodes:false, webTracks:false,
+  catalogFilters:{movies:'all',series:'all'}, loading:false, queue:[], qi:0, hls:null, drawer:false, pageSize:60, vod:false, episodes:false, webTracks:false,
   epg:new Map(), epgSource:null, epgEntries:new Map(), tab:'m3u'
 };
 function loadArray(k){ try{ const a=JSON.parse(store.get(k)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
@@ -479,6 +480,56 @@ function liveFilterPanel(app,unfiltered){
   list.append(b);
  });
  host.append(headline,list);app.append(host);
+}
+// Categorias Xtream e gêneros de metadados: cada catálogo tem seu filtro independente.
+function catalogTokens(c){
+  const value=String(c.genre||'');
+  return value.split(/[,;/|]+/).map(v=>v.trim()).filter(v=>v.length>=2&&v.length<=55);
+}
+function catalogFiltered(list){
+  if(state.mode!=='movies'&&state.mode!=='series')return list;
+  const selected=state.catalogFilters[state.mode]||'all';
+  if(selected==='all')return list;
+  if(selected==='fav')return list.filter(isFav);
+  if(selected==='recent')return state.recent.map(k=>list.find(c=>keyOf(c)===k)).filter(Boolean);
+  if(selected.startsWith('cat:'))return list.filter(c=>(c.group||'Outros')===selected.slice(4));
+  if(selected.startsWith('genre:'))return list.filter(c=>catalogTokens(c).some(g=>g.toLocaleLowerCase('pt-BR')===selected.slice(6)));
+  return list;
+}
+function catalogFilterPanel(app,unfiltered){
+  if(!['movies','series'].includes(state.mode)||state.view||state.detail)return;
+  const mode=state.mode, chosen=state.catalogFilters[mode]||'all';
+  const categories=new Map(),genres=new Map();
+  unfiltered.forEach(c=>{
+    const group=(c.group||'Outros').trim()||'Outros';
+    categories.set(group,(categories.get(group)||0)+1);
+    catalogTokens(c).forEach(g=>{const id=g.toLocaleLowerCase('pt-BR');const old=genres.get(id);genres.set(id,{name:old?.name||g,count:(old?.count||0)+1});});
+  });
+  const host=document.createElement('section');host.className='live-filter-wrap catalog-filter-wrap';
+  const header=document.createElement('div');header.className='live-filter-heading';
+  header.innerHTML='<span>'+(mode==='movies'?'🎬 Explorar filmes':'📺 Explorar séries')+'</span><span class="live-filter-caption">Gêneros e categorias · use o controle remoto</span>';
+  host.append(header);
+  const options=[['all','Todos',unfiltered.length],['fav','★ Favoritos',unfiltered.filter(isFav).length],['recent','↺ Recentes',state.recent.filter(k=>unfiltered.some(c=>keyOf(c)===k)).length]];
+  const catalogKinds=[...categories].sort((a,b)=>a[0].localeCompare(b[0],'pt-BR')).map(([g,n])=>['cat:'+g,g,n]);
+  const genreKinds=[...genres].sort((a,b)=>a[1].name.localeCompare(b[1].name,'pt-BR')).map(([id,v])=>['genre:'+id,v.name,v.count]);
+  const renderChips=(label,entries)=>{
+    if(!entries.length)return;
+    if(label){const heading=document.createElement('div');heading.className='catalog-filter-label';heading.textContent=label;host.append(heading);}
+    const row=document.createElement('div');row.className='live-filter-list';row.setAttribute('aria-label',label||'Filtros de catálogo');
+    entries.forEach(([key,name,n])=>{
+      const b=document.createElement('button');b.type='button';b.className='live-filter-chip'+(chosen===key?' active':'');
+      b.textContent=name+' · '+n;b.dataset.filterKey=key;b.setAttribute('aria-pressed',String(chosen===key));
+      b.onclick=()=>{state.catalogFilters[mode]=key;state.view=null;state.viewList=null;render();
+        const target=[...document.querySelectorAll('.catalog-filter-wrap .live-filter-chip')].find(el=>el.dataset.filterKey===key);
+        target?.focus({preventScroll:true});};
+      row.append(b);
+    });
+    host.append(row);
+  };
+  renderChips('',options);
+  renderChips('Gêneros',genreKinds);
+  renderChips('Categorias do serviço',catalogKinds);
+  app.append(host);
 }
 function toggleFav(c){ const k=keyOf(c); const had=isFav(c); state.favorites = had ? state.favorites.filter(x=>x!==k) : [...state.favorites,k]; saveState(); toast(had?'Removido dos favoritos':'Adicionado aos favoritos'); render(); updatePlayerFav(); }
 function updatePlayerFav(){ const c=state.queue[state.qi]; $('#playerFavBtn').textContent=c&&isFav(c)?'★ Favorito':'☆ Favorito'; }
@@ -700,14 +751,14 @@ function renderContinue(app){
 window.nicoNativeHistoryChanged=()=>{nativeHistoryCache=null;if(!$('#player').classList.contains('on'))render();};
 
 /* UI */
-function setMode(mode){ state.mode=mode; state.view=null; state.detail=null; state.favoriteOnly=false; state.recentOnly=false; if(mode!=='live')state.liveGroup='all'; $('#favNav').setAttribute('aria-pressed','false'); $('#recentNav').setAttribute('aria-pressed','false'); updateNav(); if(mode==='movies'&&!state.movies) return loadVod().then(()=>render()); if(mode==='series'&&!state.series) return loadSeries().then(()=>render()); render(); }
+function setMode(mode){ state.mode=mode; state.view=null; state.viewList=null; state.detail=null; state.favoriteOnly=false; state.recentOnly=false; if(mode!=='live')state.liveGroup='all'; $('#favNav').setAttribute('aria-pressed','false'); $('#recentNav').setAttribute('aria-pressed','false'); updateNav(); if(mode==='movies'&&!state.movies) return loadVod().then(()=>render()); if(mode==='series'&&!state.series) return loadSeries().then(()=>render()); render(); }
 function updateNav(){
   const map={homeNav:!state.view&&!state.detail&&!state.favoriteOnly&&!state.recentOnly&&state.mode==='live',liveNav:state.mode==='live',movieNav:state.mode==='movies',seriesNav:state.mode==='series'};
   Object.entries(map).forEach(([id,val])=>{ const el=$('#'+id); if(el) el.classList.toggle('active',!!val); });
   $('#movieNav').classList.toggle('hidden',!state.xt); $('#seriesNav').classList.toggle('hidden',!state.xt);
 }
 function groupBy(list){ const m=new Map(); list.forEach(c=>{ if(!m.has(c.group)) m.set(c.group,[]); m.get(c.group).push(c); }); return m; }
-function searchFiltered(list){ const base=liveFiltered(selectList(list)); if(!state.query) return base; const q=state.query.toLocaleLowerCase('pt-BR'); return base.filter(c=>`${c.name} ${c.group}`.toLocaleLowerCase('pt-BR').includes(q)); }
+function searchFiltered(list){ const base=catalogFiltered(liveFiltered(selectList(list))); if(!state.query) return base; const q=state.query.toLocaleLowerCase('pt-BR'); return base.filter(c=>`${c.name} ${c.group}`.toLocaleLowerCase('pt-BR').includes(q)); }
 function placeholderFrom(c){ return c.kind==='movie'?'🎬':c.kind==='series'?'📺':'◈'; }
 function card(c,list){
   const div=document.createElement('div'); div.className='card'+((c.kind==='movie'||c.kind==='series')?' poster':''); div.tabIndex=0; div.setAttribute('role','button'); div.setAttribute('aria-label',c.name);
@@ -777,18 +828,20 @@ function appendRow(app,title,list,opts={}){
 function render(){
   updateNav();
   const app=$('#app'); app.innerHTML='';
-  const all=searchFiltered(currentList());const baseLive=state.mode==='live'?selectList(state.channels):[]; $('#counter').textContent=`${all.length} itens`;
+  const all=searchFiltered(currentList());const baseLive=state.mode==='live'?selectList(state.channels):[];const baseCatalog=['movies','series'].includes(state.mode)?currentList():[]; $('#counter').textContent=`${all.length} itens`;
   if(state.loading){ empty(app,'Carregando…','Listas grandes podem levar alguns segundos.'); return; }
   if(state.detail){ renderDetail(app); return; }
   if(state.view){ renderSingleView(app,all); return; }
   if(!all.length){
     if(state.mode==='live')liveFilterPanel(app,baseLive);
+    else catalogFilterPanel(app,baseCatalog);
     renderContinue(app);
     const msg=document.createElement('div');msg.className='empty';msg.innerHTML=(!state.channels.length&&state.mode==='live')?'<h2>Bem-vindo ao Nico TV</h2><p>Importe sua lista M3U ou faça login Xtream para começar.</p>':'<h2>Nenhum resultado</h2><p>Tente alterar a busca, os filtros ou trocar de categoria.</p>';app.append(msg);
     return;
   }
   const label=state.mode==='movies'?'filmes':state.mode==='series'?'séries':'canais';
   if(state.mode==='live')liveFilterPanel(app,baseLive);
+  else catalogFilterPanel(app,baseCatalog);
   app.insertAdjacentHTML('beforeend', heroFor(all[0], all.length, label));
   $('#heroPlayBtn').onclick=()=>openItem(all[0],all); $('#heroFavBtn').onclick=()=>toggleFav(all[0]); if($('#heroGuideBtn'))$('#heroGuideBtn').onclick=openGuide;
 
