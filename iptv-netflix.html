@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nico TV v1.4.0 • Fire Edition</title>
+<title>Nico TV 2.0 v1.4.0 • Fire Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -322,24 +322,123 @@ textarea{min-height:96px;resize:vertical}
 .live-group-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .live-filter-empty{padding:24px 10px;color:#a1b0c8}
 @media(max-width:700px){.live-filter-wrap{padding:12px;border-radius:16px}.live-filter-chip{font-size:13px;min-height:42px;padding:8px 12px}}
+
+/* Nico TV 2.0 — REBUILD VISUAL: layout, not incremental tweaks. */
+:root{--gold:#f3c65a;--bg:#050c15;--muted:#9ba9bd}
+body{background:#050c15!important;color:#f4f6fb!important;font-family:Arial,Roboto,sans-serif}
+.shell{display:block!important;min-height:100vh;background:#050c15!important}
+.shell .sidebar{position:fixed!important;z-index:70;left:0;top:0;bottom:0;width:88px!important;min-width:88px!important;padding:22px 10px!important;background:#07111e!important;border-right:1px solid #233448!important;display:flex;flex-direction:column;align-items:stretch;gap:13px;overflow:hidden!important;transition:width .22s ease!important;box-sizing:border-box}
+.shell .sidebar:hover,.shell .sidebar:focus-within,.shell .sidebar.nico2-open{width:285px!important;box-shadow:22px 0 55px #000b!important}
+.sidebar .logo{width:62px!important;height:62px!important;flex:0 0 62px!important;overflow:hidden;border:1px solid #ad842e!important;border-radius:17px!important;margin:0 0 24px 3px!important}
+.sidebar .logo img{height:100%;width:100%;object-fit:contain}
+.nico2-brandname{position:absolute;left:86px;top:33px;font-size:24px;font-weight:900;white-space:nowrap;color:#fff;opacity:0;transition:opacity .1s}
+.nico2-brandname span{color:#f3c65a}.nico2-brandname small{font-size:10px;border-radius:18px;background:#392c12;color:#ffd36e;padding:4px 7px;vertical-align:middle}
+.sidebar:hover .nico2-brandname,.sidebar:focus-within .nico2-brandname,.sidebar.nico2-open .nico2-brandname{opacity:1}
+.sidebar .nav{width:100%!important;display:flex;flex-direction:column;gap:6px!important;overflow-y:auto;scrollbar-width:none}
+.sidebar .navbtn{position:relative!important;width:100%!important;min-height:54px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:20px!important;padding:7px 16px!important;border-radius:14px!important;background:transparent!important;border:1px solid transparent!important;box-shadow:none!important;color:#d8e0eb!important;font-size:16px!important;font-weight:700;text-align:left;flex-shrink:0}
+.sidebar .navbtn .ico{font-size:25px!important;width:33px!important;height:34px!important;flex:0 0 33px;display:flex;align-items:center;justify-content:center;filter:none}
+.sidebar .navbtn .navlabel{font-size:16px!important;font-weight:650!important;white-space:nowrap!important;display:block!important;opacity:0;visibility:hidden;transition:opacity .15s;flex:1}
+.sidebar:hover .navbtn .navlabel,.sidebar:focus-within .navbtn .navlabel,.sidebar.nico2-open .navbtn .navlabel{opacity:1;visibility:visible}
+.sidebar .navbtn.active,.sidebar .navbtn:focus-visible{background:linear-gradient(100deg,#ffdf78,#dda736)!important;color:#11171f!important;box-shadow:0 4px 19px #e4ad3040!important;outline:none!important;border-color:#ffd673!important}
+.sidebar .navbtn:hover:not(.active){background:#14243a!important;color:#fff!important}
+.sidebar .spacer{flex:1;min-height:2px}
+.sidebar .nico2-premium{display:flex;gap:14px;align-items:center;white-space:nowrap;border-radius:14px;border:1px solid #7b5c27;padding:11px;color:#f1cf77;font-size:13px;margin-bottom:6px;background:#121b27;min-height:56px;box-sizing:border-box}
+.nico2-premium>span{font-size:26px}.nico2-premium div{visibility:hidden;opacity:0}.nico2-premium small{display:block;color:#9facba;margin-top:3px}
+.sidebar:hover .nico2-premium div,.sidebar:focus-within .nico2-premium div,.sidebar.nico2-open .nico2-premium div{visibility:visible;opacity:1}
+.shell .main{margin-left:88px!important;width:calc(100% - 88px)!important;padding:0 0 75px!important;max-width:none!important;min-height:100vh;background:#050c15!important}
+.main .topbar{position:absolute!important;z-index:15;top:15px;right:20px;left:114px;height:54px;width:auto!important;padding:0!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;background:transparent!important;pointer-events:none!important}
+.main .topbar .brandpanel{display:none!important}
+.topbar .searchwrap{display:flex!important;gap:12px;align-items:center;justify-content:flex-end;max-width:none!important;width:auto!important;margin:0!important;pointer-events:auto}
+.topbar .search{border:1px solid #456078!important;border-radius:40px!important;background:#07131fdf!important;max-width:310px!important;min-width:220px!important;height:47px!important;padding:0 14px!important;box-shadow:0 10px 20px #0007}
+.topbar .search input{color:#fff!important;font-size:14px!important}
+.topbar #counter{display:none!important}.topbar .page-actions #homeBtn{display:none!important}
+.topbar .page-actions #importBtn{min-height:45px!important;border-radius:30px!important;font-size:13px!important;padding:0 18px!important}
+#app{padding:0 27px!important;overflow-x:hidden;max-width:none!important}
+.nico2-hero{position:relative!important;isolation:isolate;overflow:hidden!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:linear-gradient(120deg,#07111d,#132944)!important;display:flex!important;align-items:center!important;min-height:500px!important;margin:0 -27px 12px!important;padding:96px 46px 68px!important;gap:18px!important}
+.nico2-hero-backdrop{position:absolute;inset:-24px -20px;z-index:-3;background-repeat:no-repeat;background-size:cover;background-position:center 29%;filter:blur(13px) saturate(1.12);opacity:.60;transform:scale(1.1)}
+.nico2-hero-shade{position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,#050c15 3%,#050c15ed 27%,#050c15b0 51%,#050c1550 76%,#050c1590),linear-gradient(0deg,#050c15 0%,transparent 34%)}
+.nico2-hero .hero-copy{width:min(60%,750px)!important;max-width:none!important;flex:1;min-width:0;z-index:1}
+.nico2-hero .hero-copy .kicker{color:#f2c95e!important;font-size:12px!important;letter-spacing:.30em!important;font-weight:800!important}
+.nico2-feature{margin:22px 0 11px;color:#f3ca68;font-size:12px;letter-spacing:.2em;font-weight:850}
+.nico2-hero h1{font-weight:900!important;font-size:clamp(34px,4.8vw,70px)!important;line-height:1.08!important;letter-spacing:-.045em!important;margin:0 0 14px!important;max-width:860px}
+.nico2-hero .hero-copy p{font-size:clamp(15px,1.4vw,20px)!important;line-height:1.48!important;max-width:610px!important;color:#d8e0eb!important;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0 0 20px!important}
+.nico2-hero .hero-meta{margin:6px 0 23px!important;gap:8px!important;display:flex;flex-wrap:wrap}
+.nico2-hero .chip{background:#1d2c3dbd!important;border:0!important;border-radius:20px!important;color:#d9e1ec!important;padding:8px 12px!important;font-size:12px!important}
+.nico2-hero .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.nico2-hero .hero-actions .btn{min-height:54px!important;padding:0 25px!important;border-radius:13px!important;box-shadow:none!important}
+.nico2-hero .hero-actions .btn.main{color:#15151a!important;background:linear-gradient(130deg,#ffdf7d,#e7af39)!important;border:1px solid #fdd476!important}
+.nico2-hero-poster{height:min(380px,32vw);width:min(265px,23vw);flex:0 0 auto;border-radius:17px;box-shadow:0 20px 50px #0009;overflow:hidden;margin:30px max(20px,4vw) 0 0;transform:rotate(1deg);background:#0c1928}
+.nico2-hero-poster img{width:100%;height:100%;object-fit:cover}
+.nico2-welcome{min-height:470px;margin:0 -27px;padding:130px 56px 100px;background:radial-gradient(ellipse at 90% 20%,#163b5b,#050c15 65%);display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.nico2-welcome span{color:#e7c56d;letter-spacing:.2em;font-weight:900}.nico2-welcome h1{font-size:clamp(32px,5vw,74px);max-width:760px;margin:20px 0 0}.nico2-welcome p{color:#b5c4d6;font-size:18px;max-width:540px}.nico2-welcome .btn{margin-top:20px}
+#app .row.nico2-shelf{margin:18px 0 29px!important;padding:0!important;border:none!important;background:none!important;box-shadow:none!important}
+.nico2-shelf .row-head{display:flex!important;justify-content:space-between;align-items:center;margin:0 0 12px!important;padding:0!important;min-height:32px!important}
+.nico2-shelf .row-title{font-size:22px!important;color:#f3f4f8!important;font-weight:800!important;letter-spacing:-.025em}
+.nico2-shelf .row-title-btn{font-size:14px!important;background:none!important;border:none!important;color:#c5cbd5!important;padding:7px 4px!important;cursor:pointer}
+.nico2-shelf .strip{display:flex!important;gap:14px!important;overflow-x:auto!important;scroll-snap-type:x proximity;padding:3px 4px 16px!important;scrollbar-width:thin}
+#app .nico2-card{position:relative!important;width:clamp(165px,17vw,250px)!important;min-width:clamp(165px,17vw,250px)!important;flex:0 0 clamp(165px,17vw,250px)!important;background:transparent!important;border:0!important;border-radius:12px!important;padding:0!important;box-shadow:none!important;overflow:visible!important;scroll-snap-align:start}
+#app .nico2-card .thumb{height:clamp(115px,11vw,170px)!important;width:100%!important;border-radius:12px!important;overflow:hidden!important;background:#132235!important;position:relative!important;box-shadow:0 6px 18px #0005}
+#app .nico2-card .thumb img{width:100%!important;height:100%!important;object-fit:cover!important}
+#app .nico2-card.poster .thumb img{object-fit:cover!important}
+#app .nico2-card .card-body{padding:10px 2px 0!important;background:transparent!important;border:0!important;display:block!important}
+#app .nico2-card .card-title{font-size:15px!important;color:#f6f7fb!important;line-height:1.3!important;font-weight:750!important;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#app .nico2-card .card-meta{font-size:12px!important;color:#97a8bd!important;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#app .nico2-card .nico2-type{position:absolute;bottom:8px;left:8px;background:#0a1622eb;color:#f3cd70;border-radius:8px;padding:5px 7px;font-size:10px;font-weight:900;letter-spacing:.04em}
+#app .nico2-card .favstar{position:absolute;z-index:2;top:9px;right:9px;background:#07111edc!important;color:#eac46a!important;border:1px solid #eac46a55!important;border-radius:50%;width:34px;height:34px;font-size:20px;opacity:0;transition:opacity .1s}
+#app .nico2-card:hover .favstar,#app .nico2-card:focus-within .favstar{opacity:1}
+#app .nico2-card:focus-visible,#app .nico2-card:hover{transform:translateY(-3px)!important;outline:none!important}
+#app .nico2-card:focus-visible .thumb,#app .nico2-card:hover .thumb{outline:3px solid #f3ca68!important;outline-offset:2px!important;box-shadow:0 10px 30px #000b!important}
+#app .continue-grid{gap:14px!important;padding:4px 4px 13px!important}
+#app .continue-card{flex:0 0 clamp(200px,23vw,305px)!important;border-radius:12px!important;min-width:0!important;background:#0e1928!important;border:1px solid #2a3b4d!important}
+#app .continue-poster{height:clamp(110px,12vw,155px)!important}
+#app .continue-detail{padding:10px 12px!important}
+.nico2-page-heading{padding:120px 10px 18px!important;margin-bottom:8px;display:flex;flex-direction:column}
+.nico2-page-heading span{color:#e4c16d;letter-spacing:.2em;font-size:11px;font-weight:850}.nico2-page-heading h2{font-size:clamp(34px,4vw,60px);margin:10px 0}.nico2-page-heading p{color:#9ba9bd;margin:0}
+#app .live-filter-wrap{background:transparent!important;border:0!important;padding:8px!important;margin:0 0 18px!important}
+#app .catalog-filter-wrap .live-filter-list{padding:4px 0 8px!important}
+#app .live-filter-heading{font-size:14px!important;color:#bbc8d8!important}
+#app .live-filter-chip{background:#142033!important;border:1px solid #2f3d4e!important;border-radius:24px!important;min-height:38px!important;padding:6px 14px!important;font-size:12px!important}
+#app .live-filter-chip.active{background:#efc35b!important;color:#11171f!important;border-color:#efc35b!important}
+#app .grid{gap:20px!important}
+#app .section-head{padding-top:80px}
+#app .detail{margin-top:12px}
+#app button:focus-visible,#app .card:focus-visible,.topbar input:focus-visible,.topbar button:focus-visible{outline:3px solid #f3ca68!important;outline-offset:3px!important}
+@media(max-width:980px){.nico2-hero{min-height:420px!important;padding:90px 30px 50px!important}.nico2-hero-poster{width:185px;height:285px;margin:10px!important}.nico2-hero .hero-copy{width:auto!important}.topbar #importBtn{display:none!important}}
+@media(max-width:650px){.shell .sidebar{width:65px!important;min-width:65px!important;padding:15px 5px!important}.shell .sidebar:hover,.shell .sidebar:focus-within{width:235px!important}.shell .main{margin-left:65px!important;width:calc(100% - 65px)!important}.main .topbar{left:78px;right:10px}.topbar .search{min-width:130px!important;max-width:210px!important}.nico2-hero{padding:100px 18px 35px!important;min-height:390px!important}.nico2-hero h1{font-size:34px!important}.nico2-hero-poster{display:none}.nico2-hero .hero-copy{max-width:100%!important}.nico2-hero .hero-copy p{font-size:14px!important}.sidebar .navbtn{padding:6px 12px!important}}
+
+
+.nico2-hero .hero-actions .btn{width:auto!important;min-width:0!important;max-width:none!important;flex:0 0 auto!important;display:inline-flex!important;align-items:center;justify-content:center}
+.topbar .page-actions #importBtn{background:#edc45c!important;color:#131922!important;border-color:#f8d375!important;font-weight:800!important}
+.nico2-hero .kicker{border:0!important;background:none!important;padding:0!important}
+
+.sidebar .navbtn .navlabel{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;margin:0!important;color:inherit!important}
+.sidebar .navbtn.active .navlabel{color:#12171f!important}
+.sidebar .nico2-premium small{font-size:11px}
+
+/* Nico TV 2.0: foco individual do formulário no D-pad Fire TV */
+#dlg .pane.on input:not([type=file]),#dlg .pane.on textarea{scroll-margin-block:100px}
+#dlg .pane.on input:focus,#dlg .pane.on textarea:focus,#dlg button:focus{outline:3px solid #f6d17b!important;outline-offset:3px!important;box-shadow:0 0 0 6px rgba(228,193,109,.17)!important}
+#dlg .pane:not(.on){display:none!important}
 </style>
 </head>
 <body>
 <div class="shell">
-  <aside class="sidebar">
+  <aside class="sidebar" id="nico2Sidebar">
+<div class="nico2-brandname">Nico<span>TV</span><small> 2.0</small></div>
     <div class="logo" tabindex="0" aria-label="Nico TV"><img alt="Nico TV, mascote chihuahua" src="data:image/webp;base64,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"></div>
     <nav class="nav" aria-label="Navegação principal">
       <button class="navbtn active" id="homeNav"><span class="ico">⌂</span><span class="navlabel">Início</span></button>
       <button class="navbtn" id="liveNav"><span class="ico" aria-hidden="true">📺</span><span class="navlabel">Ao vivo</span></button>
       <button class="navbtn hidden" id="movieNav"><span class="ico" aria-hidden="true">🎞️</span><span class="navlabel">Filmes</span></button>
       <button class="navbtn hidden" id="seriesNav"><span class="ico" aria-hidden="true">🎬</span><span class="navlabel">Séries</span></button>
-      <button class="navbtn" id="favNav" aria-pressed="false"><span class="ico">★</span><span class="navlabel">Favoritos</span></button>
-      <button class="navbtn" id="recentNav" aria-pressed="false"><span class="ico">↺</span><span class="navlabel">Recentes</span></button>
+      <button class="navbtn" id="favNav" aria-pressed="false"><span class="ico">★</span><span class="navlabel">Minha Lista</span></button>
+      <button class="navbtn" id="recentNav" aria-pressed="false"><span class="ico">↺</span><span class="navlabel">Continuar Assistindo</span></button>
       <button class="navbtn" id="searchNav"><span class="ico">⌕</span><span class="navlabel">Buscar</span></button>
       <button class="navbtn" id="importNav"><span class="ico">＋</span><span class="navlabel">Importar</span></button>
     </nav>
     <div class="spacer"></div>
-    <button class="navbtn soft" id="importNav2"><span class="ico">⇪</span><span class="navlabel">Nova lista</span></button>
+    <div class="nico2-premium"><span>♛</span><div><b>Nico TV Premium</b><small>Cinematic Experience</small></div></div>
+    <button class="navbtn soft" id="importNav2"><span class="ico">⚙</span><span class="navlabel">Gerenciar listas</span></button>
   </aside>
 
   <main class="main">
@@ -359,7 +458,7 @@ textarea{min-height:96px;resize:vertical}
         </div>
       </div>
     </div>
-    <div id="app"></div>
+    <div id="app" class="nico2-app"></div>
   </main>
 </div>
 
@@ -441,7 +540,7 @@ const $$ = s => [...document.querySelectorAll(s)];
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 const state={
   channels:[], movies:null, series:null, xt:null,
-  mode:'live', view:null, detail:null, detailSeason:0,
+  homeView:true, mode:'live', view:null, detail:null, detailSeason:0,
   favorites:loadArray('nico_favorites'), recent:loadArray('nico_recent'),
   favoriteOnly:false, recentOnly:false, query:'', liveGroup:'all', liveRecent:loadArray('nico_live_recent'),
   catalogFilters:{movies:'all',series:'all'}, loading:false, queue:[], qi:0, hls:null, drawer:false, pageSize:60, vod:false, episodes:false, webTracks:false,
@@ -688,7 +787,7 @@ async function importFrom(src){
       if(src.text && src.text.length<3e6) src.keep=true;
     }
     if(!list.length) throw new Error('empty');
-    state.channels=list; state.movies=null; state.series=null; state.mode='live'; state.view=null; state.detail=null; state.query=''; state.favoriteOnly=false; state.recentOnly=false; state.liveGroup='all';state.liveRecent=[];store.set('nico_live_recent','[]'); $('#search').value='';
+    state.channels=list; state.movies=null; state.series=null; state.mode='live'; state.homeView=true; state.view=null; state.detail=null; state.query=''; state.favoriteOnly=false; state.recentOnly=false; state.liveGroup='all';state.liveRecent=[];store.set('nico_live_recent','[]'); $('#search').value='';
     store.set('nico_source',JSON.stringify(src.type==='xt'||src.url||src.epgUrl?src:{type:'m3u',text:src.text}));
     if(epgUrl) await loadEpg(epgUrl);
     render();
@@ -751,9 +850,9 @@ function renderContinue(app){
 window.nicoNativeHistoryChanged=()=>{nativeHistoryCache=null;if(!$('#player').classList.contains('on'))render();};
 
 /* UI */
-function setMode(mode){ state.mode=mode; state.view=null; state.viewList=null; state.detail=null; state.favoriteOnly=false; state.recentOnly=false; if(mode!=='live')state.liveGroup='all'; $('#favNav').setAttribute('aria-pressed','false'); $('#recentNav').setAttribute('aria-pressed','false'); updateNav(); if(mode==='movies'&&!state.movies) return loadVod().then(()=>render()); if(mode==='series'&&!state.series) return loadSeries().then(()=>render()); render(); }
+function setMode(mode){ state.homeView=false; state.mode=mode; state.view=null; state.viewList=null; state.detail=null; state.favoriteOnly=false; state.recentOnly=false; if(mode!=='live')state.liveGroup='all'; $('#favNav').setAttribute('aria-pressed','false'); $('#recentNav').setAttribute('aria-pressed','false'); updateNav(); if(mode==='movies'&&!state.movies) return loadVod().then(()=>{render();window.scrollTo(0,0);}); if(mode==='series'&&!state.series) return loadSeries().then(()=>{render();window.scrollTo(0,0);}); render();window.scrollTo(0,0); }
 function updateNav(){
-  const map={homeNav:!state.view&&!state.detail&&!state.favoriteOnly&&!state.recentOnly&&state.mode==='live',liveNav:state.mode==='live',movieNav:state.mode==='movies',seriesNav:state.mode==='series'};
+  const map={homeNav:state.homeView&&!state.view&&!state.detail&&!state.favoriteOnly&&!state.recentOnly,liveNav:!state.homeView&&state.mode==='live',movieNav:state.mode==='movies',seriesNav:state.mode==='series'};
   Object.entries(map).forEach(([id,val])=>{ const el=$('#'+id); if(el) el.classList.toggle('active',!!val); });
   $('#movieNav').classList.toggle('hidden',!state.xt); $('#seriesNav').classList.toggle('hidden',!state.xt);
 }
@@ -761,110 +860,93 @@ function groupBy(list){ const m=new Map(); list.forEach(c=>{ if(!m.has(c.group))
 function searchFiltered(list){ const base=catalogFiltered(liveFiltered(selectList(list))); if(!state.query) return base; const q=state.query.toLocaleLowerCase('pt-BR'); return base.filter(c=>`${c.name} ${c.group}`.toLocaleLowerCase('pt-BR').includes(q)); }
 function placeholderFrom(c){ return c.kind==='movie'?'🎬':c.kind==='series'?'📺':'◈'; }
 function card(c,list){
-  const div=document.createElement('div'); div.className='card'+((c.kind==='movie'||c.kind==='series')?' poster':''); div.tabIndex=0; div.setAttribute('role','button'); div.setAttribute('aria-label',c.name);
-  div.innerHTML=`<button class="favstar" aria-label="${isFav(c)?'Remover dos':'Adicionar aos'} favoritos">${isFav(c)?'★':'☆'}</button>
-    <div class="thumb">${c.logo?`<img alt="" loading="lazy" src="${c.logo}">`:`<div class="placeholder">${placeholderFrom(c)}</div>`}</div>
-    <div class="card-body">
-      <div class="card-title">${escapeHtml(c.name)}</div>
-      <div class="card-meta">${escapeHtml(c.group||'Conteúdo')}</div>
-      ${c.kind!=='movie'&&c.kind!=='series'?`<div class="card-epg">${renderEpgBlock(c)}</div>`:''}
-      <div class="card-actions"><button class="mini play">${c.kind==='series'?'Abrir':'Assistir'}</button><button class="mini">${isFav(c)?'Favorito':'Salvar'}</button></div>
-    </div>`;
-  const img=div.querySelector('img'); if(img) img.onerror=()=>img.parentElement.innerHTML=`<div class="placeholder">${placeholderFrom(c)}</div>`;
-  div.onclick=e=>{ if(e.target.closest('.favstar')) return; openItem(c,list); };
-  div.onkeydown=e=>{ if(e.target!==div)return; if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openItem(c,list); } };
-  div.querySelector('.favstar').onclick=e=>{ e.preventDefault(); e.stopPropagation(); toggleFav(c); };
-  return div;
+ const div=document.createElement('div');div.className='card nico2-card'+((c.kind==='movie'||c.kind==='series')?' poster':'');div.tabIndex=0;div.setAttribute('role','button');div.setAttribute('aria-label',c.name);
+ div.innerHTML=`<div class="thumb">${c.logo?`<img alt="" loading="lazy" src="${escapeHtml(c.logo)}">`:`<div class="placeholder">${placeholderFrom(c)}</div>`}<span class="nico2-type">${c.kind==='movie'?'FILME':c.kind==='series'?'SÉRIE':'AO VIVO'}</span><button class="favstar" aria-label="${isFav(c)?'Remover dos':'Adicionar aos'} favoritos">${isFav(c)?'★':'☆'}</button></div>
+ <div class="card-body"><div class="card-title">${escapeHtml(c.name)}</div><div class="card-meta">${escapeHtml(c.group||'Catálogo')}</div></div>`;
+ const img=div.querySelector('img');if(img)img.onerror=()=>{img.remove();div.querySelector('.thumb').classList.add('no-image');};
+ div.onclick=e=>{if(e.target.closest('.favstar'))return;openItem(c,list);};
+ div.onkeydown=e=>{if(e.target!==div)return;if(e.key==='Enter'||e.key===' '){e.preventDefault();openItem(c,list);}};
+ div.querySelector('.favstar').onclick=e=>{e.preventDefault();e.stopPropagation();toggleFav(c);};
+ return div;
 }
 function renderEpgBlock(c){ const epg=epgFor(c); if(!epg) return '<div class="next">Sem guia disponível</div>'; const cur=epg.current, next=epg.next; return `${cur?`<div>${timeFmt(cur.start)} · ${escapeHtml(cur.title)}</div>`:'<div>Sem programa atual</div>'}${next?`<div class="next">Próximo ${timeFmt(next.start)} · ${escapeHtml(next.title)}</div>`:''}`; }
 function empty(app,title,text){ app.innerHTML=`<div class="empty"><h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p></div>`; }
 function heroFor(item,count,label){
-  const epg=currentProgramText(item);
-  return `<section class="hero">
-    <div class="hero-copy">
-      <div class="kicker">${state.mode==='live'?'Ambiente ao vivo':state.mode==='movies'?'Catálogo de filmes':'Detalhe da série'}</div>
-      <h1>${escapeHtml(item.name)}<br><span class="accent">${escapeHtml(item.group||label)}</span></h1>
-      <p>${state.mode==='live'?'Seus canais, filmes e séries em uma interface pensada para TV, com navegação rápida, favoritos, recentes e busca inteligente.':state.mode==='movies'?'Explore seu catálogo de filmes com visual premium e acesso rápido.':'Navegue por temporadas e episódios com uma experiência mais rica e organizada.'}</p>
-      <div class="hero-meta">
-        <span class="chip">${count} ${label}</span>
-        ${item.group?`<span class="chip accent">${escapeHtml(item.group)}</span>`:''}
-        ${epg?`<span class="chip">${escapeHtml(epg)}</span>`:''}
-        ${state.epgSource?'<span class="chip">EPG ativo</span>':''}
-      </div>
-      <div class="hero-actions">
-        <button class="btn main" id="heroPlayBtn">${item.kind==='series'?'Abrir série':'Assistir agora'}</button>
-        <button class="btn" id="heroFavBtn">${isFav(item)?'★ Favoritado':'☆ Favoritar'}</button>
-        ${state.mode==='live'?'<button class="btn" id="heroGuideBtn">▦ Guia de programação</button>':''}
-      </div>
-    </div>
-    <div class="hero-media">
-      <div class="media-card">
-        <div class="media-thumb">${item.logo?`<img alt="" src="${item.logo}">`:'<div class="placeholder" style="font-size:44px;color:#f0d28c">◈</div>'}</div>
-        <div class="media-info">
-          <div class="media-title">${escapeHtml(item.name)}</div>
-          <div class="media-sub">${escapeHtml(item.group||label)}</div>
-          <div class="media-lines"><div class="media-line"></div><div class="media-line small"></div><div class="media-line tiny"></div></div>
-        </div>
-      </div>
-      <div class="control-grid">
-        <div class="control-card"><div class="label">Itens</div><div class="value">${String(count).padStart(2,'0')}</div><div class="section-sub">${label}</div></div>
-        <div class="control-card"><div class="label">Favoritos</div><div class="value">${state.favorites.length}</div><div class="section-sub">Acesso rápido</div></div>
-        <div class="control-card"><div class="label">Recentes</div><div class="value">${state.recent.length}</div><div class="section-sub">Continue assistindo</div></div>
-        <div class="control-card"><div class="label">Modo</div><div class="value" style="font-size:22px">${state.mode==='live'?'Ao vivo':state.mode==='movies'?'Filmes':'Séries'}</div><div class="section-sub">Experiência premium</div></div>
-      </div>
-    </div>
-  </section>`;
+ const c=item||{};const isSeries=c.kind==='series';const isMovie=c.kind==='movie';const kind=isSeries?'SÉRIE':isMovie?'FILME':'CANAL';
+ const desc=c.description||c.plot||(isMovie||isSeries?'Explore este título no catálogo da Nico TV.':'Acompanhe seus canais favoritos em uma experiência feita para televisão.');
+ const tags=[c.year,c.genre,c.group,c.rating?`★ ${c.rating}`:''].filter(Boolean).slice(0,4);
+ return `<section class="hero nico2-hero" aria-label="Destaque Nico TV">
+  ${c.logo?`<div class="nico2-hero-backdrop" style="background-image:url('${escapeHtml(c.logo).replace(/'/g,'%27')}')"></div>`:''}
+  <div class="nico2-hero-shade"></div>
+  <div class="hero-copy"><div class="kicker">✦ NICO TV · SELEÇÃO EM DESTAQUE</div><div class="nico2-feature">★ ${kind} EM DESTAQUE</div>
+   <h1>${escapeHtml(c.name||'Nico TV')}</h1><p>${escapeHtml(desc)}</p>
+   <div class="hero-meta">${tags.map(t=>`<span class="chip">${escapeHtml(String(t))}</span>`).join('')}</div>
+   <div class="hero-actions"><button class="btn main" id="heroPlayBtn">▶ ${isSeries?'Explorar episódios':isMovie?'Ver detalhes':'Assistir agora'}</button><button class="btn" id="heroFavBtn">${isFav(c)?'★ Na minha lista':'☆ Minha Lista'}</button></div>
+  </div>
+  <div class="nico2-hero-poster">${c.logo?`<img src="${escapeHtml(c.logo)}" alt="" onerror="this.style.display='none'">`:''}</div>
+ </section>`;
 }
 function appendRow(app,title,list,opts={}){
-  if(!list.length) return;
-  const row=document.createElement('section'); row.className='row';
-  const head=document.createElement('div'); head.className='row-head';
-  head.innerHTML=`<div><div class="row-title">${escapeHtml(title)}</div>${opts.subtitle?`<div class="row-subcount">${escapeHtml(opts.subtitle)}</div>`:''}</div>${opts.more?`<button class="row-title-btn" id="more-${escapeAttr(title)}">Ver tudo</button>`:''}`;
-  row.append(head);
-  const strip=document.createElement('div'); strip.className='strip'; list.slice(0, opts.limit||40).forEach(c=>strip.append(card(c,list)));
-  row.append(strip); app.append(row);
-  const moreBtn=row.querySelector(".row-title-btn"); if(moreBtn) moreBtn.onclick=()=>{ state.view=title; state.viewList=list; state.pageSize=60; render(); window.scrollTo(0,0); };
+ if(!list?.length)return;
+ const row=document.createElement('section');row.className='row nico2-shelf';
+ const head=document.createElement('div');head.className='row-head';
+ head.innerHTML=`<div class="row-title">${escapeHtml(title)}</div>${opts.more?'<button class="row-title-btn">Ver tudo ›</button>':''}`;
+ row.append(head);
+ const strip=document.createElement('div');strip.className='strip';list.slice(0,opts.limit||16).forEach(c=>strip.append(card(c,list)));row.append(strip);app.append(row);
+ const more=head.querySelector('.row-title-btn');if(more)more.onclick=()=>{state.view=title;state.viewList=list;state.pageSize=60;render();window.scrollTo(0,0);};
+}
+let nico2LoadingHome=false;
+async function nico2LoadHomeCatalog(){
+ if(!state.xt||nico2LoadingHome||state.movies!==null&&state.series!==null)return;
+ nico2LoadingHome=true;
+ try{
+  if(state.movies===null)await loadVod({silent:true});
+  if(state.series===null)await loadSeries({silent:true});
+ }finally{nico2LoadingHome=false;render();}
+}
+function nico2Hero(app,item,count,label){
+ if(!item)return;
+ app.insertAdjacentHTML('beforeend',heroFor(item,count,label));
+ const btn=$('#heroPlayBtn'),fav=$('#heroFavBtn');
+ if(btn)btn.onclick=()=>openItem(item,[item]);
+ if(fav)fav.onclick=()=>toggleFav(item);
 }
 function render(){
-  updateNav();
-  const app=$('#app'); app.innerHTML='';
-  const all=searchFiltered(currentList());const baseLive=state.mode==='live'?selectList(state.channels):[];const baseCatalog=['movies','series'].includes(state.mode)?currentList():[]; $('#counter').textContent=`${all.length} itens`;
-  if(state.loading){ empty(app,'Carregando…','Listas grandes podem levar alguns segundos.'); return; }
-  if(state.detail){ renderDetail(app); return; }
-  if(state.view){ renderSingleView(app,all); return; }
-  if(!all.length){
-    if(state.mode==='live')liveFilterPanel(app,baseLive);
-    else catalogFilterPanel(app,baseCatalog);
-    renderContinue(app);
-    const msg=document.createElement('div');msg.className='empty';msg.innerHTML=(!state.channels.length&&state.mode==='live')?'<h2>Bem-vindo ao Nico TV</h2><p>Importe sua lista M3U ou faça login Xtream para começar.</p>':'<h2>Nenhum resultado</h2><p>Tente alterar a busca, os filtros ou trocar de categoria.</p>';app.append(msg);
-    return;
+ updateNav();const app=$('#app');app.innerHTML='';
+ const baseList=currentList(),all=searchFiltered(baseList);$('#counter').textContent=`${all.length} itens`;
+ if(state.loading){empty(app,'Carregando…','Preparando seu catálogo.');return;}
+ if(state.detail){renderDetail(app);return;}
+ if(state.view){renderSingleView(app,all);return;}
+ if(state.homeView&&!state.query&&!state.favoriteOnly&&!state.recentOnly){
+  app.classList.add('nico2-home');
+  const featured=(state.movies||[]).find(x=>x.logo)||(state.series||[]).find(x=>x.logo)||state.channels.find(x=>x.logo)||state.channels[0];
+  if(featured){nico2Hero(app,featured,0,'conteúdos');}else{
+   app.innerHTML='<section class="nico2-welcome"><span>✦ NICO TV 2.0</span><h1>Seu entretenimento, em outro nível.</h1><p>Importe sua lista Xtream ou M3U para acessar seus conteúdos.</p><button id="nico2ImportStart" class="btn main">＋ Importar lista</button></section>';
+   $('#nico2ImportStart').onclick=openImport;
   }
-  const label=state.mode==='movies'?'filmes':state.mode==='series'?'séries':'canais';
-  if(state.mode==='live')liveFilterPanel(app,baseLive);
-  else catalogFilterPanel(app,baseCatalog);
-  app.insertAdjacentHTML('beforeend', heroFor(all[0], all.length, label));
-  $('#heroPlayBtn').onclick=()=>openItem(all[0],all); $('#heroFavBtn').onclick=()=>toggleFav(all[0]); if($('#heroGuideBtn'))$('#heroGuideBtn').onclick=openGuide;
-
   renderContinue(app);
-  const recentItems=state.recent.map(k=>all.find(x=>keyOf(x)===k)).filter(Boolean);
-  const favoriteItems=all.filter(isFav);
-  appendRow(app,'Assistidos recentemente',recentItems,{subtitle:'Seu histórico de aberturas',limit:18});
-  appendRow(app,'Favoritos',favoriteItems,{subtitle:'Seus atalhos principais',limit:18});
-  if(state.mode==='live' && state.liveGroup==='all')appendRow(app,'Últimos canais',state.liveRecent.map(k=>all.find(x=>keyOf(x)===k)).filter(Boolean),{subtitle:'Volte aos canais que você assistiu',limit:18});
-
-  if(state.mode==='live'){
-    const groups=groupBy(all);
-    for(const [name,list] of groups){
-      const row=document.createElement('section'); row.className='row';
-      row.innerHTML=`<div class="row-head"><div><button class="row-title-btn">${escapeHtml(name)} ›</button><div class="row-subcount">${list.length} canais</div></div></div>`;
-      row.querySelector('button').onclick=()=>{ state.view=name; state.viewList=list; state.pageSize=60; render(); window.scrollTo(0,0); };
-      const strip=document.createElement('div'); strip.className='strip'; list.slice(0,30).forEach(c=>strip.append(card(c,list)));
-      row.append(strip); app.append(row);
-    }
-  } else {
-    appendRow(app,state.mode==='movies'?'Catálogo de filmes':'Biblioteca de séries',all,{subtitle:`${all.length} itens disponíveis`,limit:50,more:true});
-  }
-  focusFirst();
+  const recents=state.recent.map(k=>[...(state.movies||[]),...(state.series||[]),...state.channels].find(x=>keyOf(x)===k)).filter(Boolean);
+  appendRow(app,'✦ Minha Lista',[...(state.movies||[]),...(state.series||[]),...state.channels].filter(isFav).slice(0,24),{more:true});
+  appendRow(app,'🔥 Filmes em destaque',state.movies||[],{more:true,limit:12});
+  appendRow(app,'▣ Séries populares',state.series||[],{more:true,limit:12});
+  appendRow(app,'▤ Canais ao vivo',state.channels.slice(0,16),{more:true,limit:12});
+  appendRow(app,'↺ Assistidos recentemente',recents,{more:true});
+  if(state.xt&&(state.movies===null||state.series===null)&&!nico2LoadingHome)nico2LoadHomeCatalog();
+  return;
+ }
+ app.classList.remove('nico2-home');
+ if(state.mode==='live')liveFilterPanel(app,selectList(state.channels));else catalogFilterPanel(app,baseList);
+ const modeName=state.mode==='movies'?'Filmes':state.mode==='series'?'Séries':'Ao Vivo';
+ const heading=document.createElement('div');heading.className='nico2-page-heading';heading.innerHTML=`<span>EXPLORE O CATÁLOGO</span><h2>${modeName}</h2><p>${all.length.toLocaleString('pt-BR')} títulos disponíveis</p>`;
+ app.prepend(heading);
+ if(!all.length){const msg=document.createElement('div');msg.className='empty';msg.innerHTML='<h2>Nenhum resultado</h2><p>Confira a busca ou selecione outra categoria.</p>';app.append(msg);return;}
+ if(state.mode==='live'){
+  const groups=groupBy(all);appendRow(app,'📺 Todos os canais',all,{more:true,limit:16});
+  let n=0;for(const [name,list] of groups){if(n++>=5)break;appendRow(app,name,list,{more:true,limit:12});}
+ }else{
+  appendRow(app,modeName==='Filmes'?'🎞 Filmes em destaque':'▣ Séries em destaque',all,{more:true,limit:16});
+  const groups=groupBy(all);let n=0;for(const [name,list] of groups){if(n++>=5)break;appendRow(app,name,list,{more:true,limit:12});}
+ }
 }
 function renderSingleView(app,all){
   const source=state.viewList && state.viewList.length ? searchFiltered(state.viewList) : all;
@@ -905,8 +987,8 @@ function openItem(c,list){ markRecent(c); if(c.kind==='series'){ openSeries(c); 
 
 /* VOD / series */
 async function fetchCats(action){ const cs=await getJSON(state.xt.api+'&action='+action), out={}; (Array.isArray(cs)?cs:[]).forEach(c=>out[c.category_id]=c.category_name); return out; }
-async function loadVod(){ state.loading=true; render(); try{ const [n,st]=await Promise.all([fetchCats('get_vod_categories'),getJSON(state.xt.api+'&action=get_vod_streams')]); state.movies=(Array.isArray(st)?st:[]).map(s=>({kind:'movie',name:s.name||'Sem nome',logo:s.stream_icon||'',group:n[s.category_id]||'Outros',id:s.stream_id,description:s.plot||'',year:s.year||'',rating:s.rating||'',genre:s.genre||'',url:`${state.xt.base}/movie/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${s.stream_id}.${s.container_extension||'mp4'}`})); } catch(e){ state.movies=[]; } state.loading=false; }
-async function loadSeries(){ state.loading=true; render(); try{ const [n,st]=await Promise.all([fetchCats('get_series_categories'),getJSON(state.xt.api+'&action=get_series')]); state.series=(Array.isArray(st)?st:[]).map(s=>({kind:'series',id:s.series_id,name:s.name||'Sem nome',logo:s.cover||'',group:n[s.category_id]||'Outros',description:s.plot||'',year:s.releaseDate||'',rating:s.rating||'',genre:s.genre||''})); } catch(e){ state.series=[]; } state.loading=false; }
+async function loadVod({silent=false}={}){ if(!silent){state.loading=true;render();} try{ const [n,st]=await Promise.all([fetchCats('get_vod_categories'),getJSON(state.xt.api+'&action=get_vod_streams')]); state.movies=(Array.isArray(st)?st:[]).map(s=>({kind:'movie',name:s.name||'Sem nome',logo:s.stream_icon||'',group:n[s.category_id]||'Outros',id:s.stream_id,description:s.plot||'',year:s.year||'',rating:s.rating||'',genre:s.genre||'',url:`${state.xt.base}/movie/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${s.stream_id}.${s.container_extension||'mp4'}`})); } catch(e){ state.movies=[]; } if(!silent)state.loading=false; }
+async function loadSeries({silent=false}={}){ if(!silent){state.loading=true;render();} try{ const [n,st]=await Promise.all([fetchCats('get_series_categories'),getJSON(state.xt.api+'&action=get_series')]); state.series=(Array.isArray(st)?st:[]).map(s=>({kind:'series',id:s.series_id,name:s.name||'Sem nome',logo:s.cover||'',group:n[s.category_id]||'Outros',description:s.plot||'',year:s.releaseDate||'',rating:s.rating||'',genre:s.genre||''})); } catch(e){ state.series=[]; } if(!silent)state.loading=false; }
 async function openSeries(c){ state.loading=true; render(); try{ const d=await getJSON(`${state.xt.api}&action=get_series_info&series_id=${c.id}`); const seasons=Object.keys(d.episodes||{}).sort((a,b)=>a-b).map(n=>({n,eps:d.episodes[n].map(e=>({kind:'ep',name:(`E${e.episode_num}. ${e.title||''}`).trim(),logo:(e.info&&e.info.movie_image)||c.logo,seriesId:c.id,seriesName:c.name,season:n,episode:e.episode_num,url:`${state.xt.base}/series/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${e.id}.${e.container_extension||'mp4'}`}))})); state.detail=seasons.length?{name:c.name,logo:c.logo,seasons,description:d.info?.plot||c.description||'',genre:d.info?.genre||c.genre||'',year:d.info?.releaseDate||c.year||'',rating:d.info?.rating||c.rating||''}:null; state.detailSeason=0; } catch(e){ state.detail=null; } state.loading=false; render(); }
 
 async function openMovieInfo(c){
@@ -1146,7 +1228,7 @@ function toggleDrawer(force){
   if(state.drawer)renderDrawer();showPlayerBar();
 }
 /* Navigation and events */
-$('#homeBtn').onclick=()=>{ state.view=null; state.detail=null; state.favoriteOnly=false; state.recentOnly=false; render(); scrollTo(0,0); };
+$('#homeBtn').onclick=()=>{ state.homeView=true; state.mode='live';state.view=null; state.detail=null; state.favoriteOnly=false; state.recentOnly=false; render(); scrollTo(0,0); };
 $('#importBtn').onclick=()=>openImport();
 $('#homeNav').onclick=()=>$('#homeBtn').click();
 $('#liveNav').onclick=()=>setMode('live');
@@ -1154,9 +1236,9 @@ $('#movieNav').onclick=()=>setMode('movies');
 $('#seriesNav').onclick=()=>setMode('series');
 $('#searchNav').onclick=()=>$('#search').focus();
 $('#importNav').onclick=()=>openImport(); $('#importNav2').onclick=()=>openImport();
-$('#favNav').onclick=()=>{ state.favoriteOnly=!state.favoriteOnly; state.recentOnly=false; state.view=null; $('#favNav').setAttribute('aria-pressed',state.favoriteOnly); $('#recentNav').setAttribute('aria-pressed','false'); render(); };
-$('#recentNav').onclick=()=>{ state.recentOnly=!state.recentOnly; state.favoriteOnly=false; state.view=null; $('#recentNav').setAttribute('aria-pressed',state.recentOnly); $('#favNav').setAttribute('aria-pressed','false'); render(); };
-$('#search').oninput=e=>{ state.query=e.target.value.trim(); state.view=null; render(); };
+$('#favNav').onclick=()=>{ state.homeView=false; state.favoriteOnly=!state.favoriteOnly; state.recentOnly=false; state.view=null; $('#favNav').setAttribute('aria-pressed',state.favoriteOnly); $('#recentNav').setAttribute('aria-pressed','false'); render(); };
+$('#recentNav').onclick=()=>{ state.homeView=false; state.recentOnly=!state.recentOnly; state.favoriteOnly=false; state.view=null; $('#recentNav').setAttribute('aria-pressed',state.recentOnly); $('#favNav').setAttribute('aria-pressed','false'); render(); };
+$('#search').oninput=e=>{ state.query=e.target.value.trim(); state.view=null; if(state.query)state.homeView=false; render(); };
 $('#backBtn').onclick=stopPlayback;
 $('#prevBtn').onclick=()=>{if(state.queue.length){savePlaybackProgress(true);state.qi=(state.qi-1+state.queue.length)%state.queue.length;startPlayback();}};
 $('#nextBtn').onclick=()=>{if(state.queue.length){savePlaybackProgress(true);state.qi=(state.qi+1)%state.queue.length;startPlayback();}};
@@ -1205,13 +1287,14 @@ document.addEventListener('webkitfullscreenchange',syncFullscreenButton);
 
 
 /* Teclado virtual: foco no campo de texto precisa acionar IME no Android/Fire OS. */
+let nicoDpadMovingFocus=false;
 const importFields=['m3uUrl','m3uText','epgUrl','xtServer','xtUser','xtPass'];
 importFields.forEach(id=>{
   const el=document.getElementById(id);
   if(!el)return;
   el.addEventListener('focus',()=>{
-    if(window.Android && typeof window.Android.showKeyboard==='function'){
-      // Espera o WebView atualizar seu editor de texto antes de solicitar o IME.
+    if(!nicoDpadMovingFocus && window.Android && typeof window.Android.showKeyboard==='function'){
+      // Setas navegam primeiro; OK ativa o teclado virtual.
       setTimeout(()=>{if(document.activeElement===el)window.Android.showKeyboard();},120);
     }
     setTimeout(()=>{if(document.activeElement===el)el.scrollIntoView({block:'nearest'});},180);
@@ -1243,9 +1326,51 @@ window.__back=()=>{
   return false;
 };
 
-function openImport(){ $('#err').textContent=''; $('#dlg').showModal(); }
+function focusImportControl(el, fromDpad=true){
+  if(!el)return;
+  nicoDpadMovingFocus=fromDpad;
+  try{el.focus({preventScroll:true});}catch(e){el.focus();}
+  nicoDpadMovingFocus=false;
+  el.scrollIntoView({block:'nearest',inline:'nearest'});
+}
+function importFocusableControls(){
+  const pane=state.tab==='xt'?'#pane-xt':'#pane-m3u';
+  const controls=[...document.querySelectorAll('#dlg .tabs button, '+pane+' input, '+pane+' textarea, '+pane+' button, #cancelImport, #confirmImport')];
+  return controls.filter(el=>!el.disabled && el.getClientRects().length && getComputedStyle(el).visibility!=='hidden');
+}
+// Captura no dialog ANTES da navegacao espacial padrao do WebView.
+document.addEventListener('keydown',e=>{
+  if(!$('#dlg').open)return;
+  const down=e.key==='ArrowDown'||e.keyCode===20;
+  const up=e.key==='ArrowUp'||e.keyCode===19;
+  const activate=e.key==='Enter'||e.key===' '||e.keyCode===23;
+  if(down||up){
+    const controls=importFocusableControls();
+    if(!controls.length)return;
+    let i=controls.indexOf(document.activeElement);
+    if(i<0)i=down?-1:controls.length;
+    const next=controls[Math.max(0,Math.min(controls.length-1,i+(down?1:-1)))];
+    e.preventDefault();e.stopImmediatePropagation();focusImportControl(next,true);
+    return;
+  }
+  if(activate&&['xtServer','xtUser','xtPass','m3uUrl','m3uText','epgUrl'].includes(document.activeElement?.id)){
+    e.preventDefault();e.stopImmediatePropagation();
+    if(window.Android&&typeof window.Android.showKeyboard==='function')window.Android.showKeyboard();
+    else document.activeElement.click();
+  }
+},true);
+function openImport(){
+  $('#err').textContent='';$('#dlg').showModal();
+  requestAnimationFrame(()=>focusImportControl(document.querySelector('#dlg .tabs [data-t="'+state.tab+'"]'),true));
+}
 $('#cancelImport').onclick=()=>$('#dlg').close();
-$$('.tabs .btn').forEach(b=>b.onclick=()=>{ state.tab=b.dataset.t; $$('.tabs .btn').forEach(x=>x.setAttribute('aria-pressed',x===b)); $('#pane-m3u').classList.toggle('on',state.tab==='m3u'); $('#pane-xt').classList.toggle('on',state.tab==='xt'); });
+$$('.tabs .btn').forEach(b=>b.onclick=()=>{
+  state.tab=b.dataset.t;
+  $$('.tabs .btn').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  $('#pane-m3u').classList.toggle('on',state.tab==='m3u');
+  $('#pane-xt').classList.toggle('on',state.tab==='xt');
+  focusImportControl(b,true);
+});
 $('#confirmImport').onclick=async()=>{
   const err=$('#err'); err.textContent='Carregando…';
   try{
@@ -1297,7 +1422,8 @@ document.addEventListener('keydown',e=>{
 
   if(el && /INPUT|TEXTAREA/.test(el.tagName) && !k.startsWith('Arrow')) return;
   if(!k.startsWith('Arrow')) return;
-  const nodes=[...document.querySelectorAll('.sidebar .navbtn,.topbar .btn,#search,#app button,#app .card,#app .ep-item')].filter(o=>o.offsetParent!==null);
+  let nodes=[...document.querySelectorAll('.sidebar .navbtn,.topbar .btn,#search,#app button,#app .card,#app .ep-item')].filter(o=>o.offsetParent!==null);
+  if(el&&el.closest('#app')&&(k==='ArrowUp'||k==='ArrowDown')){const inside=nodes.filter(o=>o.closest('#app'));if(inside.length)nodes=inside;}
   if(!nodes.length) return;
   if(!nodes.includes(el)){ nodes[0].focus(); e.preventDefault(); return; }
   const r=el.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2; let best=null, bestScore=1e9;
