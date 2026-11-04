@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nico TV v1.4.0 • Fire Edition</title>
+<title>Nico TV v1.6.0 • Premium Experience</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -322,6 +322,69 @@ textarea{min-height:96px;resize:vertical}
 .live-group-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .live-filter-empty{padding:24px 10px;color:#a1b0c8}
 @media(max-width:700px){.live-filter-wrap{padding:12px;border-radius:16px}.live-filter-chip{font-size:13px;min-height:42px;padding:8px 12px}}
+
+/* v1.6.0 — Premium Experience: somente interface, sem alterar o ExoPlayer */
+:root{--gold:#e8c77c;--focus:#ffe2a3;--shadow:0 16px 42px rgba(0,0,0,.36)}
+html,body{background:#080d16;color:#f6f7fb}
+.main{padding:22px clamp(18px,2.4vw,38px) 48px}
+.topbar{gap:16px;margin-bottom:22px}
+.brandpanel{background:#0d1623;border:1px solid #213045;border-radius:22px;padding:8px 13px}
+.brandbanner{width:min(28vw,300px);max-height:88px;box-shadow:none}
+.brandvisual{min-width:0;width:auto}
+.subtitle{font-size:11px;color:#9faec2}
+.sidebar{z-index:5;background:linear-gradient(180deg,#0c1522,#080e17);border-right-color:#25354c;box-shadow:4px 0 26px #0003}
+.logo{border-radius:17px}
+.navbtn{border-radius:14px;background:transparent;border-color:transparent}
+.navbtn.active{background:#292619;border-color:#796232;box-shadow:inset 3px 0 0 #e8c77c}
+.navbtn:focus-visible{border-color:#e8c77c;background:#342e1f}
+.search{background:#101a29;border-color:#2c3d54}
+.hero.cinema-hero{display:flex;align-items:center;isolation:isolate;min-height:clamp(340px,40vw,520px);padding:clamp(22px,4vw,58px);border-radius:24px;border:1px solid #334255;background:#101a29;box-shadow:0 24px 72px #0008;overflow:hidden}
+.hero.cinema-hero:before,.hero.cinema-hero:after{display:none}
+.cinema-backdrop,.cinema-shade{position:absolute;inset:0;pointer-events:none}
+.cinema-backdrop{z-index:-2;overflow:hidden;background:radial-gradient(circle at 78% 34%,#344a5d 0,#171d2b 46%,#080e16 92%)}
+.cinema-backdrop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:75% 33%;filter:brightness(.62) saturate(.85) blur(9px);transform:scale(1.1)}
+.cinema-shade{z-index:-1;background:linear-gradient(90deg,#090f19 2%,rgba(9,15,25,.97) 26%,rgba(9,15,25,.72) 55%,rgba(9,15,25,.08) 100%),linear-gradient(0deg,rgba(8,13,22,.8),transparent 50%)}
+.cinema-poster{position:absolute;right:clamp(20px,6vw,100px);top:50%;transform:translateY(-50%);width:min(21vw,230px);aspect-ratio:2/3;object-fit:cover;border-radius:16px;border:1px solid #ffffff55;box-shadow:0 25px 55px #0009;z-index:0}
+.cinema-hero .hero-copy{z-index:1;width:min(66%,670px)}
+.cinema-hero .kicker{letter-spacing:.14em;background:#1d2430d9;border-color:#735e36;color:#ffe2a0}
+.cinema-hero h1{font-size:clamp(32px,4.3vw,61px);line-height:1.06;margin:18px 0;max-width:660px;overflow-wrap:anywhere;text-shadow:0 3px 25px #0008}
+.cinema-hero h1 .accent{display:block;margin-top:10px;font-size:clamp(15px,1.7vw,21px);font-weight:700;color:#eed293;letter-spacing:0}
+.cinema-description{max-width:550px;line-height:1.65;color:#dce3ec;font-size:15px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 4px #000a}
+.cinema-hero .hero-actions{margin-top:22px}
+.cinema-hero .hero-actions .btn{min-width:148px;min-height:49px;border-radius:12px}
+.cinema-hero .hero-meta{margin:17px 0 0}
+.cinema-hero .chip{background:#111a26c9;border:1px solid #5361747a;font-size:12px;padding:6px 11px}
+.cinema-hero .chip.accent{color:#ffe0a2;border-color:#8f7449}
+.cinema-fallback-art{position:absolute;right:12%;top:25%;font-size:clamp(80px,13vw,190px);color:#d3ae5b30;pointer-events:none}
+.cinema-eyebrow{font-size:11px;font-weight:800;letter-spacing:.24em;color:#e7c77e;text-transform:uppercase}
+.row{margin-top:26px}
+.row-title{font-size:23px;letter-spacing:-.04em}
+.row-subcount{margin-top:3px;color:#8f9db1}
+.strip{gap:16px;padding:9px 4px 20px;scroll-snap-type:x proximity}
+.card{scroll-snap-align:start;width:220px;padding:9px;border-radius:17px;background:#101927;border:1px solid #28394d;box-shadow:0 7px 19px #0003;transition:transform .2s,border-color .2s,box-shadow .2s}
+.card.poster{width:192px}
+.card .thumb{border-radius:12px;border:0;position:relative;background:linear-gradient(145deg,#203449,#121927)}
+.card .thumb img{transition:transform .26s ease}
+.card:is(:hover,:focus-visible,:focus-within) .thumb img{transform:scale(1.06)}
+.card:is(:hover,:focus-visible,:focus-within){transform:translateY(-4px) scale(1.035);z-index:2;border-color:#e8c77c;box-shadow:0 0 0 2px #e8c77c77,0 18px 36px #000a}
+.card .card-body{padding:10px 3px 4px}
+.card .card-title{font-size:15px;font-weight:800}
+.card .card-meta{font-size:11px;margin-top:3px}
+.card .card-actions{margin-top:8px;gap:6px}
+.card .mini{padding:8px 9px;border-radius:8px;font-size:11px}
+.card .favstar{width:32px;height:32px;top:15px;right:15px;font-size:16px;background:#09101bdc}
+.card-overlay-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-42%);height:48px;width:48px;border-radius:50%;display:grid;place-items:center;background:#e8c77cf2;color:#101723;font-size:24px;font-weight:800;box-shadow:0 8px 24px #0008;opacity:0;transition:opacity .18s,transform .18s;pointer-events:none}
+.card:is(:hover,:focus-visible,:focus-within) .card-overlay-play{opacity:1;transform:translate(-50%,-50%)}
+.card-kind{position:absolute;left:7px;bottom:7px;background:#080e19dc;color:#e7cb89;border:1px solid #e7cb8944;border-radius:6px;padding:3px 7px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.grid{gap:16px}
+.detail-side,.detail-main{background:#101825;border-color:#2b3b51}
+.detail-title{line-height:1.12}
+.section-head .section-title{font-size:26px}
+.continue-card,.continue-item{transition:transform .16s,border-color .16s}
+@media(max-width:1100px){.cinema-hero .hero-copy{width:72%}.cinema-poster{width:min(24vw,190px)}}
+@media(max-width:780px){.main{padding:14px}.brandbanner{width:min(66vw,270px)}.hero.cinema-hero{min-height:400px;padding:24px}.cinema-hero .hero-copy{width:100%}.cinema-poster{width:36%;right:10px;opacity:.38}.cinema-shade{background:linear-gradient(90deg,#090f19 0%,#090f19e8 62%,#090f1950 100%)}.cinema-hero h1{font-size:36px}.cinema-description{font-size:13px}.card.poster{width:164px}.card{width:195px}.row-title{font-size:20px}}
+@media(prefers-reduced-motion:reduce){.card,.card .thumb img,.card-overlay-play{transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -763,7 +826,7 @@ function placeholderFrom(c){ return c.kind==='movie'?'🎬':c.kind==='series'?'�
 function card(c,list){
   const div=document.createElement('div'); div.className='card'+((c.kind==='movie'||c.kind==='series')?' poster':''); div.tabIndex=0; div.setAttribute('role','button'); div.setAttribute('aria-label',c.name);
   div.innerHTML=`<button class="favstar" aria-label="${isFav(c)?'Remover dos':'Adicionar aos'} favoritos">${isFav(c)?'★':'☆'}</button>
-    <div class="thumb">${c.logo?`<img alt="" loading="lazy" src="${c.logo}">`:`<div class="placeholder">${placeholderFrom(c)}</div>`}</div>
+    <div class="thumb">${c.logo?`<img alt="" loading="lazy" src="${escapeHtml(c.logo)}">`:`<div class="placeholder">${placeholderFrom(c)}</div>`}<span class="card-overlay-play" aria-hidden="true">▶</span><span class="card-kind">${c.kind==='series'?'Série':c.kind==='movie'?'Filme':'Ao vivo'}</span></div>
     <div class="card-body">
       <div class="card-title">${escapeHtml(c.name)}</div>
       <div class="card-meta">${escapeHtml(c.group||'Conteúdo')}</div>
@@ -779,41 +842,28 @@ function card(c,list){
 function renderEpgBlock(c){ const epg=epgFor(c); if(!epg) return '<div class="next">Sem guia disponível</div>'; const cur=epg.current, next=epg.next; return `${cur?`<div>${timeFmt(cur.start)} · ${escapeHtml(cur.title)}</div>`:'<div>Sem programa atual</div>'}${next?`<div class="next">Próximo ${timeFmt(next.start)} · ${escapeHtml(next.title)}</div>`:''}`; }
 function empty(app,title,text){ app.innerHTML=`<div class="empty"><h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p></div>`; }
 function heroFor(item,count,label){
-  const epg=currentProgramText(item);
-  return `<section class="hero">
-    <div class="hero-copy">
-      <div class="kicker">${state.mode==='live'?'Ambiente ao vivo':state.mode==='movies'?'Catálogo de filmes':'Detalhe da série'}</div>
-      <h1>${escapeHtml(item.name)}<br><span class="accent">${escapeHtml(item.group||label)}</span></h1>
-      <p>${state.mode==='live'?'Seus canais, filmes e séries em uma interface pensada para TV, com navegação rápida, favoritos, recentes e busca inteligente.':state.mode==='movies'?'Explore seu catálogo de filmes com visual premium e acesso rápido.':'Navegue por temporadas e episódios com uma experiência mais rica e organizada.'}</p>
-      <div class="hero-meta">
-        <span class="chip">${count} ${label}</span>
-        ${item.group?`<span class="chip accent">${escapeHtml(item.group)}</span>`:''}
-        ${epg?`<span class="chip">${escapeHtml(epg)}</span>`:''}
-        ${state.epgSource?'<span class="chip">EPG ativo</span>':''}
-      </div>
-      <div class="hero-actions">
-        <button class="btn main" id="heroPlayBtn">${item.kind==='series'?'Abrir série':'Assistir agora'}</button>
-        <button class="btn" id="heroFavBtn">${isFav(item)?'★ Favoritado':'☆ Favoritar'}</button>
-        ${state.mode==='live'?'<button class="btn" id="heroGuideBtn">▦ Guia de programação</button>':''}
-      </div>
-    </div>
-    <div class="hero-media">
-      <div class="media-card">
-        <div class="media-thumb">${item.logo?`<img alt="" src="${item.logo}">`:'<div class="placeholder" style="font-size:44px;color:#f0d28c">◈</div>'}</div>
-        <div class="media-info">
-          <div class="media-title">${escapeHtml(item.name)}</div>
-          <div class="media-sub">${escapeHtml(item.group||label)}</div>
-          <div class="media-lines"><div class="media-line"></div><div class="media-line small"></div><div class="media-line tiny"></div></div>
+  const kind=item.kind||'live';
+  const isVod=kind==='movie'||kind==='series';
+  const epg=isVod?'':currentProgramText(item);
+  const extra=[item.year,item.genre,item.rating?`★ ${item.rating}`:''].filter(Boolean);
+  const description=(item.description||'').trim() || (kind==='live'?'Seus canais ao vivo, organizados e acessíveis em poucos cliques.':kind==='series'?'Explore temporadas e episódios, salve favoritos e continue de onde parou.':'Uma seleção do seu catálogo, pronta para assistir.');
+  const visual=item.logo ? `<img class="cinema-poster" loading="eager" alt="" src="${escapeHtml(item.logo)}" onerror="this.style.display='none'">` : '<span class="cinema-fallback-art" aria-hidden="true">◈</span>';
+  return `<section class="hero cinema-hero" aria-label="Conteúdo em destaque">
+      <div class="cinema-backdrop">${item.logo?`<img alt="" src="${escapeHtml(item.logo)}" onerror="this.style.display='none'">`:''}</div>
+      <div class="cinema-shade"></div>${visual}
+      <div class="hero-copy">
+        <div class="cinema-eyebrow">NICO TV · SELEÇÃO EM DESTAQUE</div>
+        <div class="kicker">${kind==='live'?'● Canal ao vivo':kind==='movie'?'✦ Filme em destaque':'✦ Série em destaque'}</div>
+        <h1>${escapeHtml(item.name)}<span class="accent">${escapeHtml(item.group||label)}</span></h1>
+        <div class="cinema-description">${escapeHtml(description.slice(0,300))}</div>
+        <div class="hero-meta"><span class="chip">${count} ${label}</span>${extra.slice(0,2).map(v=>`<span class="chip">${escapeHtml(String(v))}</span>`).join('')}${epg?`<span class="chip accent">${escapeHtml(epg)}</span>`:''}</div>
+        <div class="hero-actions">
+          <button class="btn main" id="heroPlayBtn">${kind==='series'?'▶ Ver episódios':kind==='movie'?'▶ Ver detalhes':'▶ Assistir agora'}</button>
+          <button class="btn" id="heroFavBtn">${isFav(item)?'★ Na Minha Lista':'☆ Minha Lista'}</button>
+          ${state.mode==='live'?'<button class="btn" id="heroGuideBtn">▦ Guia de programação</button>':''}
         </div>
       </div>
-      <div class="control-grid">
-        <div class="control-card"><div class="label">Itens</div><div class="value">${String(count).padStart(2,'0')}</div><div class="section-sub">${label}</div></div>
-        <div class="control-card"><div class="label">Favoritos</div><div class="value">${state.favorites.length}</div><div class="section-sub">Acesso rápido</div></div>
-        <div class="control-card"><div class="label">Recentes</div><div class="value">${state.recent.length}</div><div class="section-sub">Continue assistindo</div></div>
-        <div class="control-card"><div class="label">Modo</div><div class="value" style="font-size:22px">${state.mode==='live'?'Ao vivo':state.mode==='movies'?'Filmes':'Séries'}</div><div class="section-sub">Experiência premium</div></div>
-      </div>
-    </div>
-  </section>`;
+    </section>`;
 }
 function appendRow(app,title,list,opts={}){
   if(!list.length) return;
@@ -842,8 +892,10 @@ function render(){
   const label=state.mode==='movies'?'filmes':state.mode==='series'?'séries':'canais';
   if(state.mode==='live')liveFilterPanel(app,baseLive);
   else catalogFilterPanel(app,baseCatalog);
-  app.insertAdjacentHTML('beforeend', heroFor(all[0], all.length, label));
-  $('#heroPlayBtn').onclick=()=>openItem(all[0],all); $('#heroFavBtn').onclick=()=>toggleFav(all[0]); if($('#heroGuideBtn'))$('#heroGuideBtn').onclick=openGuide;
+  // Destaque determinístico: favorito/recente com arte; sem depender de APIs externas.
+  const featured=all.find(c=>isFav(c)&&c.logo)||all.find(c=>state.recent.includes(keyOf(c))&&c.logo)||all.find(c=>c.logo)||all[0];
+  app.insertAdjacentHTML('beforeend', heroFor(featured, all.length, label));
+  $('#heroPlayBtn').onclick=()=>openItem(featured,all); $('#heroFavBtn').onclick=()=>toggleFav(featured); if($('#heroGuideBtn'))$('#heroGuideBtn').onclick=openGuide;
 
   renderContinue(app);
   const recentItems=state.recent.map(k=>all.find(x=>keyOf(x)===k)).filter(Boolean);
@@ -862,7 +914,11 @@ function render(){
       row.append(strip); app.append(row);
     }
   } else {
-    appendRow(app,state.mode==='movies'?'Catálogo de filmes':'Biblioteca de séries',all,{subtitle:`${all.length} itens disponíveis`,limit:50,more:true});
+    appendRow(app,state.mode==='movies'?'Todos os filmes':'Todas as séries',all,{subtitle:`${all.length} títulos disponíveis · navegue pelas capas`,limit:32,more:true});
+    if(!state.query && (state.catalogFilters[state.mode]||'all')==='all'){
+      const shelves=[...groupBy(all).entries()].filter(([group,items])=>group&&items.length>=3).sort((a,b)=>b[1].length-a[1].length).slice(0,6);
+      shelves.forEach(([group,items])=>appendRow(app,group,items,{subtitle:`${items.length} títulos`,limit:16,more:true}));
+    }
   }
   focusFirst();
 }
