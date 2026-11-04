@@ -461,6 +461,43 @@ body{overscroll-behavior-x:none}
  #app .nico2-hero-poster{display:none!important}
  .sidebar .navbtn .navlabel{font-size:14px!important}
 }
+
+/* Nico TV 2.1.1 — indicador discreto ao segurar OK para favoritar. */
+#app .nico2-card.nico-ok-holding .thumb{box-shadow:0 0 0 3px #f5ca6e,0 0 18px #e4c16d88!important}
+#app .nico2-card.nico-ok-holding .favstar{opacity:1!important;background:#e4c16d!important;color:#07111e!important}
+
+/* Nico TV 2.1.2 — categorias em painel e proporções corretas */
+#app .nico-category-picker{margin:0 0 24px;padding:0 5px;position:relative}
+#app .nico-category-top{display:flex;flex-direction:column;gap:13px;padding:14px 18px;background:#101a2a;border:1px solid #273952;border-radius:18px}
+#app .nico-category-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#app .nico-category-title strong{font-size:18px;color:#f5f7fa}
+#app .nico-category-title span{font-size:12px;color:#91a4bb}
+#app .nico-category-quick{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+#app .nico-category-option,#app .nico-category-trigger{font-size:14px;font-weight:750;color:#e3e9f1;background:#1b2a40;border:1px solid #354761;border-radius:12px;padding:12px 18px;min-height:48px;cursor:pointer;white-space:normal;text-align:center}
+#app .nico-category-option.active,#app .nico-category-trigger[aria-expanded=true]{background:#e8bd5a;color:#101622;border-color:#f4d88b}
+#app .nico-category-trigger{margin-left:auto;min-width:194px;background:#21324b;color:#f2d58d}
+#app .nico-category-panel{margin-top:10px;background:#111b2b;border:1px solid #384960;border-radius:18px;padding:16px;max-height:min(50vh,430px);overflow:auto}
+#app .nico-category-panel[hidden]{display:none!important}
+#app .nico-category-panel-heading{font-size:13px;color:#e9c46e;letter-spacing:.07em;font-weight:800;margin:0 0 13px}
+#app .nico-category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px}
+#app .nico-category-tile{min-width:0;min-height:75px;padding:12px 14px;text-align:left;border-radius:12px;background:#18263a;border:1px solid #30435d;color:#eef2f8;display:flex;flex-direction:column;justify-content:center;gap:6px;cursor:pointer}
+#app .nico-category-tile strong{font-size:14px;white-space:normal;overflow-wrap:anywhere;line-height:1.2}
+#app .nico-category-tile small{font-size:12px;color:#9bafc6}
+#app .nico-category-tile.active{border-color:#f1c76b;background:#3a3223}
+#app :is(.nico-category-option,.nico-category-trigger,.nico-category-tile):focus-visible{outline:3px solid #f6d373!important;outline-offset:3px!important;z-index:2}
+/* O canal deve mostrar seu logotipo inteiro, nunca zoom ou corte. */
+#app .nico2-shelf .nico2-card.nico2-live{width:clamp(185px,19vw,260px)!important;min-width:clamp(185px,19vw,260px)!important;flex-basis:clamp(185px,19vw,260px)!important}
+#app .nico2-card.nico2-live .thumb{height:auto!important;aspect-ratio:16 / 9!important;background:#152438!important;padding:18px!important;display:flex;align-items:center;justify-content:center;box-sizing:border-box}
+#app .nico2-card.nico2-live .thumb img{width:100%!important;height:100%!important;object-fit:contain!important}
+#app .nico2-card.nico2-live .thumb .nico2-type{bottom:8px;left:8px}
+/* Filmes e séries usam cartazes verticais reais, sem esmagar/cortar para 16:9. */
+#app .nico2-shelf .nico2-card.nico2-movie,#app .nico2-shelf .nico2-card.nico2-series{width:clamp(145px,13.5vw,195px)!important;min-width:clamp(145px,13.5vw,195px)!important;flex-basis:clamp(145px,13.5vw,195px)!important}
+#app .nico2-card.nico2-movie .thumb,#app .nico2-card.nico2-series .thumb{height:auto!important;aspect-ratio:2 / 3!important;padding:0!important}
+#app .nico2-card.nico2-movie .thumb img,#app .nico2-card.nico2-series .thumb img{object-fit:cover!important}
+#app .nico2-card .card-title{white-space:normal!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-height:1.35!important;min-height:2.7em;overflow:hidden!important}
+#app .nico2-shelf .strip{gap:17px!important;padding-bottom:18px!important;align-items:flex-start}
+@media(max-width:800px){#app .nico-category-trigger{margin-left:0;width:100%}#app .nico-category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#app .nico-category-title span{display:none}}
+
 </style>
 </head>
 <body>
@@ -607,21 +644,58 @@ function liveFiltered(list){
  if(state.liveGroup!=='all')return list.filter(c=>(c.group||'Outros')===state.liveGroup);
  return list;
 }
+// Nico TV 2.1.2: seletor compacto e acessível pelo controle remoto.
+const nicoFilterExpanded={live:false,movies:false,series:false};
+function nicoFilterLabel(group){
+  return String(group||'Outros').replace(/^(?:canais|filmes|s[eé]ries)\s*[|:-]\s*/i,'').trim()||'Outros';
+}
+function nicoFilterPicker(app,{mode,chosen,entries,quick,onSelect,title}){
+  const host=document.createElement('section');host.className='nico-category-picker';
+  const bar=document.createElement('div');bar.className='nico-category-top';
+  const info=document.createElement('div');info.className='nico-category-title';
+  info.innerHTML=`<strong>${title}</strong><span>Escolha por categoria, sem percorrer dezenas de botões</span>`;
+  bar.append(info);
+  const quickRow=document.createElement('div');quickRow.className='nico-category-quick';
+  quick.forEach(([key,name,count])=>{
+    const b=document.createElement('button');b.type='button';b.className='nico-category-option'+(key===chosen?' active':'');
+    b.textContent=name; b.setAttribute('aria-pressed',String(key===chosen));b.dataset.filterKey=key;
+    b.onclick=()=>{nicoFilterExpanded[mode]=false;onSelect(key);};quickRow.append(b);
+  });
+  const picker=document.createElement('button');picker.type='button';picker.className='nico-category-trigger';
+  picker.dataset.categoryTrigger=mode;
+  const selected=entries.find(([key])=>key===chosen);
+  picker.textContent=(selected?'▦ '+nicoFilterLabel(selected[1]):'▦ Escolher categoria')+'  ▾';
+  picker.setAttribute('aria-expanded',String(!!nicoFilterExpanded[mode]));
+  picker.onclick=()=>{
+    nicoFilterExpanded[mode]=!nicoFilterExpanded[mode];
+    // Não recriar a página inteira: preserva o foco e a posição da TV.
+    panel.hidden=!nicoFilterExpanded[mode];picker.setAttribute('aria-expanded',String(!panel.hidden));
+    if(!panel.hidden){const selectedButton=panel.querySelector('.active')||panel.querySelector('button');selectedButton?.focus({preventScroll:true});}
+    else picker.focus({preventScroll:true});
+  };
+  quickRow.append(picker);bar.append(quickRow);host.append(bar);
+  const panel=document.createElement('div');panel.className='nico-category-panel';panel.hidden=!nicoFilterExpanded[mode];
+  const heading=document.createElement('div');heading.className='nico-category-panel-heading';
+  heading.textContent='Categorias do catálogo';panel.append(heading);
+  const grid=document.createElement('div');grid.className='nico-category-grid';
+  entries.forEach(([key,name,n])=>{
+    const b=document.createElement('button');b.type='button';b.className='nico-category-tile'+(chosen===key?' active':'');
+    b.dataset.filterKey=key;b.setAttribute('aria-pressed',String(chosen===key));
+    const strong=document.createElement('strong');strong.textContent=nicoFilterLabel(name);
+    const count=document.createElement('small');count.textContent=n.toLocaleString('pt-BR')+' títulos';b.append(strong,count);
+    b.onclick=()=>{nicoFilterExpanded[mode]=false;onSelect(key);};grid.append(b);
+  });
+  panel.append(grid);host.append(panel);app.append(host);
+}
 function liveFilterPanel(app,unfiltered){
- if(state.mode!=='live'||state.view||state.detail)return;
- const groups=groupBy(unfiltered);const count=unfiltered.length;
- const host=document.createElement('section');host.className='live-filter-wrap';
- const headline=document.createElement('div');headline.className='live-filter-heading';
- headline.innerHTML='<span>📺 Explorar canais</span><span class="live-filter-caption">Selecione uma categoria pelo controle remoto</span>';
- const list=document.createElement('div');list.className='live-filter-list';list.setAttribute('aria-label','Filtros de canais');
- const values=[['all','Todos',count],['fav','★ Favoritos',unfiltered.filter(isFav).length],['recent','↺ Últimos vistos',state.liveRecent.filter(k=>unfiltered.some(c=>keyOf(c)===k)).length],...Array.from(groups,([group,items])=>[group,group,items.length])];
- values.forEach(([key,label,n])=>{
-  const b=document.createElement('button');b.className='live-filter-chip'+(state.liveGroup===key?' active':'');b.type='button';
-  b.textContent=label+' · '+n;b.setAttribute('aria-pressed',state.liveGroup===key?'true':'false');
-  b.onclick=()=>{state.liveGroup=key;render();const next=[...document.querySelectorAll('.live-filter-chip')].find(x=>x.textContent===b.textContent);next?.focus({preventScroll:true});};
-  list.append(b);
- });
- host.append(headline,list);app.append(host);
+  if(state.mode!=='live'||state.view||state.detail)return;
+  const groups=groupBy(unfiltered);
+  const quick=[['all','Todos',unfiltered.length],['fav','★ Favoritos',unfiltered.filter(isFav).length],['recent','↺ Recentes',state.liveRecent.length]];
+  const categories=[...groups].sort((a,b)=>a[0].localeCompare(b[0],'pt-BR')).map(([name,list])=>[name,name,list.length]);
+  nicoFilterPicker(app,{mode:'live',chosen:state.liveGroup,entries:categories,quick,title:'📺 Explorar canais',onSelect:key=>{
+    state.liveGroup=key;render();
+    document.querySelector(key==='all'||key==='fav'||key==='recent'?'.nico-category-option.active':'.nico-category-trigger')?.focus({preventScroll:true});
+  }});
 }
 // Categorias Xtream e gêneros de metadados: cada catálogo tem seu filtro independente.
 function catalogTokens(c){
@@ -641,37 +715,19 @@ function catalogFiltered(list){
 function catalogFilterPanel(app,unfiltered){
   if(!['movies','series'].includes(state.mode)||state.view||state.detail)return;
   const mode=state.mode, chosen=state.catalogFilters[mode]||'all';
-  const categories=new Map(),genres=new Map();
+  const groups=new Map(),genres=new Map();
   unfiltered.forEach(c=>{
-    const group=(c.group||'Outros').trim()||'Outros';
-    categories.set(group,(categories.get(group)||0)+1);
+    const group=(c.group||'Outros').trim()||'Outros';groups.set(group,(groups.get(group)||0)+1);
     catalogTokens(c).forEach(g=>{const id=g.toLocaleLowerCase('pt-BR');const old=genres.get(id);genres.set(id,{name:old?.name||g,count:(old?.count||0)+1});});
   });
-  const host=document.createElement('section');host.className='live-filter-wrap catalog-filter-wrap';
-  const header=document.createElement('div');header.className='live-filter-heading';
-  header.innerHTML='<span>'+(mode==='movies'?'🎬 Explorar filmes':'📺 Explorar séries')+'</span><span class="live-filter-caption">Gêneros e categorias · use o controle remoto</span>';
-  host.append(header);
-  const options=[['all','Todos',unfiltered.length],['fav','★ Favoritos',unfiltered.filter(isFav).length],['recent','↺ Recentes',state.recent.filter(k=>unfiltered.some(c=>keyOf(c)===k)).length]];
-  const catalogKinds=[...categories].sort((a,b)=>a[0].localeCompare(b[0],'pt-BR')).map(([g,n])=>['cat:'+g,g,n]);
-  const genreKinds=[...genres].sort((a,b)=>a[1].name.localeCompare(b[1].name,'pt-BR')).map(([id,v])=>['genre:'+id,v.name,v.count]);
-  const renderChips=(label,entries)=>{
-    if(!entries.length)return;
-    if(label){const heading=document.createElement('div');heading.className='catalog-filter-label';heading.textContent=label;host.append(heading);}
-    const row=document.createElement('div');row.className='live-filter-list';row.setAttribute('aria-label',label||'Filtros de catálogo');
-    entries.forEach(([key,name,n])=>{
-      const b=document.createElement('button');b.type='button';b.className='live-filter-chip'+(chosen===key?' active':'');
-      b.textContent=name+' · '+n;b.dataset.filterKey=key;b.setAttribute('aria-pressed',String(chosen===key));
-      b.onclick=()=>{state.catalogFilters[mode]=key;state.view=null;state.viewList=null;render();
-        const target=[...document.querySelectorAll('.catalog-filter-wrap .live-filter-chip')].find(el=>el.dataset.filterKey===key);
-        target?.focus({preventScroll:true});};
-      row.append(b);
-    });
-    host.append(row);
-  };
-  renderChips('',options);
-  renderChips('Gêneros',genreKinds);
-  renderChips('Categorias do serviço',catalogKinds);
-  app.append(host);
+  const categories=[...groups].sort((a,b)=>a[0].localeCompare(b[0],'pt-BR')).map(([g,n])=>['cat:'+g,g,n]);
+  const genresList=[...genres].sort((a,b)=>a[1].name.localeCompare(b[1].name,'pt-BR')).map(([id,v])=>['genre:'+id,v.name,v.count]);
+  const entries=[...genresList,...categories];
+  const quick=[['all','Todos',unfiltered.length],['fav','★ Favoritos',unfiltered.filter(isFav).length],['recent','↺ Recentes',state.recent.length]];
+  nicoFilterPicker(app,{mode,chosen,entries,quick,title:mode==='movies'?'🎬 Explorar filmes':'▣ Explorar séries',onSelect:key=>{
+    state.catalogFilters[mode]=key;state.view=null;state.viewList=null;render();
+    document.querySelector(['all','fav','recent'].includes(key)?'.nico-category-option.active':'.nico-category-trigger')?.focus({preventScroll:true});
+  }});
 }
 function toggleFav(c){ const k=keyOf(c); const had=isFav(c); state.favorites = had ? state.favorites.filter(x=>x!==k) : [...state.favorites,k]; saveState(); toast(had?'Removido dos favoritos':'Adicionado aos favoritos'); render(); updatePlayerFav(); }
 function updatePlayerFav(){ const c=state.queue[state.qi]; $('#playerFavBtn').textContent=c&&isFav(c)?'★ Favorito':'☆ Favorito'; }
@@ -903,12 +959,45 @@ function groupBy(list){ const m=new Map(); list.forEach(c=>{ if(!m.has(c.group))
 function searchFiltered(list){ const base=catalogFiltered(liveFiltered(selectList(list))); if(!state.query) return base; const q=state.query.toLocaleLowerCase('pt-BR'); return base.filter(c=>`${c.name} ${c.group}`.toLocaleLowerCase('pt-BR').includes(q)); }
 function placeholderFrom(c){ return c.kind==='movie'?'🎬':c.kind==='series'?'📺':'◈'; }
 function card(c,list){
- const div=document.createElement('div');div.className='card nico2-card'+((c.kind==='movie'||c.kind==='series')?' poster':'');div.tabIndex=0;div.setAttribute('role','button');div.setAttribute('aria-label',c.name);
+ const div=document.createElement('div');div.className='card nico2-card nico2-'+(c.kind||'live')+((c.kind==='movie'||c.kind==='series')?' poster':'');div.tabIndex=0;div.setAttribute('role','button');div.setAttribute('aria-label',c.name+' — OK abre; segure OK para favoritar');div.dataset.nicoItemKey=keyOf(c);
  div.innerHTML=`<div class="thumb">${c.logo?`<img alt="" loading="lazy" src="${escapeHtml(c.logo)}">`:`<div class="placeholder">${placeholderFrom(c)}</div>`}<span class="nico2-type">${c.kind==='movie'?'FILME':c.kind==='series'?'SÉRIE':'AO VIVO'}</span><button class="favstar" aria-label="${isFav(c)?'Remover dos':'Adicionar aos'} favoritos">${isFav(c)?'★':'☆'}</button></div>
  <div class="card-body"><div class="card-title">${escapeHtml(c.name)}</div><div class="card-meta">${escapeHtml(c.group||'Catálogo')}</div></div>`;
  const img=div.querySelector('img');if(img)img.onerror=()=>{img.remove();div.querySelector('.thumb').classList.add('no-image');};
  div.onclick=e=>{if(e.target.closest('.favstar'))return;openItem(c,list);};
- div.onkeydown=e=>{if(e.target!==div)return;if(e.key==='Enter'||e.key===' '){e.preventDefault();openItem(c,list);}};
+ // Fire TV: OK curto abre o item; OK mantido (>= 700 ms) alterna favorito.
+ // Nao abrir no keydown: a decisao acontece no keyup ou no temporizador.
+ let okHeld=false,okLong=false,okTimer=null;
+ const okKey=e=>e.key==='Enter'||e.key===' '||e.key==='NumpadEnter'||e.keyCode===23||e.keyCode===66;
+ const stopOkTimer=()=>{if(okTimer!==null){clearTimeout(okTimer);okTimer=null;}div.classList.remove('nico-ok-holding');};
+ const toggleHeldFavorite=()=>{
+   if(!okHeld||okLong)return;
+   okLong=true;stopOkTimer();
+   const oldIndex=[...document.querySelectorAll('#app .nico2-card')].indexOf(div);
+   const oldKey=keyOf(c);
+   toggleFav(c);
+   requestAnimationFrame(()=>{
+     const cards=[...document.querySelectorAll('#app .nico2-card')];
+     const target=cards.find(el=>el.dataset.nicoItemKey===oldKey)||cards[Math.min(Math.max(0,oldIndex),cards.length-1)];
+     if(target){try{target.focus({preventScroll:true});}catch(_){target.focus();}}
+   });
+ };
+ div.addEventListener('keydown',e=>{
+   if(e.target!==div||!okKey(e))return;
+   e.preventDefault();e.stopPropagation();
+   if(okHeld)return; // ignora repeticoes do D-pad ao manter OK pressionado
+   okHeld=true;okLong=false;
+   div.classList.add('nico-ok-holding');
+   okTimer=setTimeout(toggleHeldFavorite,700);
+ });
+ div.addEventListener('keyup',e=>{
+   if(e.target!==div||!okKey(e))return;
+   e.preventDefault();e.stopPropagation();
+   if(!okHeld)return;
+   const wasLong=okLong;
+   okHeld=false;stopOkTimer();
+   if(!wasLong)openItem(c,list);
+ });
+ div.addEventListener('blur',()=>{okHeld=false;stopOkTimer();});
  div.querySelector('.favstar').onclick=e=>{e.preventDefault();e.stopPropagation();toggleFav(c);};
  return div;
 }
