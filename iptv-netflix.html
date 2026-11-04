@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nico TV 2.0 v1.4.0 • Fire Edition</title>
+<title>Nico TV 2.1 • Fire TV Experience</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -419,6 +419,48 @@ body{background:#050c15!important;color:#f4f6fb!important;font-family:Arial,Robo
 #dlg .pane.on input:not([type=file]),#dlg .pane.on textarea{scroll-margin-block:100px}
 #dlg .pane.on input:focus,#dlg .pane.on textarea:focus,#dlg button:focus{outline:3px solid #f6d17b!important;outline-offset:3px!important;box-shadow:0 0 0 6px rgba(228,193,109,.17)!important}
 #dlg .pane:not(.on){display:none!important}
+
+/* Nico TV 2.1 — Fire TV first: visual + focus consistency */
+html{scroll-behavior:auto}
+body{overscroll-behavior-x:none}
+.shell .sidebar{outline:0;will-change:width}
+.sidebar .navbtn{flex-shrink:0;min-height:57px!important}
+.sidebar .navbtn .navlabel{left:auto!important;position:static!important;transform:none!important;pointer-events:none!important;line-height:1.2!important}
+.sidebar .navbtn:focus,.sidebar .navbtn:focus-visible{outline:3px solid #f9d573!important;outline-offset:-2px!important;background:#efc45d!important;color:#101922!important;transform:none!important}
+.sidebar .navbtn:focus .navlabel{color:#101922!important}
+.sidebar .navbtn.active:not(:focus){background:#2d281c!important;border:1px solid #735b2d!important;color:#f4d582!important}
+.sidebar .navbtn.active:not(:focus) .navlabel{color:#f4d582!important}
+#app .nico2-hero{min-height:clamp(410px,62vh,690px)!important;padding:92px 6% 54px!important}
+#app .nico2-hero .hero-copy{max-width:700px!important}
+#app .nico2-hero-backdrop{opacity:.76!important;filter:blur(8px) saturate(1.15)!important}
+#app .nico2-hero-shade{background:linear-gradient(90deg,#050c15 0%,#050c15e8 20%,#050c15b9 48%,#050c1530 83%),linear-gradient(0deg,#050c15 0%,transparent 40%)!important}
+#app .nico2-hero-poster{max-height:46vh!important;box-shadow:0 26px 70px #000b!important}
+#app .nico2-shelf .strip{scroll-behavior:smooth;scroll-padding:18px}
+#app .nico2-card{transition:transform .15s ease!important}
+#app .nico2-card:focus-visible{z-index:3;transform:translateY(-3px) scale(1.04)!important}
+#app .nico2-card:focus-visible .thumb{outline:4px solid #ffde84!important;outline-offset:3px!important;box-shadow:0 12px 30px #000d,0 0 18px #d5ab3c55!important}
+#app button:focus-visible,#app [role=button]:focus-visible,#app input:focus-visible{outline:3px solid #ffdf7f!important;outline-offset:3px!important}
+#app .nico2-page-heading{padding-top:96px!important}
+#app .live-filter-list{scroll-behavior:smooth;scroll-padding:20px}
+#app .live-filter-chip{min-height:44px!important}
+#dlg{width:min(730px,94vw);max-height:87vh;overflow-y:auto}
+#dlg :is(input,textarea,button):focus{outline:4px solid #ffd36a!important;outline-offset:3px!important;box-shadow:0 0 0 7px #e7b94933!important}
+#dlg .pane.on :is(input,textarea){min-height:55px;font-size:18px}
+#dlg .tabs .btn{min-width:145px;min-height:54px}
+/* Preserve a TV-style sidebar even on 720p and mobile WebView landscape. */
+@media(min-width:650px) and (max-width:1100px){
+ .shell .sidebar{width:80px!important;min-width:80px!important}
+ .shell .sidebar:hover,.shell .sidebar:focus-within,.shell .sidebar.nico2-open{width:268px!important}
+ .shell .main{margin-left:80px!important;width:calc(100% - 80px)!important}
+ .main .topbar{left:93px!important}
+ #app .nico2-hero{min-height:400px!important;padding:87px 5% 40px!important}
+ #app .nico2-hero-poster{width:170px;height:260px;margin:10px!important}
+}
+@media(max-width:649px){
+ #app .nico2-hero{min-height:390px!important;padding:82px 24px 35px!important}
+ #app .nico2-hero-poster{display:none!important}
+ .sidebar .navbtn .navlabel{font-size:14px!important}
+}
 </style>
 </head>
 <body>
@@ -1337,7 +1379,7 @@ function focusImportControl(el, fromDpad=true){
 }
 function importFocusableControls(){
   const pane=state.tab==='xt'?'#pane-xt':'#pane-m3u';
-  const controls=[...document.querySelectorAll('#dlg .tabs button, '+pane+' input, '+pane+' textarea, '+pane+' button, #cancelImport, #confirmImport')];
+  const controls=[...document.querySelectorAll(pane+' input:not([type=file]), '+pane+' textarea, '+pane+' button, #cancelImport, #confirmImport')];
   return controls.filter(el=>!el.disabled && el.getClientRects().length && getComputedStyle(el).visibility!=='hidden');
 }
 // Captura no dialog ANTES da navegacao espacial padrao do WebView.
@@ -1371,7 +1413,8 @@ $$('.tabs .btn').forEach(b=>b.onclick=()=>{
   $$('.tabs .btn').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
   $('#pane-m3u').classList.toggle('on',state.tab==='m3u');
   $('#pane-xt').classList.toggle('on',state.tab==='xt');
-  focusImportControl(b,true);
+  const first=state.tab==='xt'?$('#xtServer'):$('#m3uUrl');
+  requestAnimationFrame(()=>focusImportControl(first||b,true));
 });
 $('#confirmImport').onclick=async()=>{
   const err=$('#err'); err.textContent='Carregando…';
@@ -1390,6 +1433,124 @@ $('#confirmImport').onclick=async()=>{
     err.textContent=e.message==='miss'?'Preencha os campos da aba escolhida.' : e.message==='empty'?'Nenhum item encontrado. Verifique se a lista está correta.' : e.message==='auth'?'Usuário ou senha não aceitos pelo servidor.' : readableConnectionError(e);
   }
 };
+
+/* Nico TV 2.1 — deterministic D-pad navigation. Never mix sidebar and shelves. */
+const nico21FocusByPage=new Map();
+let nico21LastContent=null;
+function nico21Visible(el){
+  if(!el || !el.isConnected || el.disabled || el.closest('[hidden],.hidden'))return false;
+  const r=el.getBoundingClientRect();return r.width>3&&r.height>3&&getComputedStyle(el).visibility!=='hidden';
+}
+function nico21Elements(selector,root=document){return [...root.querySelectorAll(selector)].filter(nico21Visible);}
+function nico21Focus(el){
+  if(!el)return false;
+  try{el.focus({preventScroll:true});}catch(_){el.focus();}
+  el.scrollIntoView({block:'nearest',inline:'nearest',behavior:'auto'});
+  if(el.closest('#app'))nico21LastContent=el;
+  return true;
+}
+function nico21PageKey(){return [state.homeView?'home':state.mode,state.view||'',state.detail?.name||'',state.favoriteOnly?'fav':'',state.recentOnly?'recent':''].join('|');}
+const nico21ContentSelector='.nico2-hero button,.nico2-welcome button,.nico2-shelf .row-title-btn,.nico2-shelf .card,.continue-card,.live-filter-chip,#app .btn,#app .ep-item,#app .card,#app [role=button]';
+function nico21Content(){return nico21Elements(nico21ContentSelector,document.getElementById('app'));}
+function nico21FirstContent(){return nico21Content()[0]||document.getElementById('importBtn');}
+function nico21Sidebar(){return nico21Elements('.sidebar .navbtn');}
+function nico21Directional(candidates,from,dir){
+ const r=from.getBoundingClientRect(),cx=(r.left+r.right)/2,cy=(r.top+r.bottom)/2;
+ let best=null,bestScore=Infinity;
+ for(const item of candidates){
+  if(item===from)continue;
+  const b=item.getBoundingClientRect(),dx=(b.left+b.right)/2-cx,dy=(b.top+b.bottom)/2-cy;
+  const longitudinal=dir==='ArrowRight'?dx:dir==='ArrowLeft'?-dx:dir==='ArrowDown'?dy:-dy;
+  if(longitudinal<=5)continue;
+  const lateral=dir==='ArrowRight'||dir==='ArrowLeft'?Math.abs(dy):Math.abs(dx);
+  const score=longitudinal+2.6*lateral;
+  if(score<bestScore){best=item;bestScore=score;}
+ }
+ return best;
+}
+function nico21ShelfNeighbor(el,dir){
+ const shelf=el.closest('.nico2-shelf');if(!shelf)return null;
+ const current=[...shelf.querySelectorAll('.card')].filter(nico21Visible);
+ const idx=current.indexOf(el);
+ if(idx<0)return null;
+ return current[idx+(dir==='ArrowRight'?1:-1)]||null;
+}
+function nico21VerticalShelf(el,dir){
+ const shelf=el.closest('.nico2-shelf');if(!shelf)return null;
+ const all=[...document.querySelectorAll('#app .nico2-shelf')];
+ const idx=all.indexOf(shelf),other=all[idx+(dir==='ArrowDown'?1:-1)];
+ if(!other)return null;
+ const cards=nico21Elements('.card',other);if(!cards.length)return null;
+ const x=el.getBoundingClientRect(),mid=(x.left+x.right)/2;
+ return cards.reduce((best,c)=>Math.abs(((c.getBoundingClientRect().left+c.getBoundingClientRect().right)/2)-mid)<Math.abs(((best.getBoundingClientRect().left+best.getBoundingClientRect().right)/2)-mid)?c:best,cards[0]);
+}
+function nico21RestoreContent(){
+ const last=nico21FocusByPage.get(nico21PageKey());
+ const candidates=nico21Content();
+ const match=last&&candidates.find(el=>(el.getAttribute('aria-label')||el.textContent?.trim().slice(0,100)||'')===last);
+ nico21Focus(match||nico21FirstContent());
+}
+function nico21Back(){
+ if($('#dlg').open || $('#guideDialog').open || $('#infoDialog').open){
+   const modal=[$('#dlg'),$('#guideDialog'),$('#infoDialog')].find(x=>x.open);
+   const el=document.activeElement;
+   if(modal===$('#dlg')&&el&&/^(INPUT|TEXTAREA)$/.test(el.tagName)){
+     el.blur();if(window.Android&&typeof window.Android.hideKeyboard==='function')Android.hideKeyboard();return true;
+   }
+   modal.close();nico21Focus(nico21LastContent||nico21FirstContent());return true;
+ }
+ if(state.detail){state.detail=null;render();requestAnimationFrame(nico21RestoreContent);return true;}
+ if(state.view){state.view=null;state.viewList=null;render();requestAnimationFrame(nico21RestoreContent);return true;}
+ if(!state.homeView){$('#homeNav').click();requestAnimationFrame(()=>nico21Focus(nico21FirstContent()));return true;}
+ return false;
+}
+// Native Android back callback: the WebView's Java bridge calls __back.
+const nico21PriorBack=window.__back;
+window.__back=function(){
+ if(nico21Back())return true;
+ return typeof nico21PriorBack==='function'?nico21PriorBack():false;
+};
+document.addEventListener('focusin',event=>{
+ const target=event.target;
+ if(target.closest('#app')){nico21LastContent=target;nico21FocusByPage.set(nico21PageKey(),target.getAttribute('aria-label')||target.textContent?.trim().slice(0,100)||'');}
+ const sidebar=document.getElementById('nico2Sidebar');
+ if(sidebar)sidebar.classList.toggle('nico2-open',!!target.closest('.sidebar'));
+});
+document.addEventListener('keydown',e=>{
+ if($('#player').classList.contains('on'))return;
+ if($('#dlg').open || $('#guideDialog').open || $('#infoDialog').open)return;
+ const key={'19':'ArrowUp','20':'ArrowDown','21':'ArrowLeft','22':'ArrowRight'}[String(e.keyCode)]||e.key;
+ if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))return;
+ if(e.target?.matches('input,textarea,[contenteditable=true]'))return;
+ // Key-based navigation on TV; leave mouse/desktop behavior unchanged.
+ if(!window.Android && nico21DesktopMouseActive)return;
+ const el=document.activeElement,sidebar=nico21Sidebar(),content=nico21Content();
+ const insideSidebar=sidebar.includes(el),insideContent=content.includes(el);
+ let target=null;
+ if(insideSidebar){
+   if(key==='ArrowRight')target=nico21LastContent&&nico21Visible(nico21LastContent)?nico21LastContent:nico21FirstContent();
+   else if(key==='ArrowUp'||key==='ArrowDown')target=sidebar[Math.max(0,Math.min(sidebar.length-1,sidebar.indexOf(el)+(key==='ArrowDown'?1:-1)))];
+ }else if(insideContent){
+   if(el.closest('.nico2-shelf')){
+     if(key==='ArrowLeft'||key==='ArrowRight')target=nico21ShelfNeighbor(el,key);
+     else target=nico21VerticalShelf(el,key);
+   }
+   if(!target && key==='ArrowLeft'&&!el.closest('.nico2-shelf')){
+     // Only go to the sidebar from the left edge of the content area.
+     const rect=el.getBoundingClientRect();const earlier=content.some(c=>c!==el&&c.getBoundingClientRect().left<rect.left-25&&Math.abs(c.getBoundingClientRect().top-rect.top)<90);
+     if(!earlier)target=sidebar.find(x=>x.classList.contains('active'))||sidebar[0];
+   }
+   if(!target && (key==='ArrowUp'||key==='ArrowDown'))target=nico21Directional(content,el,key);
+   if(!target && (key==='ArrowLeft'||key==='ArrowRight')&&!el.closest('.nico2-shelf'))target=nico21Directional(content,el,key);
+   if(!target && key==='ArrowLeft' && el.closest('.nico2-shelf') && !nico21ShelfNeighbor(el,key))target=sidebar.find(x=>x.classList.contains('active'))||sidebar[0];
+ }else{
+   target=key==='ArrowLeft'?sidebar[0]:nico21FirstContent();
+ }
+ e.preventDefault();e.stopImmediatePropagation();
+ if(target)nico21Focus(target);
+},true);
+let nico21DesktopMouseActive=false;
+document.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&!window.Android)nico21DesktopMouseActive=true;});
 
 /* Mouse/teclado no PC: setas verticais rolam. Controle D-pad permanece espacial. */
 let desktopPointerMode=false;
