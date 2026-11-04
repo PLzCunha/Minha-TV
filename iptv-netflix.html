@@ -438,6 +438,7 @@ body{background:#050c15!important;color:#f4f6fb!important;font-family:Arial,Robo
     </nav>
     <div class="spacer"></div>
     <div class="nico2-premium"><span>♛</span><div><b>Nico TV Premium</b><small>Cinematic Experience</small></div></div>
+    <button class="navbtn soft" id="updateNav"><span class="ico">⤓</span><span class="navlabel">Verificar atualizações</span></button>
     <button class="navbtn soft" id="importNav2"><span class="ico">⚙</span><span class="navlabel">Gerenciar listas</span></button>
   </aside>
 
@@ -1236,6 +1237,7 @@ $('#movieNav').onclick=()=>setMode('movies');
 $('#seriesNav').onclick=()=>setMode('series');
 $('#searchNav').onclick=()=>$('#search').focus();
 $('#importNav').onclick=()=>openImport(); $('#importNav2').onclick=()=>openImport();
+$('#updateNav').onclick=()=>{ if(window.Android && typeof Android.checkUpdates==='function') Android.checkUpdates(); else alert('A verificação integrada de atualizações funciona no aplicativo Android/Fire TV.'); };
 $('#favNav').onclick=()=>{ state.homeView=false; state.favoriteOnly=!state.favoriteOnly; state.recentOnly=false; state.view=null; $('#favNav').setAttribute('aria-pressed',state.favoriteOnly); $('#recentNav').setAttribute('aria-pressed','false'); render(); };
 $('#recentNav').onclick=()=>{ state.homeView=false; state.recentOnly=!state.recentOnly; state.favoriteOnly=false; state.view=null; $('#recentNav').setAttribute('aria-pressed',state.recentOnly); $('#favNav').setAttribute('aria-pressed','false'); render(); };
 $('#search').oninput=e=>{ state.query=e.target.value.trim(); state.view=null; if(state.query)state.homeView=false; render(); };
