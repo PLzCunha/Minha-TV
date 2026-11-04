@@ -609,6 +609,31 @@ body:has(#app.nico2-home) .main .topbar .metric-pill{display:none!important}
 #app.nico2-home .nico-f2-tile:focus .nico-f2-art,#app.nico2-home .nico-f2-tile:hover .nico-f2-art{border:2px solid #f6c654!important;box-shadow:0 0 0 3px #ffce5f33,0 9px 25px #0008!important;transform:translateY(-2px)}
 @media(max-width:1100px){#app.nico2-home .nico2-hero{min-height:400px!important;padding-top:115px!important}#app.nico2-home .nico2-hero .hero-copy{width:76%!important}#app.nico2-home .nico-f2-tile{width:172px!important;min-width:172px!important;flex-basis:172px!important}}
 
+
+/* Nico TV 2.2.1 — Ver tudo integrado ao fluxo do controle remoto. */
+#app .nico-see-all{
+ box-sizing:border-box!important;flex:0 0 clamp(150px,15vw,215px)!important;
+ width:clamp(150px,15vw,215px)!important;min-width:clamp(150px,15vw,215px)!important;
+ min-height:120px!important;align-self:stretch!important;display:flex!important;
+ flex-direction:column!important;align-items:center!important;justify-content:center!important;
+ gap:8px!important;margin:0!important;padding:15px!important;
+ background:linear-gradient(150deg,#18283d,#0a1525)!important;
+ border:1px solid #b7903c70!important;border-radius:12px!important;
+ color:#f5f3eb!important;cursor:pointer!important;scroll-snap-align:start!important;
+ box-shadow:inset 0 0 24px #d7aa2c0b!important;outline:none!important;
+}
+#app .nico-see-all-icon{font-size:44px!important;line-height:34px!important;color:#f0c461!important}
+#app .nico-see-all-title{font-size:19px!important;font-weight:800!important;white-space:nowrap!important}
+#app .nico-see-all-hint{font-size:11px!important;color:#a9b6ca!important;text-align:center!important}
+#app .nico-see-all:focus,#app .nico-see-all:focus-visible,#app .nico-see-all:hover{
+ border:3px solid #ffd66e!important;background:linear-gradient(145deg,#2d3040,#151e30)!important;
+ box-shadow:0 0 0 4px #ffd46d55,0 0 24px #b58d3670!important;
+ transform:translateY(-2px)!important;
+}
+#app.nico2-home .nico-f2-rail .nico-f2-all{min-height:113px!important;align-self:stretch!important}
+#app .nico2-shelf .strip .nico2-all-card{min-height:175px!important}
+@media(max-width:700px){#app .nico-see-all{flex-basis:158px!important;min-width:158px!important;width:158px!important}}
+
 </style>
 </head>
 <body>
@@ -1133,10 +1158,11 @@ function appendRow(app,title,list,opts={}){
  if(!list?.length)return;
  const row=document.createElement('section');row.className='row nico2-shelf';
  const head=document.createElement('div');head.className='row-head';
- head.innerHTML=`<div class="row-title">${escapeHtml(title)}</div>${opts.more?'<button class="row-title-btn">Ver tudo ›</button>':''}`;
+ head.innerHTML=`<div class="row-title">${escapeHtml(title)}</div>`;
  row.append(head);
- const strip=document.createElement('div');strip.className='strip';list.slice(0,opts.limit||16).forEach(c=>strip.append(card(c,list)));row.append(strip);app.append(row);
- const more=head.querySelector('.row-title-btn');if(more)more.onclick=()=>{state.view=title;state.viewList=list;state.pageSize=60;render();window.scrollTo(0,0);};
+ const strip=document.createElement('div');strip.className='strip';list.slice(0,opts.limit||16).forEach(c=>strip.append(card(c,list)));
+ if(opts.more)strip.append(nicoMakeSeeAllCard(title,list,'nico2-all-card'));
+ row.append(strip);app.append(row);
 }
 let nico2LoadingHome=false;
 async function nico2LoadHomeCatalog(){
@@ -1168,14 +1194,22 @@ function nicoF2OpenGroup(title,items){
   state.view=title;state.viewList=items;state.pageSize=60;
   render();window.scrollTo(0,0);
 }
+/* Fire TV: "Ver tudo" é o último card navegável da própria prateleira.
+   Usa o mesmo .card dos conteúdos para integrar o D-pad e o foco dourado. */
+function nicoMakeSeeAllCard(title,items,extraClass=''){
+ const more=document.createElement('button');
+ more.type='button';more.className='card nico-see-all '+extraClass;
+ more.setAttribute('aria-label','Ver todos os conteúdos de '+title);
+ more.innerHTML='<span class="nico-see-all-icon" aria-hidden="true">›</span><span class="nico-see-all-title">Ver tudo</span><span class="nico-see-all-hint">Abrir catálogo completo</span>';
+ more.onclick=()=>nicoF2OpenGroup(title,items);
+ return more;
+}
 function nicoF2Rail(app,title,items,variant='wide',opts={}){
   if(!items||!items.length)return;
   const shelf=document.createElement('section');shelf.className='nico2-shelf nico-f2-shelf nico-f2-'+variant;
   const header=document.createElement('div');header.className='nico-f2-shelf-head';
   const heading=document.createElement('h2');heading.textContent=title;
-  const more=document.createElement('button');more.className='nico-f2-more row-title-btn';more.textContent='Ver tudo ›';
-  more.onclick=()=>nicoF2OpenGroup(title,items);
-  header.append(heading,more);
+  header.append(heading);
   const rail=document.createElement('div');rail.className='nico-f2-rail strip';
   const limit=variant==='progress'?12:variant==='live'?10:15;
   items.slice(0,limit).forEach(c=>{
@@ -1197,6 +1231,7 @@ function nicoF2Rail(app,title,items,variant='wide',opts={}){
     b.addEventListener('blur',()=>{if(timer)clearTimeout(timer);down=false;});
     rail.append(b);
   });
+  rail.append(nicoMakeSeeAllCard(title,items,'nico-f2-all'));
   shelf.append(header,rail);app.append(shelf);
 }
 function nicoF2ContinueRail(app){
@@ -1205,7 +1240,7 @@ function nicoF2ContinueRail(app){
   // Use a dedicated click handler so resumed episodes use the existing persistence/series resolver.
   nicoF2Rail(app,'◴ Continuar Assistindo',tiles,'progress',{historyMap:new Map(entries.map((e,i)=>[keyOf(tiles[i]),e])),onOpen:(c)=>{const i=tiles.findIndex(t=>keyOf(t)===keyOf(c));if(i>=0)resumeHistoryEntry(entries[i]);}});
   const rail=app.lastElementChild?.querySelector('.nico-f2-rail');
-  if(rail) [...rail.children].forEach((b,i)=>{b.onclick=()=>resumeHistoryEntry(entries[i]);});
+  if(rail) [...rail.querySelectorAll('.nico-f2-tile')].forEach((b,i)=>{b.onclick=()=>resumeHistoryEntry(entries[i]);});
 }
 function renderNicoFase2HomeRails(app){
   nicoF2ContinueRail(app);
