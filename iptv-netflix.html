@@ -498,6 +498,57 @@ body{overscroll-behavior-x:none}
 #app .nico2-shelf .strip{gap:17px!important;padding-bottom:18px!important;align-items:flex-start}
 @media(max-width:800px){#app .nico-category-trigger{margin-left:0;width:100%}#app .nico-category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#app .nico-category-title span{display:none}}
 
+
+/* Nico TV 2.2 — HOME cinematic rebuilt using approved Fase 2 composition.
+   Scoped exclusively to Home; never modify native player or imported catalog. */
+@media(min-width:1101px){
+ body:has(#app.nico2-home) .shell .sidebar{width:280px!important;min-width:280px!important;padding:24px 15px!important}
+ body:has(#app.nico2-home) .shell .main{margin-left:280px!important;width:calc(100% - 280px)!important}
+ body:has(#app.nico2-home) .main .topbar{left:288px!important}
+ body:has(#app.nico2-home) .sidebar .navbtn .navlabel,
+ body:has(#app.nico2-home) .sidebar .nico2-brandname,
+ body:has(#app.nico2-home) .sidebar .nico2-premium div{opacity:1!important;visibility:visible!important}
+ body:has(#app.nico2-home) .shell .sidebar:hover,
+ body:has(#app.nico2-home) .shell .sidebar:focus-within{width:280px!important}
+}
+#app.nico2-home{padding:0 25px!important;background:#040b14}
+#app.nico2-home .nico2-hero{margin:-84px -25px 0!important;min-height:clamp(390px,51vh,570px)!important;padding:98px 5% 42px!important;display:flex!important;align-items:center!important;border:0!important}
+#app.nico2-home .nico2-hero .hero-copy{width:min(55%,650px)!important;max-width:650px!important;flex:none!important}
+#app.nico2-home .nico2-hero-backdrop{inset:0!important;filter:none!important;transform:none!important;opacity:.92!important;background-size:cover!important;background-position:center 37%!important}
+#app.nico2-home .nico2-hero-shade{background:linear-gradient(90deg,#040b14 0%,#040b14ef 24%,#040b1494 49%,#040b1412 80%),linear-gradient(0deg,#040b14 0%,transparent 34%)!important}
+#app.nico2-home .nico2-hero.nico2-portrait .nico2-hero-backdrop{filter:blur(15px) saturate(1.1)!important;transform:scale(1.1)!important;opacity:.58!important;background-position:70% 35%!important}
+#app.nico2-home .nico2-hero-poster{display:none!important}
+#app.nico2-home .nico2-hero.nico2-portrait .nico2-hero-poster{display:block!important;width:min(230px,22vw)!important;height:min(340px,33vw)!important;position:absolute;right:4%;top:19%;margin:0!important;transform:none!important;border:1px solid #64758b55!important}
+#app.nico2-home .nico2-hero h1{font-size:clamp(38px,4.5vw,72px)!important;line-height:1.04!important;max-width:630px!important}
+#app.nico2-home .nico2-hero .kicker{letter-spacing:.23em!important}
+#app.nico2-home .nico2-hero .nico2-feature{margin:12px 0 14px!important}
+#app.nico2-home .nico2-hero .hero-actions{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important}
+#app.nico2-home .nico2-hero .hero-actions .btn{width:auto!important;min-width:0!important;flex:0 0 auto!important;display:inline-flex!important;min-height:49px!important;padding:0 24px!important;border-radius:12px!important}
+#app.nico2-home .nico2-hero .hero-copy p{font-size:clamp(14px,1.2vw,18px)!important;max-width:490px!important}
+#app.nico2-home .nico2-shelf{margin:10px 0 19px!important}
+#app.nico2-home .nico2-shelf .row-head{margin-bottom:8px!important}
+#app.nico2-home .nico2-shelf .row-title{font-size:19px!important}
+#app.nico2-home .nico2-shelf .strip{gap:12px!important;padding-bottom:10px!important}
+#app.nico2-home .nico2-card{width:clamp(150px,14.7vw,218px)!important;min-width:clamp(150px,14.7vw,218px)!important;flex-basis:clamp(150px,14.7vw,218px)!important}
+#app.nico2-home .nico2-card .thumb{height:auto!important;aspect-ratio:1.73!important}
+#app.nico2-home .nico2-card .card-body{padding:7px 2px 0!important}
+#app.nico2-home .nico2-card .card-title{font-size:13px!important;min-height:0!important;-webkit-line-clamp:1!important}
+#app.nico2-home .nico2-card .card-meta{font-size:11px!important;margin-top:3px!important}
+#app.nico2-home .nico2-card .thumb img{object-fit:cover!important}
+#app.nico2-home .nico2-shelf .nico2-card.nico2-movie,
+#app.nico2-home .nico2-shelf .nico2-card.nico2-series{width:clamp(150px,15.5vw,228px)!important;min-width:clamp(150px,15.5vw,228px)!important;flex-basis:clamp(150px,15.5vw,228px)!important}
+#app.nico2-home .nico2-card.nico2-movie .thumb,
+#app.nico2-home .nico2-card.nico2-series .thumb{aspect-ratio:1.73!important}
+#app.nico2-home .continue-card{flex:0 0 clamp(195px,23vw,308px)!important}
+#app.nico2-home .continue-poster{height:clamp(92px,10vw,145px)!important}
+#app.nico2-home .continue-grid{padding-bottom:8px!important}
+#app.nico2-home .nico2-shelf .nico2-type{display:none!important}
+#app.nico2-home .nico2-hero-backdrop{pointer-events:none}
+@media(max-width:800px){#app.nico2-home .nico2-hero{margin-top:-50px!important;padding-top:110px!important;min-height:430px!important}#app.nico2-home .nico2-hero .hero-copy{width:90%!important}#app.nico2-home .nico2-hero.nico2-portrait .nico2-hero-poster{display:none!important}}
+/* D-pad category panel: explicit focus and visible focus states. */
+#app .nico-category-picker :is(button,[tabindex]):focus{outline:4px solid #ffd46a!important;outline-offset:3px!important;box-shadow:0 0 0 7px #f3bb3e35!important;position:relative;z-index:3}
+#app .nico-category-panel:not([hidden]){position:relative;z-index:6}
+
 </style>
 </head>
 <body>
@@ -1039,12 +1090,20 @@ async function nico2LoadHomeCatalog(){
 function nico2Hero(app,item,count,label){
  if(!item)return;
  app.insertAdjacentHTML('beforeend',heroFor(item,count,label));
+ const hero=app.querySelector('.nico2-hero');
+ if(hero&&item.logo){
+   const check=new Image();check.onload=()=>{
+      if(!hero.isConnected)return;
+      hero.classList.toggle('nico2-portrait',check.naturalWidth/check.naturalHeight<1.32);
+   };check.src=item.logo;
+ }
+
  const btn=$('#heroPlayBtn'),fav=$('#heroFavBtn');
  if(btn)btn.onclick=()=>openItem(item,[item]);
  if(fav)fav.onclick=()=>toggleFav(item);
 }
 function render(){
- updateNav();const app=$('#app');app.innerHTML='';
+ updateNav();const app=$('#app');app.innerHTML='';app.classList.toggle('nico2-home',!!(state.homeView&&!state.query&&!state.favoriteOnly&&!state.recentOnly&&!state.detail&&!state.view));
  const baseList=currentList(),all=searchFiltered(baseList);$('#counter').textContent=`${all.length} itens`;
  if(state.loading){empty(app,'Carregando…','Preparando seu catálogo.');return;}
  if(state.detail){renderDetail(app);return;}
@@ -1539,7 +1598,7 @@ function nico21Focus(el){
   return true;
 }
 function nico21PageKey(){return [state.homeView?'home':state.mode,state.view||'',state.detail?.name||'',state.favoriteOnly?'fav':'',state.recentOnly?'recent':''].join('|');}
-const nico21ContentSelector='.nico2-hero button,.nico2-welcome button,.nico2-shelf .row-title-btn,.nico2-shelf .card,.continue-card,.live-filter-chip,#app .btn,#app .ep-item,#app .card,#app [role=button]';
+const nico21ContentSelector='.nico-category-option,.nico-category-trigger,.nico-category-panel:not([hidden]) .nico-category-tile,.nico2-hero button,.nico2-welcome button,.nico2-shelf .row-title-btn,.nico2-shelf .card,.continue-card,.live-filter-chip,#app .btn,#app .ep-item,#app .card,#app [role=button]';
 function nico21Content(){return nico21Elements(nico21ContentSelector,document.getElementById('app'));}
 function nico21FirstContent(){return nico21Content()[0]||document.getElementById('importBtn');}
 function nico21Sidebar(){return nico21Elements('.sidebar .navbtn');}
@@ -1580,6 +1639,14 @@ function nico21RestoreContent(){
  nico21Focus(match||nico21FirstContent());
 }
 function nico21Back(){
+ const openCategory=document.querySelector('#app .nico-category-panel:not([hidden])');
+ if(openCategory){
+  openCategory.hidden=true;
+  const trigger=document.querySelector('#app .nico-category-trigger');
+  if(trigger){trigger.setAttribute('aria-expanded','false');trigger.focus({preventScroll:true});}
+  for(const k of Object.keys(nicoFilterExpanded)) nicoFilterExpanded[k]=false;
+  return true;
+ }
  if($('#dlg').open || $('#guideDialog').open || $('#infoDialog').open){
    const modal=[$('#dlg'),$('#guideDialog'),$('#infoDialog')].find(x=>x.open);
    const el=document.activeElement;
@@ -1609,15 +1676,37 @@ document.addEventListener('keydown',e=>{
  if($('#player').classList.contains('on'))return;
  if($('#dlg').open || $('#guideDialog').open || $('#infoDialog').open)return;
  const key={'19':'ArrowUp','20':'ArrowDown','21':'ArrowLeft','22':'ArrowRight'}[String(e.keyCode)]||e.key;
+ if(['Escape','Backspace','GoBack','BrowserBack'].includes(key)&&document.querySelector('#app .nico-category-panel:not([hidden])')){e.preventDefault();e.stopImmediatePropagation();nico21Back();return;}
  if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))return;
  if(e.target?.matches('input,textarea,[contenteditable=true]'))return;
  // Key-based navigation on TV; leave mouse/desktop behavior unchanged.
  if(!window.Android && nico21DesktopMouseActive)return;
  const el=document.activeElement,sidebar=nico21Sidebar(),content=nico21Content();
+ const picker=el?.closest?.('.nico-category-picker');
+ if(picker){
+  const quick=nico21Elements('.nico-category-option,.nico-category-trigger',picker);
+  const grid=nico21Elements('.nico-category-panel:not([hidden]) .nico-category-tile',picker);
+  const inGrid=grid.includes(el),inQuick=quick.includes(el);
+  let next=null;
+  if(inQuick && (key==='ArrowLeft'||key==='ArrowRight')){
+    const n=quick.indexOf(el)+(key==='ArrowRight'?1:-1);
+    next=quick[Math.max(0,Math.min(quick.length-1,n))];
+  }else if(inQuick&&key==='ArrowDown'&&grid.length){next=grid[0];}
+  else if(inGrid){
+    const index=grid.indexOf(el);
+    const columns=Math.max(1,Math.round(picker.querySelector('.nico-category-grid').clientWidth/Math.max(1,el.getBoundingClientRect().width+10)));
+    const delta=key==='ArrowRight'?1:key==='ArrowLeft'?-1:key==='ArrowDown'?columns:-columns;
+    if(key==='ArrowUp'&&index<columns)next=quick[quick.length-1];
+    else next=grid[Math.max(0,Math.min(grid.length-1,index+delta))];
+  }else if(inQuick&&key==='ArrowUp'){
+    next=nico21Directional(content.filter(x=>!x.closest('.nico-category-picker')),el,key);
+  }
+  if(next){e.preventDefault();e.stopImmediatePropagation();nico21Focus(next);return;}
+ }
  const insideSidebar=sidebar.includes(el),insideContent=content.includes(el);
  let target=null;
  if(insideSidebar){
-   if(key==='ArrowRight')target=nico21LastContent&&nico21Visible(nico21LastContent)?nico21LastContent:nico21FirstContent();
+   if(key==='ArrowRight')target=(document.querySelector('#app .nico-category-option.active')||document.querySelector('#app .nico-category-trigger'))|| (nico21LastContent&&nico21Visible(nico21LastContent)?nico21LastContent:nico21FirstContent());
    else if(key==='ArrowUp'||key==='ArrowDown')target=sidebar[Math.max(0,Math.min(sidebar.length-1,sidebar.indexOf(el)+(key==='ArrowDown'?1:-1)))];
  }else if(insideContent){
    if(el.closest('.nico2-shelf')){
