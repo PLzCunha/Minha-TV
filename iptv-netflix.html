@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nico TV 2.0 • Cinematic Fire Edition</title>
+<title>Nico TV v1.4.0 • Fire Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -322,243 +322,13 @@ textarea{min-height:96px;resize:vertical}
 .live-group-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .live-filter-empty{padding:24px 10px;color:#a1b0c8}
 @media(max-width:700px){.live-filter-wrap{padding:12px;border-radius:16px}.live-filter-chip{font-size:13px;min-height:42px;padding:8px 12px}}
-
-/* v1.6.0 — Premium Experience: somente interface, sem alterar o ExoPlayer */
-:root{--gold:#e8c77c;--focus:#ffe2a3;--shadow:0 16px 42px rgba(0,0,0,.36)}
-html,body{background:#080d16;color:#f6f7fb}
-.main{padding:22px clamp(18px,2.4vw,38px) 48px}
-.topbar{gap:16px;margin-bottom:22px}
-.brandpanel{background:#0d1623;border:1px solid #213045;border-radius:22px;padding:8px 13px}
-.brandbanner{width:min(28vw,300px);max-height:88px;box-shadow:none}
-.brandvisual{min-width:0;width:auto}
-.subtitle{font-size:11px;color:#9faec2}
-.sidebar{z-index:5;background:linear-gradient(180deg,#0c1522,#080e17);border-right-color:#25354c;box-shadow:4px 0 26px #0003}
-.logo{border-radius:17px}
-.navbtn{border-radius:14px;background:transparent;border-color:transparent}
-.navbtn.active{background:#292619;border-color:#796232;box-shadow:inset 3px 0 0 #e8c77c}
-.navbtn:focus-visible{border-color:#e8c77c;background:#342e1f}
-.search{background:#101a29;border-color:#2c3d54}
-.hero.cinema-hero{display:flex;align-items:center;isolation:isolate;min-height:clamp(340px,40vw,520px);padding:clamp(22px,4vw,58px);border-radius:24px;border:1px solid #334255;background:#101a29;box-shadow:0 24px 72px #0008;overflow:hidden}
-.hero.cinema-hero:before,.hero.cinema-hero:after{display:none}
-.cinema-backdrop,.cinema-shade{position:absolute;inset:0;pointer-events:none}
-.cinema-backdrop{z-index:-2;overflow:hidden;background:radial-gradient(circle at 78% 34%,#344a5d 0,#171d2b 46%,#080e16 92%)}
-.cinema-backdrop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:75% 33%;filter:brightness(.62) saturate(.85) blur(9px);transform:scale(1.1)}
-.cinema-shade{z-index:-1;background:linear-gradient(90deg,#090f19 2%,rgba(9,15,25,.97) 26%,rgba(9,15,25,.72) 55%,rgba(9,15,25,.08) 100%),linear-gradient(0deg,rgba(8,13,22,.8),transparent 50%)}
-.cinema-poster{position:absolute;right:clamp(20px,6vw,100px);top:50%;transform:translateY(-50%);width:min(21vw,230px);aspect-ratio:2/3;object-fit:cover;border-radius:16px;border:1px solid #ffffff55;box-shadow:0 25px 55px #0009;z-index:0}
-.cinema-hero .hero-copy{z-index:1;width:min(66%,670px)}
-.cinema-hero .kicker{letter-spacing:.14em;background:#1d2430d9;border-color:#735e36;color:#ffe2a0}
-.cinema-hero h1{font-size:clamp(32px,4.3vw,61px);line-height:1.06;margin:18px 0;max-width:660px;overflow-wrap:anywhere;text-shadow:0 3px 25px #0008}
-.cinema-hero h1 .accent{display:block;margin-top:10px;font-size:clamp(15px,1.7vw,21px);font-weight:700;color:#eed293;letter-spacing:0}
-.cinema-description{max-width:550px;line-height:1.65;color:#dce3ec;font-size:15px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 4px #000a}
-.cinema-hero .hero-actions{margin-top:22px}
-.cinema-hero .hero-actions .btn{min-width:148px;min-height:49px;border-radius:12px}
-.cinema-hero .hero-meta{margin:17px 0 0}
-.cinema-hero .chip{background:#111a26c9;border:1px solid #5361747a;font-size:12px;padding:6px 11px}
-.cinema-hero .chip.accent{color:#ffe0a2;border-color:#8f7449}
-.cinema-fallback-art{position:absolute;right:12%;top:25%;font-size:clamp(80px,13vw,190px);color:#d3ae5b30;pointer-events:none}
-.cinema-eyebrow{font-size:11px;font-weight:800;letter-spacing:.24em;color:#e7c77e;text-transform:uppercase}
-.row{margin-top:26px}
-.row-title{font-size:23px;letter-spacing:-.04em}
-.row-subcount{margin-top:3px;color:#8f9db1}
-.strip{gap:16px;padding:9px 4px 20px;scroll-snap-type:x proximity}
-.card{scroll-snap-align:start;width:220px;padding:9px;border-radius:17px;background:#101927;border:1px solid #28394d;box-shadow:0 7px 19px #0003;transition:transform .2s,border-color .2s,box-shadow .2s}
-.card.poster{width:192px}
-.card .thumb{border-radius:12px;border:0;position:relative;background:linear-gradient(145deg,#203449,#121927)}
-.card .thumb img{transition:transform .26s ease}
-.card:is(:hover,:focus-visible,:focus-within) .thumb img{transform:scale(1.06)}
-.card:is(:hover,:focus-visible,:focus-within){transform:translateY(-4px) scale(1.035);z-index:2;border-color:#e8c77c;box-shadow:0 0 0 2px #e8c77c77,0 18px 36px #000a}
-.card .card-body{padding:10px 3px 4px}
-.card .card-title{font-size:15px;font-weight:800}
-.card .card-meta{font-size:11px;margin-top:3px}
-.card .card-actions{margin-top:8px;gap:6px}
-.card .mini{padding:8px 9px;border-radius:8px;font-size:11px}
-.card .favstar{width:32px;height:32px;top:15px;right:15px;font-size:16px;background:#09101bdc}
-.card-overlay-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-42%);height:48px;width:48px;border-radius:50%;display:grid;place-items:center;background:#e8c77cf2;color:#101723;font-size:24px;font-weight:800;box-shadow:0 8px 24px #0008;opacity:0;transition:opacity .18s,transform .18s;pointer-events:none}
-.card:is(:hover,:focus-visible,:focus-within) .card-overlay-play{opacity:1;transform:translate(-50%,-50%)}
-.card-kind{position:absolute;left:7px;bottom:7px;background:#080e19dc;color:#e7cb89;border:1px solid #e7cb8944;border-radius:6px;padding:3px 7px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-.grid{gap:16px}
-.detail-side,.detail-main{background:#101825;border-color:#2b3b51}
-.detail-title{line-height:1.12}
-.section-head .section-title{font-size:26px}
-.continue-card,.continue-item{transition:transform .16s,border-color .16s}
-@media(max-width:1100px){.cinema-hero .hero-copy{width:72%}.cinema-poster{width:min(24vw,190px)}}
-@media(max-width:780px){.main{padding:14px}.brandbanner{width:min(66vw,270px)}.hero.cinema-hero{min-height:400px;padding:24px}.cinema-hero .hero-copy{width:100%}.cinema-poster{width:36%;right:10px;opacity:.38}.cinema-shade{background:linear-gradient(90deg,#090f19 0%,#090f19e8 62%,#090f1950 100%)}.cinema-hero h1{font-size:36px}.cinema-description{font-size:13px}.card.poster{width:164px}.card{width:195px}.row-title{font-size:20px}}
-@media(prefers-reduced-motion:reduce){.card,.card .thumb img,.card-overlay-play{transition:none!important}}
-
-
-/* Nico TV 1.6.1 | Cinematic Redesign: layout responsivo real, sem alterar o player */
-:root{--bg:#070b12;--panel:#0d1420;--line:#243045}
-html,body{background:#070b12}
-.shell{grid-template-columns:82px minmax(0,1fr)}
-.sidebar{padding:19px 10px;gap:21px;border-right:1px solid #ffffff0d;background:#080e18;box-shadow:none;z-index:20}
-.logo{height:62px;padding:4px;border-radius:15px;background:none;border-color:#ad874328}
-.logo img{max-width:58px}
-.nav{gap:12px}
-.navbtn{height:52px;border-radius:14px;background:transparent;border:1px solid transparent;box-shadow:none;transition:background .18s,border .18s,color .18s}
-.navbtn.active,.navbtn[aria-pressed=true]{background:#e4c16d1c;border-color:#e4c16d65;color:#f6d78f;box-shadow:none}
-.navbtn:focus-visible,.navbtn:hover{background:#1b2637;border-color:#e4c16da0;transform:none}
-.navlabel{left:60px;background:#0f1928f5;border-color:#65512e}
-.main{padding:12px clamp(14px,2.35vw,36px) 40px}
-.topbar{display:flex;align-items:center;gap:16px;justify-content:space-between;margin-bottom:6px;padding:3px 0 14px}
-.brandpanel{background:transparent;border:0;box-shadow:none;padding:0;border-radius:0;flex:0 0 auto}
-.brandvisual{min-width:0;gap:0}
-.brandbanner{width:clamp(160px,20vw,274px);border-radius:0;box-shadow:none}
-.subtitle{font-size:10px;opacity:.65;padding-left:2px;letter-spacing:.01em}
-.searchwrap{margin-left:auto;justify-content:flex-end;gap:8px}
-.search{height:44px;min-width:160px;max-width:320px;border-radius:999px;background:#111a29d9;padding:0 16px}
-.metric-pill{padding:8px 12px;font-size:11px;background:transparent;border:0;color:#a4b0be}
-.page-actions .btn{height:44px;min-height:44px;border-radius:999px;font-size:13px;padding:0 15px}
-/* Hero diretamente no canvas: o filme domina a primeira tela, sem card encapsulado */
-.hero.cinema-hero{min-height:clamp(485px,69vh,800px);margin:0 calc(-1 * clamp(14px,2.35vw,36px)) 8px;border:0;border-radius:0;padding:clamp(34px,5vw,88px);padding-bottom:clamp(64px,8vw,110px);box-shadow:none;align-items:flex-end;background:#101827}
-.cinema-backdrop{background:radial-gradient(circle at 75% 35%,#344150,#0c121c 60%,#070b12 95%)}
-.cinema-backdrop img{object-position:73% 36%;filter:blur(22px) brightness(.53) saturate(.92);transform:scale(1.27)}
-.cinema-shade{background:linear-gradient(90deg,#070b12 0%,#070b12f5 20%,#070b12ce 47%,#070b1244 73%,#070b1230 100%),linear-gradient(0deg,#070b12 0%,#070b1210 34%,#070b1250 100%)}
-.cinema-hero .hero-copy{width:min(68%,780px);margin-bottom:0;z-index:2}
-.cinema-eyebrow{font-size:11px;letter-spacing:.32em;color:#f4d58f}
-.cinema-hero .kicker{background:transparent;border:0;padding:9px 0 0;font-size:10px;letter-spacing:.23em;color:#dec386}
-.cinema-hero h1{font-size:clamp(44px,5.3vw,86px);letter-spacing:-.065em;line-height:1.045;margin:14px 0 18px;max-width:850px;text-wrap:balance;text-shadow:0 5px 34px #000c}
-.cinema-hero h1 .accent{font-size:clamp(13px,1.25vw,18px);font-weight:700;color:#ebc980;margin-top:16px;letter-spacing:.035em}
-.cinema-description{max-width:570px;font-size:clamp(14px,1.2vw,17px);line-height:1.6;color:#d9e0e9}
-.cinema-hero .hero-meta{margin:18px 0 0}
-.cinema-hero .chip{border:0;padding:5px 9px;background:#192434aa;color:#e3e8ef}
-.cinema-hero .hero-actions{margin-top:25px;gap:12px}
-.cinema-hero .hero-actions .btn{min-height:54px;border-radius:10px;min-width:145px;padding:0 21px}
-.cinema-hero .hero-actions .btn:not(.main){background:#f0f4f219;border-color:#e6e6e02c;backdrop-filter:blur(8px)}
-.cinema-poster{right:clamp(22px,5vw,96px);top:47%;width:clamp(180px,21vw,320px);max-height:70%;object-fit:cover;border-radius:14px;border:1px solid #fff5;box-shadow:0 34px 90px #000b;transform:translateY(-50%) rotate(2deg);opacity:.95;z-index:0}
-.cinema-fallback-art{right:12%;top:18%;font-size:clamp(110px,18vw,250px)}
-/* Prateleiras semelhantes a serviços de streaming: capas sem caixas, botões surgem sob foco */
-.row{margin-top:35px}
-.row-title{font-size:clamp(21px,2vw,27px)}
-.row-head{margin-bottom:13px}
-.strip{gap:15px;padding:10px 7px 26px;scroll-padding:18px;scroll-snap-type:x mandatory}
-.card,.card.poster{width:clamp(170px,15.2vw,240px);padding:0;border:0;background:transparent;box-shadow:none;border-radius:13px;scroll-snap-align:start;overflow:visible;transition:transform .18s ease}
-.card:not(.poster){width:clamp(190px,19vw,275px)}
-.card .thumb{border-radius:11px;border:0;background:#141d2a;overflow:hidden;box-shadow:0 10px 24px #0006}
-.card.poster .thumb{aspect-ratio:2/3}
-.card .card-body{padding:11px 3px 4px}
-.card .card-title{font-size:15px;letter-spacing:-.015em}
-.card .card-meta{font-size:11px;color:#8e9fb3;min-height:16px}
-.card .card-actions{display:none;gap:6px;padding-top:2px}
-.card:is(:hover,:focus-visible,:focus-within) .card-actions{display:flex}
-.card:is(:hover,:focus-visible,:focus-within){border:0;transform:translateY(-5px) scale(1.035);box-shadow:none;z-index:5}
-.card:is(:hover,:focus-visible,:focus-within) .thumb{outline:3px solid #efc978;outline-offset:3px;box-shadow:0 16px 36px #0009}
-.card:focus-visible{outline:none}
-.card .favstar{top:9px;right:9px;width:34px;height:34px;opacity:.22;transition:opacity .18s}
-.card:is(:hover,:focus-visible,:focus-within) .favstar{opacity:1}
-.card .card-kind{font-size:9px}
-.card .mini{font-size:11px;padding:8px 12px}
-.card .card-epg{background:#101926;border-color:#26394a}
-.grid{gap:18px}
-.catalog-filter-wrap,.live-filter-wrap{margin-top:19px}
-@media(max-width:1100px){.cinema-hero .hero-copy{width:66%}.cinema-poster{width:26vw}.hero.cinema-hero{min-height:540px}}
-@media(max-width:780px){
- .shell{grid-template-columns:64px minmax(0,1fr)}.sidebar{padding:12px 6px}.navbtn{height:46px}.logo{height:52px}.logo img{max-width:45px}
- .main{padding:10px 12px 32px}.topbar{margin-bottom:8px}.brandbanner{width:145px}.subtitle{display:none}.searchwrap{gap:6px}.search{max-width:190px;min-width:85px;height:40px}.metric-pill{display:none}
- .hero.cinema-hero{margin:0 -12px 8px;padding:32px 25px 66px;min-height:540px;align-items:flex-end}.cinema-hero .hero-copy{width:100%;z-index:3}
- .cinema-hero h1{font-size:clamp(36px,7.4vw,58px);max-width:600px}.cinema-description{max-width:450px}
- .cinema-poster{width:clamp(135px,36vw,250px);right:10px;top:24%;opacity:.4;transform:translateY(-35%)}
- .cinema-shade{background:linear-gradient(90deg,#070b12 0%,#070b12d9 65%,#070b1238 100%),linear-gradient(0deg,#070b12 0%,transparent 85%)}
- .card.poster{width:166px}.card:not(.poster){width:190px}
-}
-@media(max-width:530px){.topbar{flex-wrap:wrap}.searchwrap{width:100%;justify-content:space-between}.search{flex:1;max-width:none}.hero.cinema-hero{min-height:515px;padding:24px 18px 55px}.cinema-hero h1{font-size:34px}.cinema-hero .hero-actions .btn{min-width:0;padding:0 12px;min-height:48px;font-size:12px}.cinema-hero .hero-copy{width:100%}.cinema-description{font-size:12px}.cinema-poster{opacity:.3}.row{margin-top:23px}}
-@media(prefers-reduced-motion:reduce){.card,.card .thumb img{transition:none!important}}
-
-
-/* ===================================================================
- Nico TV 2.0 • Integração visual real, conservando o player homologado
- Estrutural: sidebar overlay expansível, hero edge-to-edge e prateleiras
- =================================================================== */
-:root{--gold:#f0c756;--focus:#ffe49a;--bg:#050b13;--text:#f6f8fc}
-html,body{background:#050b13!important;scroll-behavior:auto}
-.shell{display:grid;grid-template-columns:94px minmax(0,1fr);min-height:100vh}
-.sidebar{width:94px;min-width:94px;box-sizing:border-box;position:sticky;top:0;height:100vh;z-index:50!important;padding:22px 10px 18px;background:linear-gradient(180deg,#08121f,#070e19);border-right:1px solid #203046;overflow:hidden;gap:22px;transition:width .22s ease,box-shadow .22s ease}
-.sidebar:hover,.sidebar:focus-within,.sidebar.nico2-expanded{width:288px;box-shadow:18px 0 56px #000b}
-.sidebar .logo{flex:0 0 auto;width:100%;height:84px;display:flex;align-items:center;justify-content:flex-start;border:0!important;background:transparent!important;padding:4px 10px!important;box-shadow:none!important}
-.sidebar .logo img{width:63px;max-width:63px;height:63px;flex-shrink:0;object-fit:contain}
-.sidebar .nav{width:268px;gap:7px}
-.sidebar .navbtn{position:relative;flex-shrink:0;width:268px;height:56px;padding:0 14px;display:flex;gap:23px;align-items:center;justify-content:flex-start;border-radius:14px;border:1px solid transparent;background:transparent;color:#d6dfeb;box-shadow:none;font-size:16px;transition:background .12s,border-color .12s}
-.sidebar .navbtn .ico{display:flex;align-items:center;justify-content:center;flex:0 0 47px;font-size:24px;line-height:1}
-.sidebar .navbtn .navlabel{position:static!important;display:block!important;opacity:1!important;transform:none!important;pointer-events:auto!important;padding:0!important;white-space:nowrap;background:none!important;border:0!important;backdrop-filter:none!important;color:inherit;font-size:16px;font-weight:650}
-.sidebar .navbtn.active,.sidebar .navbtn[aria-pressed="true"]{background:linear-gradient(110deg,#f6d476,#d7a32e)!important;color:#1c1a16!important;border-color:#f8d987!important;box-shadow:0 8px 20px #dfac3145!important}
-.sidebar .navbtn:hover,.sidebar .navbtn:focus-visible{background:#23324a;border-color:#f8d987;transform:none}
-.sidebar .navbtn.active:hover,.sidebar .navbtn.active:focus-visible{background:#f0c756!important}
-.sidebar .navbtn.hidden{display:none!important}
-.sidebar .navbtn:focus-visible{outline:3px solid #ffdb73!important;outline-offset:2px}
-.nico2-menu-heading{margin:0 12px;color:#b29b64;font-size:10px;letter-spacing:.19em;font-weight:800;white-space:nowrap;opacity:0;transition:opacity .12s}
-.sidebar:is(:hover,:focus-within,.nico2-expanded) .nico2-menu-heading{opacity:1}
-.nico2-menu-footer{width:268px;border:1px solid #7a5c2399;border-radius:14px;min-height:64px;background:linear-gradient(110deg,#1b1c1c,#0d1624);display:flex;gap:16px;align-items:center;padding:12px 14px}
-.nico2-crown{font-size:29px;color:#f0c756;min-width:47px;text-align:center}
-.nico2-footer-copy{display:flex;flex-direction:column;gap:2px;white-space:nowrap;color:#f5d16c}
-.nico2-footer-copy small{color:#abb6c4;font-size:11px}
-.sidebar #importNav2{display:none}
-.main{min-width:0;padding:0 0 40px!important}
-.topbar{position:absolute;top:0;left:94px;right:0;z-index:8;height:104px;padding:19px 3.3vw;display:flex;align-items:center;justify-content:flex-end;gap:16px;background:linear-gradient(180deg,#06101b99,transparent);pointer-events:none}
-.topbar>*{pointer-events:auto}
-.brandpanel{margin-right:auto;background:none!important;border:0!important;padding:0!important}
-.brandbanner{width:190px!important;max-height:77px!important;object-fit:contain;object-position:left center}
-.brandvisual .subtitle{display:none!important}
-.searchwrap{flex:0 1 auto;gap:10px;flex-wrap:nowrap}
-.search{min-width:220px;max-width:380px;width:min(28vw,380px);height:52px;border-radius:28px;background:#091423e6;border-color:#46566c}
-.search input{font-size:14px}
-.metric-pill{display:none}
-.page-actions #homeBtn{display:none}
-.page-actions .btn{min-height:49px;border-radius:13px}
-#app{min-width:0}
-.hero.cinema-hero{min-height:min(73vh,720px);height:auto;margin:0 0 16px!important;border:0!important;border-radius:0!important;padding:140px clamp(26px,4vw,72px) 80px!important;display:flex;align-items:center;justify-content:flex-start;isolation:isolate;background:#091725;box-shadow:none!important}
-.cinema-hero .hero-copy{width:min(54%,690px);margin:0;z-index:2}
-.cinema-backdrop img{object-position:75% 32%;filter:blur(12px) brightness(.60) saturate(1.05);transform:scale(1.15)}
-.cinema-shade{background:linear-gradient(90deg,#050b13 0%,#050b13f5 18%,#050b13c2 43%,#050b1320 74%,#050b130c 100%),linear-gradient(0deg,#050b13 0%,transparent 31%,#050b1355 100%)}
-.cinema-poster{right:clamp(24px,5vw,90px);width:clamp(190px,25vw,360px);top:52%;max-height:73%;opacity:1;transform:translateY(-50%) rotate(0deg);border:1px solid #fff4;box-shadow:0 25px 70px #000c}
-.cinema-eyebrow{font-size:12px;color:#f8d173;letter-spacing:.32em}
-.cinema-hero .kicker{font-size:12px!important;color:#e6c779!important}
-.cinema-hero h1{font-size:clamp(38px,5.5vw,83px)!important;line-height:1.06!important;letter-spacing:-.055em;margin:15px 0!important}
-.cinema-hero h1 .accent{font-size:clamp(14px,1.6vw,20px);color:#e9c875}
-.cinema-description{font-size:clamp(14px,1.2vw,17px);max-width:580px;line-height:1.65;-webkit-line-clamp:3}
-.cinema-hero .hero-actions .btn.main{background:linear-gradient(120deg,#f9d675,#d8aa36);color:#15130f;box-shadow:0 5px 20px #e7bc4240;border-color:#f9d675}
-.cinema-hero .hero-actions .btn{min-height:54px;font-size:15px;padding:0 24px}
-.row{margin:24px clamp(22px,3vw,52px) 0!important}
-.row-head{margin-bottom:12px}
-.row-title{font-size:clamp(20px,1.8vw,26px)!important}
-.row-subcount{font-size:12px}
-.strip{gap:12px;padding:10px 5px 26px;scroll-behavior:auto!important;scroll-snap-type:x proximity}
-.card.poster,.card{padding:0!important;width:clamp(185px,17vw,260px)!important;border:0!important;background:transparent!important;border-radius:12px;box-shadow:none!important}
-.card:not(.poster){width:clamp(215px,20vw,315px)!important}
-.card .thumb,.card.poster .thumb{aspect-ratio:16/10!important;border-radius:12px;box-shadow:0 8px 20px #0009;overflow:hidden}
-.card .thumb img{width:100%;height:100%;object-fit:cover;object-position:center 26%}
-.card .card-body{padding:9px 2px 6px}
-.card .card-title{font-size:14px}
-.card .card-meta{font-size:11px}
-.card .card-actions{display:none}
-.card:is(:hover,:focus-visible,:focus-within) .card-actions{display:flex}
-.card:is(:hover,:focus-visible,:focus-within) .thumb{outline:3px solid #f3d36e;outline-offset:2px}
-.card:is(:focus-visible,:hover,:focus-within){transform:translateY(-2px) scale(1.035)!important;z-index:3}
-.continue-grid{gap:12px}
-.continue-card{border:1px solid #2f435c;background:#111c2b;overflow:hidden}
-.continue-card:focus-visible,.continue-card:hover{outline:3px solid #f2cc6f;outline-offset:3px}
-.continue-progress span{background:#f2c94d}
-.live-filter-wrap,.catalog-filter-wrap{margin:20px clamp(22px,3vw,52px)!important;padding:14px 18px;border-radius:18px;background:#101b2a;border:1px solid #2b3a51}
-.live-filter-chip{min-height:48px}
-.live-filter-chip:focus-visible,.btn:focus-visible,.row-title-btn:focus-visible{outline:3px solid #f9d577;outline-offset:3px}
-.section-head,.grid,.detail,.empty{margin-left:clamp(22px,3vw,52px);margin-right:clamp(22px,3vw,52px)}
-@media(max-width:1050px){.cinema-hero .hero-copy{width:65%}.cinema-poster{width:25vw;opacity:.75}.brandbanner{width:140px!important}.hero.cinema-hero{min-height:570px;padding-top:130px!important}}
-@media(max-width:700px){
- .shell{grid-template-columns:66px minmax(0,1fr)}.sidebar{width:66px;min-width:66px;padding:13px 5px}.sidebar:hover,.sidebar:focus-within,.sidebar.nico2-expanded{width:245px}
- .sidebar .logo{height:64px;padding:3px 0!important}.sidebar .logo img{max-width:50px;width:50px;height:50px}
- .sidebar .navbtn{width:230px;height:48px;padding:0 5px;gap:14px}.sidebar .navbtn .ico{flex-basis:49px;font-size:20px}.sidebar .navbtn .navlabel{font-size:14px}.sidebar .nav{width:230px}.nico2-menu-footer{width:230px}
- .topbar{left:66px;height:84px;padding:10px 15px}.brandbanner{width:90px!important;max-height:55px!important}.search{min-width:90px;width:150px;max-width:200px;height:42px}.page-actions .btn{min-height:42px;padding:0 11px;font-size:12px}
- .hero.cinema-hero{min-height:530px!important;padding:120px 18px 47px!important}.cinema-hero .hero-copy{width:100%;z-index:3}.cinema-poster{width:46%;right:5px;top:29%;opacity:.38}.cinema-shade{background:linear-gradient(90deg,#050b13f7,#050b1399 80%),linear-gradient(0deg,#050b13,transparent 75%)}
- .cinema-hero h1{font-size:clamp(30px,7.2vw,48px)!important}.cinema-description{font-size:13px}.row{margin-left:15px!important;margin-right:15px!important}.card,.card.poster{width:170px!important}.card:not(.poster){width:185px!important}
- .live-filter-wrap,.catalog-filter-wrap{margin:14px!important}
-}
-@media(prefers-reduced-motion:reduce){.sidebar,.card,.strip{transition:none!important;scroll-behavior:auto!important}}
-
 </style>
 </head>
 <body>
 <div class="shell">
-  <aside class="sidebar" id="nicoSidebar" aria-label="Menu Nico TV">
+  <aside class="sidebar">
     <div class="logo" tabindex="0" aria-label="Nico TV"><img alt="Nico TV, mascote chihuahua" src="data:image/webp;base64,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"></div>
-    <div class="nico2-menu-heading">NAVEGAÇÃO</div><nav class="nav" aria-label="Navegação principal">
+    <nav class="nav" aria-label="Navegação principal">
       <button class="navbtn active" id="homeNav"><span class="ico">⌂</span><span class="navlabel">Início</span></button>
       <button class="navbtn" id="liveNav"><span class="ico" aria-hidden="true">📺</span><span class="navlabel">Ao vivo</span></button>
       <button class="navbtn hidden" id="movieNav"><span class="ico" aria-hidden="true">🎞️</span><span class="navlabel">Filmes</span></button>
@@ -568,7 +338,7 @@ html,body{background:#050b13!important;scroll-behavior:auto}
       <button class="navbtn" id="searchNav"><span class="ico">⌕</span><span class="navlabel">Buscar</span></button>
       <button class="navbtn" id="importNav"><span class="ico">＋</span><span class="navlabel">Importar</span></button>
     </nav>
-    <div class="spacer"></div><div class="nico2-menu-footer"><span class="nico2-crown">♛</span><span class="nico2-footer-copy"><strong>Nico TV 2.0</strong><small>Cinematic Fire Edition</small></span></div>
+    <div class="spacer"></div>
     <button class="navbtn soft" id="importNav2"><span class="ico">⇪</span><span class="navlabel">Nova lista</span></button>
   </aside>
 
@@ -601,7 +371,7 @@ html,body{background:#050b13!important;scroll-behavior:auto}
   <div id="playerBar">
     <div class="player-meta">
       <div id="playerTitle"></div>
-      <div id="playerSub"></div><div style="font-size:10px;color:#acb8ce;opacity:.7">Nico TV 2.0</div>
+      <div id="playerSub"></div><div style="font-size:10px;color:#acb8ce;opacity:.7">Nico TV 1.4.0</div>
     </div>
     <div class="player-actions">
       <button class="btn" id="backBtn">Voltar</button>
@@ -993,7 +763,7 @@ function placeholderFrom(c){ return c.kind==='movie'?'🎬':c.kind==='series'?'�
 function card(c,list){
   const div=document.createElement('div'); div.className='card'+((c.kind==='movie'||c.kind==='series')?' poster':''); div.tabIndex=0; div.setAttribute('role','button'); div.setAttribute('aria-label',c.name);
   div.innerHTML=`<button class="favstar" aria-label="${isFav(c)?'Remover dos':'Adicionar aos'} favoritos">${isFav(c)?'★':'☆'}</button>
-    <div class="thumb">${c.logo?`<img alt="" loading="lazy" src="${escapeHtml(c.logo)}">`:`<div class="placeholder">${placeholderFrom(c)}</div>`}<span class="card-overlay-play" aria-hidden="true">▶</span><span class="card-kind">${c.kind==='series'?'Série':c.kind==='movie'?'Filme':'Ao vivo'}</span></div>
+    <div class="thumb">${c.logo?`<img alt="" loading="lazy" src="${c.logo}">`:`<div class="placeholder">${placeholderFrom(c)}</div>`}</div>
     <div class="card-body">
       <div class="card-title">${escapeHtml(c.name)}</div>
       <div class="card-meta">${escapeHtml(c.group||'Conteúdo')}</div>
@@ -1009,28 +779,41 @@ function card(c,list){
 function renderEpgBlock(c){ const epg=epgFor(c); if(!epg) return '<div class="next">Sem guia disponível</div>'; const cur=epg.current, next=epg.next; return `${cur?`<div>${timeFmt(cur.start)} · ${escapeHtml(cur.title)}</div>`:'<div>Sem programa atual</div>'}${next?`<div class="next">Próximo ${timeFmt(next.start)} · ${escapeHtml(next.title)}</div>`:''}`; }
 function empty(app,title,text){ app.innerHTML=`<div class="empty"><h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p></div>`; }
 function heroFor(item,count,label){
-  const kind=item.kind||'live';
-  const isVod=kind==='movie'||kind==='series';
-  const epg=isVod?'':currentProgramText(item);
-  const extra=[item.year,item.genre,item.rating?`★ ${item.rating}`:''].filter(Boolean);
-  const description=(item.description||'').trim() || (kind==='live'?'Seus canais ao vivo, organizados e acessíveis em poucos cliques.':kind==='series'?'Explore temporadas e episódios, salve favoritos e continue de onde parou.':'Uma seleção do seu catálogo, pronta para assistir.');
-  const visual=item.logo ? `<img class="cinema-poster" loading="eager" alt="" src="${escapeHtml(item.logo)}" onerror="this.style.display='none'">` : '<span class="cinema-fallback-art" aria-hidden="true">◈</span>';
-  return `<section class="hero cinema-hero" aria-label="Conteúdo em destaque">
-      <div class="cinema-backdrop">${item.logo?`<img alt="" src="${escapeHtml(item.logo)}" onerror="this.style.display='none'">`:''}</div>
-      <div class="cinema-shade"></div>${visual}
-      <div class="hero-copy">
-        <div class="cinema-eyebrow">NICO TV · SELEÇÃO EM DESTAQUE</div>
-        <div class="kicker">${kind==='live'?'● Canal ao vivo':kind==='movie'?'✦ Filme em destaque':'✦ Série em destaque'}</div>
-        <h1>${escapeHtml(item.name)}<span class="accent">${escapeHtml(item.group||label)}</span></h1>
-        <div class="cinema-description">${escapeHtml(description.slice(0,300))}</div>
-        <div class="hero-meta"><span class="chip">${kind==='series'?'SÉRIE':kind==='movie'?'FILME':'AO VIVO'}</span>${extra.slice(0,2).map(v=>`<span class="chip">${escapeHtml(String(v))}</span>`).join('')}${epg?`<span class="chip accent">${escapeHtml(epg)}</span>`:''}</div>
-        <div class="hero-actions">
-          <button class="btn main" id="heroPlayBtn">${kind==='series'?'▶ Explorar episódios':kind==='movie'?'▶ Ver detalhes':'▶ Assistir agora'}</button>
-          <button class="btn" id="heroFavBtn">${isFav(item)?'★ Na Minha Lista':'☆ Minha Lista'}</button>
-          ${state.mode==='live'?'<button class="btn" id="heroGuideBtn">▦ Guia de programação</button>':''}
+  const epg=currentProgramText(item);
+  return `<section class="hero">
+    <div class="hero-copy">
+      <div class="kicker">${state.mode==='live'?'Ambiente ao vivo':state.mode==='movies'?'Catálogo de filmes':'Detalhe da série'}</div>
+      <h1>${escapeHtml(item.name)}<br><span class="accent">${escapeHtml(item.group||label)}</span></h1>
+      <p>${state.mode==='live'?'Seus canais, filmes e séries em uma interface pensada para TV, com navegação rápida, favoritos, recentes e busca inteligente.':state.mode==='movies'?'Explore seu catálogo de filmes com visual premium e acesso rápido.':'Navegue por temporadas e episódios com uma experiência mais rica e organizada.'}</p>
+      <div class="hero-meta">
+        <span class="chip">${count} ${label}</span>
+        ${item.group?`<span class="chip accent">${escapeHtml(item.group)}</span>`:''}
+        ${epg?`<span class="chip">${escapeHtml(epg)}</span>`:''}
+        ${state.epgSource?'<span class="chip">EPG ativo</span>':''}
+      </div>
+      <div class="hero-actions">
+        <button class="btn main" id="heroPlayBtn">${item.kind==='series'?'Abrir série':'Assistir agora'}</button>
+        <button class="btn" id="heroFavBtn">${isFav(item)?'★ Favoritado':'☆ Favoritar'}</button>
+        ${state.mode==='live'?'<button class="btn" id="heroGuideBtn">▦ Guia de programação</button>':''}
+      </div>
+    </div>
+    <div class="hero-media">
+      <div class="media-card">
+        <div class="media-thumb">${item.logo?`<img alt="" src="${item.logo}">`:'<div class="placeholder" style="font-size:44px;color:#f0d28c">◈</div>'}</div>
+        <div class="media-info">
+          <div class="media-title">${escapeHtml(item.name)}</div>
+          <div class="media-sub">${escapeHtml(item.group||label)}</div>
+          <div class="media-lines"><div class="media-line"></div><div class="media-line small"></div><div class="media-line tiny"></div></div>
         </div>
       </div>
-    </section>`;
+      <div class="control-grid">
+        <div class="control-card"><div class="label">Itens</div><div class="value">${String(count).padStart(2,'0')}</div><div class="section-sub">${label}</div></div>
+        <div class="control-card"><div class="label">Favoritos</div><div class="value">${state.favorites.length}</div><div class="section-sub">Acesso rápido</div></div>
+        <div class="control-card"><div class="label">Recentes</div><div class="value">${state.recent.length}</div><div class="section-sub">Continue assistindo</div></div>
+        <div class="control-card"><div class="label">Modo</div><div class="value" style="font-size:22px">${state.mode==='live'?'Ao vivo':state.mode==='movies'?'Filmes':'Séries'}</div><div class="section-sub">Experiência premium</div></div>
+      </div>
+    </div>
+  </section>`;
 }
 function appendRow(app,title,list,opts={}){
   if(!list.length) return;
@@ -1057,13 +840,11 @@ function render(){
     return;
   }
   const label=state.mode==='movies'?'filmes':state.mode==='series'?'séries':'canais';
-  // Filtros da TV ao vivo serão mostrados após o destaque cinematográfico.
-  // Destaque determinístico: favorito/recente com arte; sem depender de APIs externas.
-  const featured=all.find(c=>isFav(c)&&c.logo)||all.find(c=>state.recent.includes(keyOf(c))&&c.logo)||all.find(c=>c.logo)||all[0];
-  app.insertAdjacentHTML('beforeend', heroFor(featured, all.length, label));
-  $('#heroPlayBtn').onclick=()=>openItem(featured,all); $('#heroFavBtn').onclick=()=>toggleFav(featured); if($('#heroGuideBtn'))$('#heroGuideBtn').onclick=openGuide;
   if(state.mode==='live')liveFilterPanel(app,baseLive);
   else catalogFilterPanel(app,baseCatalog);
+  app.insertAdjacentHTML('beforeend', heroFor(all[0], all.length, label));
+  $('#heroPlayBtn').onclick=()=>openItem(all[0],all); $('#heroFavBtn').onclick=()=>toggleFav(all[0]); if($('#heroGuideBtn'))$('#heroGuideBtn').onclick=openGuide;
+
   renderContinue(app);
   const recentItems=state.recent.map(k=>all.find(x=>keyOf(x)===k)).filter(Boolean);
   const favoriteItems=all.filter(isFav);
@@ -1081,11 +862,7 @@ function render(){
       row.append(strip); app.append(row);
     }
   } else {
-    appendRow(app,state.mode==='movies'?'Todos os filmes':'Todas as séries',all,{subtitle:`${all.length} títulos disponíveis · navegue pelas capas`,limit:32,more:true});
-    if(!state.query && (state.catalogFilters[state.mode]||'all')==='all'){
-      const shelves=[...groupBy(all).entries()].filter(([group,items])=>group&&items.length>=3).sort((a,b)=>b[1].length-a[1].length).slice(0,6);
-      shelves.forEach(([group,items])=>appendRow(app,group,items,{subtitle:`${items.length} títulos`,limit:16,more:true}));
-    }
+    appendRow(app,state.mode==='movies'?'Catálogo de filmes':'Biblioteca de séries',all,{subtitle:`${all.length} itens disponíveis`,limit:50,more:true});
   }
   focusFirst();
 }
@@ -1520,7 +1297,7 @@ document.addEventListener('keydown',e=>{
 
   if(el && /INPUT|TEXTAREA/.test(el.tagName) && !k.startsWith('Arrow')) return;
   if(!k.startsWith('Arrow')) return;
-  const nodes=[...document.querySelectorAll('.sidebar .navbtn:not(.hidden),.topbar .btn,#search,#app button,#app .card,#app .continue-card,#app .ep-item')].filter(o=>o.offsetParent!==null);
+  const nodes=[...document.querySelectorAll('.sidebar .navbtn,.topbar .btn,#search,#app button,#app .card,#app .ep-item')].filter(o=>o.offsetParent!==null);
   if(!nodes.length) return;
   if(!nodes.includes(el)){ nodes[0].focus(); e.preventDefault(); return; }
   const r=el.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2; let best=null, bestScore=1e9;
@@ -1534,27 +1311,6 @@ function escapeAttr(s){ return String(s??'').replace(/[^\w\-]+/g,'_'); }
 
 (async()=>{
   try{ const saved=JSON.parse(store.get('nico_source')||'null'); if(saved) await importFrom(saved); else render(); }catch(e){ render(); }
-})();
-/* Nico TV 2.0: foco de controle remoto e menu contextualmente expansível. */
-(function(){
- const sidebar=document.getElementById('nicoSidebar');
- if(!sidebar)return;
- const nav=sidebar.querySelector('.nav');
- nav.addEventListener('focusin',()=>sidebar.classList.add('nico2-expanded'));
- sidebar.addEventListener('focusout',()=>{
-   requestAnimationFrame(()=>{if(!sidebar.contains(document.activeElement))sidebar.classList.remove('nico2-expanded')});
- });
- // Abre o menu no toque/clique e fecha ao navegar para o conteúdo.
- const logo=sidebar.querySelector('.logo');
- logo.addEventListener('click',()=>sidebar.classList.toggle('nico2-expanded'));
- document.querySelector('.main').addEventListener('pointerdown',()=>sidebar.classList.remove('nico2-expanded'),{passive:true});
- // Setas horizontais não devem deslocar o documento inteiro; foco sempre permanece visível.
- document.addEventListener('focusin',e=>{
-   const target=e.target;
-   if(target && (target.matches('.card,.continue-card,.navbtn,.live-filter-chip,.catalog-filter-chip')||target.closest('.strip,.continue-grid'))){
-     target.scrollIntoView({block:'nearest',inline:'nearest',behavior:'auto'});
-   }
- });
 })();
 </script>
 </body>
