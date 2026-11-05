@@ -634,27 +634,564 @@ body:has(#app.nico2-home) .main .topbar .metric-pill{display:none!important}
 #app .nico2-shelf .strip .nico2-all-card{min-height:175px!important}
 @media(max-width:700px){#app .nico-see-all{flex-basis:158px!important;min-width:158px!important;width:158px!important}}
 
+
+/* NICO TV • VISUAL PREMIUM — SOMENTE APRESENTAÇÃO (ZERO JS ALTERADO)
+   Mantém eventos, IDs, estado, navegação DPAD, contratos e rotas intactos. */
+:root{--bg:#020913;--panel:#091625;--panel2:#11233a;--line:#31435a;--text:#f7f9fc;--muted:#a2b1c7;--gold:#f2c459;--focus:#ffd66b;--shadow:0 8px 28px #0008}
+html,body{background:#030b15!important;color:#f5f7fa!important}
+.shell{grid-template-columns:clamp(232px,21vw,284px) minmax(0,1fr)!important;background:linear-gradient(110deg,#071323 0%,#020a14 33%,#010814 100%)}
+.sidebar{width:auto!important;position:sticky!important;top:0!important;height:100vh!important;max-height:100vh!important;overflow-y:auto!important;overscroll-behavior:contain;z-index:18!important;padding:21px 13px!important;gap:10px!important;border:0!important;border-right:1px solid #bb8b2b6e!important;border-radius:0 0 24px 0!important;background:linear-gradient(104deg,#020d1c 0%,#061426 85%,#14202b 100%)!important;box-shadow:8px 0 28px #0006,1px 0 0 #bb8b2b4e!important;scrollbar-width:none}
+.sidebar::-webkit-scrollbar{display:none}
+.sidebar .logo{height:75px!important;min-height:75px!important;width:76px!important;justify-content:flex-start!important;margin-left:8px!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+.sidebar .logo img{max-width:69px!important;width:69px!important}
+.sidebar .nico2-brandname{position:absolute!important;top:33px!important;left:97px!important;right:7px!important;display:block!important;text-align:left!important;font-size:clamp(19px,2vw,29px)!important;white-space:nowrap!important;pointer-events:none!important}
+.sidebar .nico2-brandname small{font-size:11px!important}
+.sidebar .nav{gap:5px!important;margin-top:10px!important}
+.sidebar .navbtn{display:flex!important;justify-content:flex-start!important;align-items:center!important;position:relative!important;min-height:43px!important;height:43px!important;width:100%!important;max-width:none!important;border:1px solid transparent!important;border-radius:12px!important;box-shadow:none!important;background:transparent!important;padding:0 12px!important;gap:12px!important;transition:background .15s,border-color .15s!important;transform:none!important;overflow:visible!important}
+.sidebar .navbtn .ico{display:flex!important;width:27px!important;min-width:27px!important;justify-content:center!important;align-items:center!important;font-size:21px!important;color:#e7edf6!important}
+.sidebar .navbtn .navlabel{position:static!important;display:block!important;opacity:1!important;visibility:visible!important;transform:none!important;pointer-events:none!important;min-width:0!important;padding:0!important;margin:0!important;background:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;font-size:clamp(12px,1.1vw,15px)!important;white-space:nowrap!important;text-overflow:ellipsis!important;overflow:hidden!important;color:#f1f3f8!important;font-weight:650!important}
+.sidebar .navbtn.active,.sidebar .navbtn[aria-pressed=true]{background:linear-gradient(110deg,#ffd86c,#c99524)!important;border-color:#ffe294!important;box-shadow:0 4px 15px #d49a2733!important;color:#101520!important}
+.sidebar .nav .navbtn.active .navlabel,.sidebar .nav .navbtn.active .ico,.sidebar .nav .navbtn[aria-pressed=true] .navlabel,.sidebar .nav .navbtn[aria-pressed=true] .ico{color:#10151c!important}
+.sidebar .navbtn:hover{background:#23364a!important;border-color:#5c687c!important}
+.sidebar .navbtn.active:hover{background:linear-gradient(110deg,#ffd86c,#c99524)!important}
+.sidebar .spacer{min-height:3px!important;flex:1!important}
+.sidebar .nico2-premium{width:100%!important;max-width:none!important;min-height:58px!important;margin:8px 0!important;padding:9px!important;justify-content:flex-start!important;border-radius:12px!important}
+.sidebar .nico2-premium span{flex:none!important}
+.sidebar .nico2-premium b{font-size:13px!important}
+.sidebar .nico2-premium small{font-size:10px!important}
+.sidebar .navbtn.soft{min-height:37px!important;height:37px!important}
+.main{padding:0 16px 20px!important;min-width:0!important;position:relative!important}
+.topbar{position:absolute!important;top:0!important;left:16px!important;right:16px!important;z-index:8!important;height:74px!important;min-height:74px!important;display:flex!important;justify-content:flex-end!important;align-items:center!important;gap:12px!important;flex-wrap:nowrap!important;margin:0!important;padding:8px 0!important;background:transparent!important;pointer-events:none!important}
+.topbar>*{pointer-events:auto!important}
+.topbar .brandpanel{display:none!important}
+.topbar .searchwrap{margin-left:auto!important;flex:0 1 auto!important;flex-wrap:nowrap!important;gap:10px!important}
+.topbar .search{height:43px!important;min-width:210px!important;width:clamp(260px,25vw,400px)!important;max-width:400px!important;border-radius:26px!important;background:#07101ecf!important;border:1px solid #9ca9bb80!important;box-shadow:0 4px 22px #0007!important}
+.topbar .search input{font-size:13px!important}
+.topbar .metric-pill,.topbar .subtitle{display:none!important}
+.topbar .btn{min-height:43px!important;height:43px!important;padding:0 20px!important;border-radius:26px!important;font-size:13px!important}
+#app{padding-top:86px!important}
+#app.nico2-home{padding-top:0!important}
+#app.nico2-home .nico2-hero{position:relative!important;min-height:clamp(370px,44vw,500px)!important;height:auto!important;max-height:none!important;margin:0 -16px 2px!important;padding:90px clamp(23px,4vw,68px) 32px!important;display:flex!important;align-items:center!important;isolation:isolate!important;overflow:hidden!important;border:0!important;border-radius:0!important;background:#061425!important;box-shadow:none!important}
+#app.nico2-home .nico2-hero-backdrop{inset:0!important;z-index:-2!important;filter:blur(7px) saturate(1.18)!important;opacity:.9!important;background-position:75% 30%!important;transform:scale(1.12)!important}
+#app.nico2-home .nico2-hero-shade{inset:0!important;z-index:-1!important;background:linear-gradient(90deg,#030a15 0%,#030a15ed 29%,#030a15a9 52%,#030a1530 82%),linear-gradient(0deg,#030a15 0%,transparent 38%)!important}
+#app.nico2-home .nico2-hero .hero-copy{width:61%!important;max-width:670px!important;margin:0!important;padding:0!important;align-self:center!important;z-index:3!important}
+#app.nico2-home .nico2-hero .kicker{background:transparent!important;border:0!important;padding:0!important;margin:0 0 15px!important;font-size:11px!important;letter-spacing:.23em!important;color:#ffd067!important}
+#app.nico2-home .nico2-hero .nico2-feature{font-size:11px!important;letter-spacing:.17em!important;color:#f4c351!important;margin-bottom:9px!important}
+#app.nico2-home .nico2-hero h1{font-size:clamp(36px,4.6vw,72px)!important;font-weight:900!important;line-height:1.05!important;max-width:630px!important;margin:0 0 14px!important;letter-spacing:-.045em!important;color:#fff!important;text-shadow:0 2px 28px #0007!important}
+#app.nico2-home .nico2-hero p{font-size:clamp(13px,1.05vw,16px)!important;line-height:1.48!important;color:#e4e9f3!important;max-width:530px!important;margin-bottom:16px!important;-webkit-line-clamp:3!important}
+#app.nico2-home .nico2-hero .hero-meta{gap:8px!important;margin-bottom:17px!important}
+#app.nico2-home .nico2-hero .chip{padding:6px 11px!important;background:#1d2736d8!important;border:0!important;color:#e8eaf0!important;border-radius:16px!important;font-size:11px!important}
+#app.nico2-home .nico2-hero .hero-actions{display:flex!important;gap:10px!important;flex-wrap:wrap!important}
+#app.nico2-home .nico2-hero .hero-actions>.btn{width:auto!important;min-width:0!important;min-height:47px!important;max-width:250px!important;padding:0 22px!important;border-radius:11px!important;font-size:14px!important;flex:0 0 auto!important}
+#app.nico2-home .nico2-hero .hero-actions>.btn.main{background:linear-gradient(110deg,#ffda70,#d99f25)!important;color:#161309!important;border:1px solid #ffda70!important;box-shadow:0 5px 19px #eab83c35!important}
+#app.nico2-home .nico2-hero .hero-actions>.btn:not(.main){background:#0a1220b9!important;color:#f3f4f8!important;border:1px solid #a9b4c260!important}
+#app.nico2-home .nico2-hero-poster{position:absolute!important;right:clamp(24px,3vw,70px)!important;top:19%!important;height:63%!important;width:25%!important;min-width:150px!important;max-width:310px!important;border-radius:14px!important;border:1px solid #c4c9d01c!important;overflow:hidden!important;opacity:.85!important;box-shadow:0 18px 43px #0007!important;transform:none!important}
+#app.nico2-home .nico2-hero-poster img{width:100%!important;height:100%!important;object-fit:contain!important;background:#111927!important}
+#app.nico2-home .nico-f2-shelf{margin:13px 0 12px!important;padding:0 7px!important;border:0!important;background:transparent!important;box-shadow:none!important}
+#app.nico2-home .nico-f2-shelf-head{margin-bottom:9px!important;min-height:26px!important}
+#app.nico2-home .nico-f2-shelf-head h2{font-size:19px!important;font-weight:800!important;letter-spacing:-.02em!important;color:#f8f9fc!important}
+#app.nico2-home .nico-f2-rail{gap:9px!important;padding:3px 4px 9px!important;scroll-padding:5px!important;scrollbar-width:none!important}
+#app.nico2-home .nico-f2-tile{flex:0 0 clamp(155px,14.8vw,225px)!important;width:clamp(155px,14.8vw,225px)!important;min-width:clamp(155px,14.8vw,225px)!important;max-width:none!important;gap:0!important}
+#app.nico2-home .nico-f2-progress .nico-f2-tile{flex-basis:clamp(220px,21.5vw,310px)!important;width:clamp(220px,21.5vw,310px)!important;min-width:clamp(220px,21.5vw,310px)!important}
+#app.nico2-home .nico-f2-art{aspect-ratio:1.90!important;border-radius:10px!important;border:1px solid #43556d99!important;overflow:hidden!important;box-shadow:0 5px 12px #0006!important}
+#app.nico2-home .nico-f2-info{margin:4px 0 0!important}
+#app.nico2-home .nico-f2-info strong{font-size:12px!important;color:#eff4fa!important}
+#app.nico2-home .nico-f2-info small{font-size:10px!important}
+#app.nico2-home .nico-f2-progress .nico-f2-tile .nico-f2-info{padding:18px 9px 7px!important}
+#app.nico2-home .nico-f2-progress .nico-f2-tile .nico-f2-info strong{font-size:12px!important}
+#app .nico-see-all{min-height:120px!important}
+/* DPAD: foco sempre legível, inclusive quando :focus-visible não é emitido pelo WebView */
+.sidebar .navbtn:focus,.sidebar .navbtn:focus-visible,#app .nico-f2-tile:focus,#app .nico-f2-tile:focus-visible,#app button:focus,#app button:focus-visible,.topbar button:focus,.topbar input:focus{outline:3px solid #ffda70!important;outline-offset:2px!important;box-shadow:0 0 0 5px #e9b7423e,0 4px 22px #0007!important;z-index:7!important}
+.sidebar .navbtn:focus:not(.active){background:#243650!important}
+#app .nico-f2-tile:focus .nico-f2-art{border:3px solid #ffda70!important;box-shadow:0 0 0 3px #e9b74233!important}
+#app .nico-see-all:focus{background:#24364b!important}
+/* Catálogo: estética aprimorada sem trocar elementos nem seleção */
+#app:not(.nico2-home) .row-head,#app:not(.nico2-home) .section-head{margin-top:14px!important}
+#app:not(.nico2-home) .card{border-radius:13px!important;background:transparent!important;box-shadow:none!important;padding:7px!important}
+#app:not(.nico2-home) .card:focus{border-color:#f4ca65!important;background:#1a2837!important}
+#app:not(.nico2-home) .strip{gap:10px!important}
+@media(max-width:1100px){.shell{grid-template-columns:218px minmax(0,1fr)!important}.sidebar{padding:12px 9px!important}.sidebar .nav{gap:2px!important}.sidebar .navbtn{height:38px!important;min-height:38px!important}.sidebar .nico2-brandname{font-size:20px!important;left:89px!important;top:27px!important}.sidebar .logo{height:64px!important;min-height:64px!important}.sidebar .logo img{width:61px!important}.sidebar .nico2-premium{min-height:48px!important}.main{padding:0 12px 18px!important}.topbar{left:12px!important;right:12px!important}#app.nico2-home .nico2-hero{margin:0 -12px 2px!important;padding:79px 24px 25px!important;min-height:360px!important}#app.nico2-home .nico2-hero .hero-copy{width:65%!important}#app.nico2-home .nico2-hero-poster{width:23%!important;right:18px!important}}
+@media(max-height:760px){.sidebar{gap:4px!important;padding-top:10px!important;padding-bottom:8px!important}.sidebar .nav{margin-top:0!important;gap:1px!important}.sidebar .navbtn{height:37px!important;min-height:37px!important}.sidebar .logo{height:57px!important;min-height:57px!important}.sidebar .logo img{width:55px!important}.sidebar .nico2-brandname{top:22px!important;left:83px!important}.sidebar .nico2-premium{margin:1px 0!important;min-height:43px!important}.sidebar .navbtn.soft{height:33px!important;min-height:33px!important}#app.nico2-home .nico2-hero{min-height:340px!important;padding-top:76px!important;padding-bottom:21px!important}#app.nico2-home .nico2-hero h1{font-size:clamp(31px,4vw,53px)!important}}
+@media(max-width:700px){.shell{grid-template-columns:80px minmax(0,1fr)!important}.sidebar .nico2-brandname,.sidebar .navbtn .navlabel,.sidebar .nico2-premium div{display:none!important}.sidebar .navbtn{justify-content:center!important;padding:0!important}.sidebar .navbtn .ico{width:auto!important}.sidebar .logo{margin:0 auto!important;width:52px!important}.sidebar .logo img{width:51px!important}.main{padding:0 9px 10px!important}.topbar{left:9px!important;right:9px!important}.topbar .search{min-width:130px!important;width:185px!important}.topbar .btn{padding:0 9px!important}#app.nico2-home .nico2-hero{margin:0 -9px!important;padding:76px 14px 26px!important;min-height:335px!important}#app.nico2-home .nico2-hero .hero-copy{width:78%!important}#app.nico2-home .nico2-hero-poster{opacity:.30!important;right:-30px!important;max-width:45%!important}#app.nico2-home .nico2-hero h1{font-size:32px!important}}
+/* fim - todas as mudanças estão no bloco CSS acima */
+
+
+/* Nico TV 2.3 — strictly visual layer. No functional selectors, events or JS changed. */
+:root{--gold:#ffd064;--focus:#ffdb73;--bg:#030911;--panel:#081321;--text:#f9fbff}
+html,body{background:#030911!important;color:#f8f9fd!important}
+.shell{grid-template-columns:clamp(230px,20.5vw,305px) minmax(0,1fr)!important;background:#030911!important}
+.sidebar{position:sticky!important;top:0!important;width:auto!important;min-width:0!important;height:100vh!important;min-height:0!important;display:flex!important;flex-direction:column!important;padding:25px 15px 16px!important;gap:9px!important;background:linear-gradient(112deg,#071523 0%,#06101c 85%,#09101a 100%)!important;border-right:1px solid #b6842966!important;border-radius:0 0 23px 0!important;box-shadow:13px 0 30px #0006!important;overflow-y:auto!important;scrollbar-width:none!important;z-index:16!important}
+.sidebar::-webkit-scrollbar{display:none}
+.sidebar .logo{position:relative!important;margin:0 0 22px 0!important;width:65px!important;height:65px!important;min-height:65px!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important}
+.sidebar .logo img{width:65px!important;height:65px!important;max-width:65px!important;border-radius:13px!important;object-fit:contain!important}
+.sidebar .nico2-brandname{position:absolute!important;left:79px!important;top:38px!important;white-space:nowrap!important;font-weight:900!important;font-size:clamp(21px,2.1vw,30px)!important;letter-spacing:-.05em!important;color:#f8f8fb!important;pointer-events:none!important}
+.sidebar .nico2-brandname span{color:#f9c653!important}
+.sidebar .nico2-brandname small{font-size:11px!important;padding:4px 7px!important;letter-spacing:0!important;background:#55401b!important;border-radius:14px!important;color:#ffe08a!important;vertical-align:middle!important}
+.sidebar .nav{gap:5px!important;margin-top:8px!important}
+.sidebar .navbtn{width:100%!important;min-height:45px!important;height:45px!important;padding:0 17px!important;gap:13px!important;border:1px solid transparent!important;border-radius:13px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;background:transparent!important;box-shadow:none!important;transform:none!important;transition:background-color .16s,box-shadow .16s!important}
+.sidebar .navbtn .ico{width:26px!important;min-width:26px!important;display:grid!important;place-items:center!important;color:#eef3fa!important;font-size:22px!important}
+.sidebar .navbtn .navlabel{position:static!important;display:block!important;visibility:visible!important;opacity:1!important;transform:none!important;pointer-events:none!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none!important;color:#eef2f9!important;font-size:clamp(12px,1.1vw,15px)!important;font-weight:650!important}
+.sidebar .navbtn.active,.sidebar .navbtn[aria-pressed=true]{background:linear-gradient(110deg,#ffdc76,#dca226)!important;border:1px solid #ffe294!important;box-shadow:0 5px 17px #bd7e214d!important;color:#181109!important}
+.sidebar .navbtn.active .ico,.sidebar .navbtn.active .navlabel,.sidebar .navbtn[aria-pressed=true] .ico,.sidebar .navbtn[aria-pressed=true] .navlabel{color:#181109!important}
+.sidebar .navbtn:hover:not(.active){background:#1c2e43!important;border-color:#41526c!important}
+.sidebar .nico2-premium{margin-top:12px!important;width:100%!important;max-width:none!important;min-height:57px!important;padding:10px!important;justify-content:flex-start!important;border-radius:14px!important;border:1px solid #997026!important;background:linear-gradient(115deg,#1a1b21,#081321)!important}
+.sidebar .spacer{flex:1!important;min-height:5px!important}
+.main{min-width:0!important;max-width:100%!important;width:auto!important;padding:0 0 24px!important;background:#030911!important;overflow:hidden!important}
+.topbar{position:absolute!important;top:0!important;left:clamp(230px,20.5vw,305px)!important;right:0!important;z-index:10!important;height:72px!important;min-height:72px!important;margin:0!important;padding:12px 23px!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:14px!important;background:transparent!important;border:0!important;pointer-events:none!important;flex-wrap:nowrap!important}
+.topbar>*{pointer-events:auto!important}
+.topbar .brandpanel,.topbar .metric-pill,.topbar .subtitle{display:none!important}
+.topbar .searchwrap{flex-wrap:nowrap!important;flex:0 0 auto!important;margin-left:auto!important;gap:10px!important}
+.topbar .search{height:44px!important;width:clamp(250px,27vw,420px)!important;max-width:420px!important;min-width:200px!important;border:1px solid #78889baa!important;border-radius:25px!important;background:#060d19d9!important;box-shadow:0 8px 22px #0007!important}
+.topbar .search input{font-size:13px!important}
+.topbar .page-actions{flex-wrap:nowrap!important}
+.topbar .btn{height:43px!important;min-height:43px!important;padding:0 20px!important;border-radius:22px!important;font-size:13px!important}
+#app{padding:77px 24px 28px!important}
+#app.nico2-home{padding:0 22px 24px!important;overflow:visible!important}
+/* full-bleed, photo-led cinema hero: real provider artwork, never a static demo */
+#app.nico2-home .nico2-hero{position:relative!important;isolation:isolate!important;display:flex!important;align-items:center!important;margin:0 -22px 7px!important;padding:83px 44px 18px!important;height:clamp(355px,36vw,500px)!important;min-height:355px!important;max-height:510px!important;width:calc(100% + 44px)!important;overflow:hidden!important;border:0!important;border-radius:0!important;background:radial-gradient(ellipse at 74% 40%,#23485b88,transparent 50%),#06101d!important;box-shadow:none!important}
+#app.nico2-home .nico2-hero::before,#app.nico2-home .nico2-hero::after{display:none!important}
+#app.nico2-home .nico2-hero-backdrop{position:absolute!important;inset:-5%!important;z-index:-3!important;opacity:1!important;background-size:cover!important;background-position:70% 38%!important;filter:blur(9px) saturate(1.18)!important;transform:scale(1.08)!important;display:block!important}
+#app.nico2-home .nico2-hero-shade{position:absolute!important;inset:0!important;z-index:-1!important;display:block!important;background:linear-gradient(90deg,#030a14 0%,#030a14f8 21%,#030a14d7 39%,#030a148c 59%,#030a141c 88%),linear-gradient(0deg,#030911 0%,transparent 33%)!important}
+#app.nico2-home .nico2-hero .hero-copy{position:relative!important;z-index:4!important;align-self:center!important;margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:6px!important;width:min(57%,660px)!important;max-width:660px!important;min-width:0!important}
+#app.nico2-home .nico2-hero .kicker{display:block!important;background:transparent!important;border:0!important;color:#ffd36e!important;padding:0!important;margin:0 0 8px!important;letter-spacing:.23em!important;font-size:12px!important;font-weight:850!important}
+#app.nico2-home .nico2-hero .nico2-feature{font-size:11px!important;letter-spacing:.19em!important;color:#ffce63!important;margin-bottom:4px!important}
+#app.nico2-home .nico2-hero h1{font-size:clamp(35px,4.2vw,69px)!important;font-weight:900!important;line-height:1.04!important;letter-spacing:-.052em!important;color:#fff!important;text-shadow:0 4px 24px #0008!important;margin:3px 0 8px!important;max-width:100%!important;display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;overflow:hidden!important}
+#app.nico2-home .nico2-hero p{font-size:clamp(12px,1.07vw,16px)!important;line-height:1.5!important;color:#e5ebf5!important;max-width:480px!important;margin:0 0 8px!important;max-height:71px!important;display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:3!important;overflow:hidden!important}
+#app.nico2-home .nico2-hero .hero-meta{margin:3px 0 12px!important;gap:7px!important;flex-wrap:wrap!important}
+#app.nico2-home .nico2-hero .chip{background:#212d3bdf!important;border:0!important;border-radius:14px!important;color:#edf0f8!important;padding:6px 11px!important;font-size:11px!important}
+#app.nico2-home .nico2-hero .hero-actions{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:10px!important;margin-top:0!important;max-width:100%!important}
+#app.nico2-home .nico2-hero .hero-actions>.btn{flex:0 0 auto!important;width:auto!important;max-width:240px!important;min-width:0!important;height:46px!important;min-height:46px!important;padding:0 18px!important;border-radius:12px!important;box-shadow:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:14px!important;white-space:nowrap!important}
+#app.nico2-home .nico2-hero .hero-actions>.btn.main{background:linear-gradient(110deg,#ffdc73,#dca323)!important;border:1px solid #ffdd7a!important;color:#17120b!important;box-shadow:0 5px 15px #e2a82e3d!important}
+#app.nico2-home .nico2-hero .hero-actions>.btn:not(.main){background:#08121eae!important;color:#fff!important;border:1px solid #bac2cd82!important}
+#app.nico2-home .nico2-hero-poster{position:absolute!important;z-index:-2!important;right:-1.4%!important;top:4%!important;width:min(45%,450px)!important;max-width:none!important;min-width:160px!important;height:96%!important;border:0!important;border-radius:0!important;background:transparent!important;opacity:.9!important;box-shadow:none!important;overflow:hidden!important;mask-image:linear-gradient(90deg,transparent 0%,#000 23%,#000 96%)!important}
+#app.nico2-home .nico2-hero-poster img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center right!important;background:transparent!important;border:0!important;filter:saturate(1.08)!important}
+/* compact immersive rails: art visible rather than huge text containers */
+#app.nico2-home .nico-f2-shelf{background:transparent!important;border:0!important;box-shadow:none!important;margin:6px 0 11px!important;padding:0 2px!important;width:100%!important;overflow:visible!important}
+#app.nico2-home .nico-f2-shelf-head{min-height:30px!important;margin:0 0 6px!important}
+#app.nico2-home .nico-f2-shelf-head h2{font-size:clamp(16px,1.46vw,22px)!important;font-weight:800!important;color:#fafbfe!important;letter-spacing:-.03em!important}
+#app.nico2-home .nico-f2-rail{display:flex!important;gap:9px!important;padding:3px 3px 9px!important;overflow-x:auto!important;scrollbar-width:none!important;scroll-padding-left:5px!important;align-items:flex-start!important}
+#app.nico2-home .nico-f2-rail::-webkit-scrollbar{display:none!important}
+#app.nico2-home .nico-f2-tile{flex:0 0 clamp(145px,14.5vw,225px)!important;width:clamp(145px,14.5vw,225px)!important;min-width:clamp(145px,14.5vw,225px)!important;max-width:none!important;margin:0!important;padding:0!important;gap:0!important;border:0!important;border-radius:10px!important;background:none!important;box-shadow:none!important;overflow:visible!important}
+#app.nico2-home .nico-f2-progress .nico-f2-tile{flex:0 0 clamp(220px,20.5vw,330px)!important;width:clamp(220px,20.5vw,330px)!important;min-width:clamp(220px,20.5vw,330px)!important}
+#app.nico2-home .nico-f2-art{aspect-ratio:1.85!important;width:100%!important;border:1px solid #34475c!important;border-radius:10px!important;background:#122235!important;overflow:hidden!important;box-shadow:0 4px 12px #0007!important;position:relative!important}
+#app.nico2-home .nico-f2-art img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;border:0!important;display:block!important}
+#app.nico2-home .nico-f2-info{background:transparent!important;margin:3px 0 0!important;padding:0 1px!important}
+#app.nico2-home .nico-f2-info strong{font-size:12px!important;color:#f4f7fd!important;font-weight:700!important;line-height:1.25!important}
+#app.nico2-home .nico-f2-info small{font-size:10px!important;color:#a9bbcf!important}
+#app.nico2-home .nico-f2-progress .nico-f2-tile .nico-f2-info{margin:-39px 0 0!important;position:relative!important;z-index:2!important;padding:14px 9px 8px!important;min-height:38px!important;background:linear-gradient(0deg,#030811 7%,#030811bf 69%,transparent)!important;border-radius:0 0 10px 10px!important;pointer-events:none!important}
+#app.nico2-home .nico-f2-progress .nico-f2-tile .nico-f2-info strong{font-size:12px!important;color:#fff!important}
+#app.nico2-home .nico-f2-progress .nico-f2-tile .nico-f2-info small{font-size:10px!important;color:#dce4ee!important}
+#app.nico2-home .nico-f2-progress .nico-f2-tile .nico-f2-info .nico-f2-track{margin-top:4px!important;height:4px!important}
+#app.nico2-home .nico-f2-tile:focus,#app.nico2-home .nico-f2-tile:focus-visible,#app.nico2-home .nico-see-all:focus{outline:3px solid #ffda70!important;outline-offset:3px!important;box-shadow:0 0 0 6px #ffce653a,0 10px 18px #0009!important;border-radius:10px!important;z-index:6!important}
+#app.nico2-home .nico-f2-all{border:1px solid #66778e!important;border-radius:10px!important;background:linear-gradient(130deg,#172b42,#091525)!important;align-self:stretch!important;min-height:110px!important}
+#app:not(.nico2-home) .nico2-page-heading{margin-top:7px!important}
+#app:not(.nico2-home) .card{background:transparent!important;border:0!important;box-shadow:none!important;padding:3px!important;border-radius:12px!important}
+#app:not(.nico2-home) .card:focus{outline:3px solid #ffd56c!important;outline-offset:2px!important}
+#app:not(.nico2-home) .strip{gap:12px!important}
+.sidebar .navbtn:focus,.sidebar .navbtn:focus-visible,#app button:focus,#app button:focus-visible,.topbar button:focus,.topbar input:focus{outline:3px solid #ffdc76!important;outline-offset:2px!important;box-shadow:0 0 0 5px #d6ab3b42!important;z-index:7!important}
+@media(max-width:1150px){.shell{grid-template-columns:226px minmax(0,1fr)!important}.sidebar{padding:18px 9px!important}.sidebar .nico2-brandname{left:73px!important;top:35px!important;font-size:21px!important}.sidebar .logo,.sidebar .logo img{width:57px!important;height:57px!important}.sidebar .navbtn{height:41px!important;min-height:41px!important}.topbar{left:226px!important}#app.nico2-home .nico2-hero{padding:83px 25px 20px!important;height:clamp(360px,36vw,450px)!important}#app.nico2-home .nico2-hero .hero-copy{width:64%!important}#app.nico2-home .nico2-hero-poster{width:43%!important}}
+@media(max-height:760px){.sidebar{gap:5px!important;padding-top:12px!important}.sidebar .nav{gap:1px!important;margin-top:0!important}.sidebar .navbtn{min-height:36px!important;height:36px!important}.sidebar .logo{margin-bottom:7px!important}.sidebar .nico2-premium{min-height:44px!important;padding:6px!important}.topbar{height:62px!important;min-height:62px!important}#app.nico2-home .nico2-hero{min-height:310px!important;height:clamp(310px,46vh,400px)!important;padding-top:68px!important}#app.nico2-home .nico2-hero h1{font-size:clamp(31px,3.8vw,52px)!important}#app.nico2-home .nico-f2-shelf{margin:5px 0 8px!important}}
+@media(max-width:720px){.shell{grid-template-columns:75px minmax(0,1fr)!important}.sidebar{padding:10px 6px!important}.sidebar .nico2-brandname,.sidebar .navlabel,.sidebar .nico2-premium div{display:none!important}.sidebar .navbtn{justify-content:center!important;padding:0!important}.sidebar .logo,.sidebar .logo img{width:53px!important;height:53px!important;margin:0 auto 14px!important}.topbar{left:75px!important;padding:8px!important}.topbar .search{min-width:120px!important;width:165px!important}#app{padding-left:10px!important;padding-right:10px!important}#app.nico2-home{padding-left:10px!important;padding-right:10px!important}#app.nico2-home .nico2-hero{width:calc(100% + 20px)!important;margin:0 -10px 6px!important;min-height:320px!important;padding:65px 16px 20px!important}#app.nico2-home .nico2-hero .hero-copy{width:78%!important}#app.nico2-home .nico2-hero-poster{opacity:.55!important;right:-12%!important}#app.nico2-home .nico2-hero h1{font-size:31px!important}}
+
+
+
+/* =======================================================
+ NICO TV CINEMATIC VISUAL SYSTEM — PRESENTATION ONLY
+ No changes to handlers, classes expected by JS, or data.
+ ======================================================= */
+:root{--gold:#f4c858;--focus:#ffd568;--muted:#aab7c9;--text:#f7f9fc}
+html,body{background:#030a12!important;color:#f7f9fc!important;font-family:Manrope,system-ui,sans-serif!important}
+.shell{grid-template-columns:clamp(250px,20.2vw,326px) minmax(0,1fr)!important;background:#030912!important;align-items:start}
+.sidebar{width:100%!important;min-width:0!important;height:100vh!important;min-height:690px!important;position:sticky!important;top:0!important;z-index:50!important;padding:25px 17px 22px!important;border-right:1px solid #8a632d75!important;border-radius:0 0 24px 0!important;background:linear-gradient(128deg,#07131f 0%,#030b15 62%,#0a1b2c 100%)!important;box-shadow:inset -7px 0 28px #0005!important;gap:0!important;overflow-y:auto!important;scrollbar-width:none}
+.sidebar::-webkit-scrollbar{display:none}
+.sidebar .logo{position:absolute!important;top:30px!important;left:23px!important;display:flex!important;width:58px!important;height:58px!important;min-width:58px!important;border:1px solid #ad8130!important;border-radius:17px!important;padding:3px!important;margin:0!important;background:#07121d!important;box-shadow:0 0 14px #d99b3526!important}
+.sidebar .logo img{width:100%!important;max-width:100%!important;height:100%!important;border-radius:13px!important;object-fit:contain!important}
+.sidebar .nico2-brandname{display:block!important;position:relative!important;top:auto!important;left:auto!important;width:auto!important;margin:9px 0 49px 72px!important;padding:0!important;font-size:clamp(22px,2vw,29px)!important;line-height:1.2!important;letter-spacing:-1.1px!important;white-space:nowrap!important;font-weight:900!important;color:#fff!important;min-height:57px!important}
+.sidebar .nico2-brandname span{color:#edbd49!important}
+.sidebar .nico2-brandname small{font-size:11px!important;color:#eab94a!important;padding:4px 7px!important;border-radius:16px!important;background:#b984261f!important;vertical-align:middle!important}
+.sidebar .nav{display:flex!important;flex-direction:column!important;gap:4px!important;margin:0!important;flex:none!important}
+.sidebar .navbtn,.sidebar button.navbtn{width:100%!important;min-height:51px!important;height:51px!important;max-height:51px!important;flex:none!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:14px!important;position:relative!important;padding:9px 15px!important;margin:0!important;background:transparent!important;border:1px solid transparent!important;border-radius:13px!important;color:#e6edf4!important;box-shadow:none!important;transform:none!important;text-align:left!important;transition:background .12s,border-color .12s!important}
+.sidebar .navbtn .ico{display:flex!important;align-items:center!important;justify-content:center!important;min-width:28px!important;width:28px!important;font-size:22px!important;line-height:1!important}
+.sidebar .navbtn .navlabel,.sidebar .navlabel{display:inline-block!important;visibility:visible!important;opacity:1!important;position:static!important;transform:none!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;font-size:14px!important;font-weight:700!important;color:inherit!important;line-height:1.2!important;white-space:nowrap!important;pointer-events:none!important}
+.sidebar .navbtn.active,.sidebar .navbtn[aria-pressed=true],.sidebar .navbtn:focus-visible{background:linear-gradient(100deg,#ffda73,#dea528)!important;border:1px solid #ffde83!important;color:#1c180f!important;box-shadow:0 0 19px #d49a354e!important}
+.sidebar .nico2-premium{display:flex!important;width:100%!important;min-height:58px!important;border-radius:13px!important;border:1px solid #ac7a2b!important;background:linear-gradient(120deg,#161a1d,#071626)!important;color:#f8c95b!important;margin-top:14px!important;padding:9px!important}
+.sidebar .nico2-premium div,.sidebar .nico2-premium strong,.sidebar .nico2-premium small{display:block!important}
+.main{padding:0!important;margin:0!important;background:#030912!important;width:100%!important;min-width:0!important;overflow:hidden!important}
+.topbar{position:absolute!important;top:0!important;left:clamp(250px,20.2vw,326px)!important;right:0!important;z-index:21!important;height:80px!important;min-height:80px!important;display:flex!important;justify-content:flex-end!important;align-items:flex-start!important;gap:14px!important;padding:18px 24px!important;margin:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.topbar .brandpanel,.topbar #counter,.topbar #homeBtn,.topbar .metric-pill{display:none!important}
+.topbar .searchwrap{display:flex!important;align-items:center!important;gap:10px!important;flex:0 1 420px!important;max-width:420px!important;margin:0!important;flex-wrap:nowrap!important}
+.topbar .search{width:100%!important;min-width:0!important;max-width:100%!important;height:45px!important;min-height:45px!important;padding:0 14px!important;border-radius:50px!important;background:#050d18e9!important;border:1px solid #6a7b927f!important;box-shadow:0 7px 19px #0004!important}
+.topbar .search input{font-size:13px!important;white-space:nowrap!important;text-overflow:ellipsis!important}
+.topbar #importBtn{display:none!important} /* duplicate of functional sidebar Import; remains in DOM */
+#app{position:relative;min-width:0!important;background:#030912!important}
+#app.nico2-home{padding:0 17px 24px!important;margin:0!important;width:100%!important;overflow:hidden!important}
+#app.nico2-home .nico2-hero{position:relative!important;display:block!important;isolation:isolate!important;overflow:hidden!important;box-sizing:border-box!important;width:calc(100% + 34px)!important;margin:0 -17px 7px!important;padding:83px 0 20px 40px!important;height:clamp(365px,30.8vw,490px)!important;min-height:365px!important;max-height:490px!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#06121e!important}
+#app.nico2-home .nico2-hero::before,#app.nico2-home .nico2-hero::after{display:none!important}
+#app.nico2-home .nico2-hero-backdrop{display:block!important;position:absolute!important;inset:-2%!important;z-index:-3!important;opacity:1!important;transform:scale(1.035)!important;filter:saturate(1.09)!important;background-position:72% 37%!important;background-repeat:no-repeat!important;background-size:cover!important}
+#app.nico2-home .nico2-hero-shade{display:block!important;position:absolute!important;inset:0!important;z-index:-1!important;background:linear-gradient(90deg,#030912 0%,#030912fa 10%,#04101cde 35%,#03111b60 62%,#02070d15 92%),linear-gradient(0deg,#030912 0%,#0309122c 22%,transparent 52%)!important}
+#app.nico2-home .nico2-hero.nico2-portrait .nico2-hero-backdrop{filter:blur(32px) brightness(.72) saturate(1.25)!important;transform:scale(1.16)!important;opacity:.84!important}
+#app.nico2-home .nico2-hero-poster{display:none!important}
+#app.nico2-home .nico2-hero.nico2-portrait .nico2-hero-poster{display:flex!important;position:absolute!important;z-index:-2!important;right:8%!important;top:13%!important;bottom:auto!important;width:min(28%,275px)!important;height:75%!important;max-width:275px!important;border-radius:18px!important;overflow:hidden!important;box-shadow:0 18px 35px #0009!important;opacity:1!important;transform:none!important;border:1px solid #d8c9ac30!important}
+#app.nico2-home .nico2-hero.nico2-portrait .nico2-hero-poster img{width:100%!important;height:100%!important;object-fit:contain!important;background:#040a13!important;display:block!important}
+#app.nico2-home .nico2-hero .hero-copy{display:flex!important;position:relative!important;z-index:4!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;gap:0!important;width:58%!important;max-width:700px!important;height:100%!important;padding:0!important;margin:0!important;background:transparent!important;overflow:visible!important;text-align:left!important}
+#app.nico2-home .nico2-hero .kicker{display:block!important;width:auto!important;padding:0!important;margin:0 0 10px!important;background:none!important;border:none!important;box-shadow:none!important;color:#f7c957!important;font-size:11px!important;letter-spacing:3px!important;line-height:1.3!important;font-weight:900!important}
+#app.nico2-home .nico2-hero .nico2-feature{display:block!important;color:#ffce57!important;font-size:12px!important;letter-spacing:2px!important;font-weight:900!important;margin-bottom:8px!important}
+#app.nico2-home .nico2-hero h1{display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;overflow:hidden!important;font-size:clamp(40px,4.8vw,75px)!important;line-height:1.01!important;letter-spacing:-.045em!important;font-weight:900!important;margin:0 0 13px!important;max-width:690px!important;text-shadow:0 3px 15px #000a!important;overflow-wrap:anywhere!important}
+#app.nico2-home .nico2-hero .hero-copy p{display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:3!important;overflow:hidden!important;font-size:clamp(13px,1.03vw,16px)!important;line-height:1.45!important;color:#e5eaf0!important;margin:0 0 13px!important;max-width:465px!important;max-height:68px!important;text-shadow:0 2px 7px #0008!important}
+#app.nico2-home .nico2-hero .hero-meta{display:flex!important;gap:7px!important;max-width:100%!important;flex-wrap:wrap!important;margin:0 0 14px!important;padding:0!important}
+#app.nico2-home .nico2-hero .chip{font-size:11px!important;font-weight:700!important;padding:6px 11px!important;min-height:0!important;border-radius:20px!important;color:#f4f6fa!important;border:0!important;background:#242d38e8!important}
+#app.nico2-home .nico2-hero .hero-actions{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;width:auto!important;max-width:100%!important;flex-wrap:wrap!important;margin:0!important}
+#app.nico2-home .nico2-hero .hero-actions .btn{display:inline-flex!important;position:static!important;align-items:center!important;justify-content:center!important;flex:none!important;width:auto!important;min-width:0!important;min-height:44px!important;height:44px!important;max-height:44px!important;margin:0!important;padding:0 23px!important;border-radius:13px!important;font-size:14px!important;font-weight:800!important;white-space:nowrap!important;transform:none!important;box-shadow:none!important}
+#app.nico2-home .nico2-hero .hero-actions .btn.main{background:linear-gradient(115deg,#ffd56d,#eab335)!important;color:#15120a!important;border:1px solid #ffe08e!important;box-shadow:0 4px 16px #d49a3a59!important}
+#app.nico2-home .nico2-hero .hero-actions .btn:not(.main){background:#07111dbb!important;color:#f5f7fb!important;border:1px solid #aebad190!important}
+#app.nico2-home .nico-f2-shelf{display:block!important;margin:5px 0 15px!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+#app.nico2-home .nico-f2-shelf-head{display:flex!important;align-items:center!important;justify-content:space-between!important;height:34px!important;margin:0 0 6px!important;padding:0!important}
+#app.nico2-home .nico-f2-shelf-head h2{font-size:19px!important;line-height:1.2!important;letter-spacing:-.025em!important;color:#f7f9fc!important;font-weight:850!important;margin:0!important}
+#app.nico2-home .nico-f2-rail{display:flex!important;gap:10px!important;align-items:stretch!important;overflow-x:auto!important;overflow-y:hidden!important;padding:3px 3px 12px!important;scrollbar-width:thin!important;scrollbar-color:#425064 transparent!important;scroll-snap-type:x proximity!important}
+#app.nico2-home .nico-f2-tile,#app.nico2-home .nico-f2-all{display:flex!important;flex-direction:column!important;flex:0 0 clamp(178px,16.2vw,242px)!important;width:clamp(178px,16.2vw,242px)!important;min-width:clamp(178px,16.2vw,242px)!important;max-width:clamp(178px,16.2vw,242px)!important;padding:0!important;margin:0!important;border:1px solid #293c50!important;border-radius:12px!important;background:#0b1522!important;box-shadow:none!important;overflow:hidden!important;position:relative!important;scroll-snap-align:start!important;transform:none!important}
+#app.nico2-home .nico-f2-progress .nico-f2-tile{flex-basis:clamp(215px,21.1vw,308px)!important;width:clamp(215px,21.1vw,308px)!important;min-width:clamp(215px,21.1vw,308px)!important;max-width:clamp(215px,21.1vw,308px)!important}
+#app.nico2-home .nico-f2-art{display:block!important;width:100%!important;height:auto!important;aspect-ratio:1.85!important;border:0!important;border-radius:11px 11px 0 0!important;background:#101e2e!important;overflow:hidden!important;position:relative!important}
+#app.nico2-home .nico-f2-art img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;border:0!important;max-width:none!important}
+#app.nico2-home .nico-f2-info{padding:6px 9px 7px!important;margin:0!important;border:0!important;background:transparent!important;min-height:31px!important;display:block!important}
+#app.nico2-home .nico-f2-info strong{display:block!important;font-size:12px!important;font-weight:800!important;line-height:1.17!important;color:#f7f8fc!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#app.nico2-home .nico-f2-info small{display:block!important;font-size:10px!important;color:#bdc9d7!important;margin-top:2px!important}
+#app.nico2-home .nico-f2-progress .nico-f2-info{position:relative!important;z-index:3!important;margin:-47px 0 0!important;padding:13px 10px 8px!important;min-height:47px!important;background:linear-gradient(0deg,#02060ef5 0%,#02060ed5 72%,transparent 100%)!important;pointer-events:none!important;border-radius:0!important}
+#app.nico2-home .nico-f2-progress .nico-f2-info strong{color:#fff!important;font-size:13px!important}
+#app.nico2-home .nico-f2-progress .nico-f2-track{height:5px!important;margin:5px 0 0!important;background:#596373!important;border-radius:6px!important}
+#app.nico2-home .nico-f2-progress .nico-f2-track i{background:#f1be48!important}
+#app.nico2-home .nico-f2-all{align-items:center!important;justify-content:center!important;text-align:center!important;min-height:137px!important;background:linear-gradient(145deg,#172840,#07111e)!important}
+#app.nico2-home .nico-see-all-icon{font-size:42px!important;color:#ffd16d!important}
+#app.nico2-home .nico-see-all-title{font-size:15px!important;font-weight:850!important}
+#app.nico2-home .nico-f2-tile:focus-visible,#app.nico2-home .nico-f2-tile:focus,#app.nico2-home .nico-f2-all:focus-visible,#app.nico2-home .nico-f2-all:focus,.sidebar .navbtn:focus-visible,#app button:focus-visible,.topbar input:focus-visible{outline:3px solid #ffdf79!important;outline-offset:2px!important;box-shadow:0 0 0 5px #ffce5f36!important;z-index:9!important}
+#app:not(.nico2-home){padding:100px 25px 38px!important;min-height:100vh!important;background:#030912!important}
+#app:not(.nico2-home) .nico2-page-heading{margin:0 0 22px!important}
+#app:not(.nico2-home) .nico2-page-heading h2{font-size:40px!important}
+#app:not(.nico2-home) .card{background:#0b1422!important;border-radius:12px!important;box-shadow:none!important;padding:4px!important}
+#app:not(.nico2-home) .strip{gap:13px!important}
+@media(max-height:790px){.sidebar{padding-top:15px!important}.sidebar .logo{top:17px!important}.sidebar .nico2-brandname{margin-top:7px!important;margin-bottom:30px!important}.sidebar .navbtn{height:42px!important;min-height:42px!important;max-height:42px!important}.sidebar .nav{gap:2px!important}.sidebar .nico2-premium{margin-top:8px!important;min-height:50px!important}#app.nico2-home .nico2-hero{height:clamp(335px,46vh,410px)!important;min-height:335px!important;padding-top:70px!important}#app.nico2-home .nico2-hero h1{font-size:clamp(35px,4vw,57px)!important}#app.nico2-home .nico2-hero .kicker{margin-bottom:6px!important}#app.nico2-home .nico2-hero .nico2-feature{margin-bottom:5px!important}}
+@media(max-width:1000px){.shell{grid-template-columns:225px minmax(0,1fr)!important}.topbar{left:225px!important}.sidebar{padding:13px 9px!important}.sidebar .logo{left:12px!important;top:17px!important;width:49px!important;height:49px!important;min-width:49px!important}.sidebar .nico2-brandname{margin-left:61px!important;font-size:20px!important}.sidebar .navbtn{padding:8px 10px!important}.sidebar .navbtn .navlabel{font-size:12px!important}#app.nico2-home .nico2-hero .hero-copy{width:65%!important}#app.nico2-home .nico2-hero{padding-left:25px!important}#app.nico2-home .nico2-hero h1{font-size:38px!important}#app.nico2-home .nico-f2-tile{flex-basis:185px!important;width:185px!important;min-width:185px!important;max-width:185px!important}}
+@media(max-width:740px){.shell{grid-template-columns:80px minmax(0,1fr)!important}.topbar{left:80px!important;padding:12px!important}.sidebar{padding:11px 7px!important}.sidebar .logo{position:static!important;margin:0 auto 22px!important;width:57px!important;height:57px!important}.sidebar .nico2-brandname,.sidebar .navlabel,.sidebar .nico2-premium div{display:none!important}.sidebar .navbtn{justify-content:center!important;padding:7px!important}#app.nico2-home .nico2-hero{padding-left:19px!important}#app.nico2-home .nico2-hero .hero-copy{width:80%!important}#app.nico2-home .nico2-hero h1{font-size:32px!important}#app.nico2-home .nico2-hero.nico2-portrait .nico2-hero-poster{opacity:.4!important}}
+@media(prefers-reduced-motion:reduce){.sidebar .navbtn,#app .card,#app .btn{transition:none!important}}
+
+</style>
+<style id="nicoGoldVisualLayer">
+
+/* NICO TV 2.0 | VISUAL CINEMA GRAFITE / DOURADO
+   Camada visual isolada. Nenhum estilo altera eventos nem dados IPTV. */
+:root{--bg:#070606!important;--bg2:#12100e!important;--panel:#15120f!important;--panel2:#1e1913!important;--line:#574222!important;--muted:#b8b0a5!important;--gold:#f5bd43!important;--gold2:#c68a26!important;--focus:#ffd46b!important;--shadow:0 18px 45px #0009!important}
+html,body{background:#070605!important;color:#f8f5f0!important}
+body{background-image:radial-gradient(ellipse 70vw 34vw at 75% 0%,#48301228,transparent 75%),linear-gradient(180deg,#080706,#0b0907)!important}
+.shell{display:grid!important;grid-template-columns:var(--nico-side-width,104px) minmax(0,1fr)!important;transition:grid-template-columns .18s ease!important;background:#080706!important}
+body.nico-expanded{--nico-side-width:268px}
+body.nico-collapsed{--nico-side-width:104px}
+.sidebar{position:sticky!important;top:0!important;z-index:70!important;width:100%!important;min-width:0!important;max-width:100%!important;height:100vh!important;min-height:0!important;overflow-y:auto!important;padding:16px 9px 18px!important;border-radius:0!important;border-right:1px solid #ae78275c!important;background:linear-gradient(110deg,#0e0c09 0%,#070605 64%,#15100a 100%)!important;box-shadow:inset -10px 0 25px #0009,6px 0 30px #0005!important;display:flex!important;flex-direction:column!important;gap:0!important}
+.sidebar .logo{position:relative!important;top:auto!important;left:auto!important;flex:0 0 auto!important;width:67px!important;height:67px!important;min-width:67px!important;margin:5px auto 12px!important;border:1px solid #ba8531!important;border-radius:20px!important;background:#130f0b!important;box-shadow:0 0 15px #e7a7384d!important;padding:4px!important}
+.sidebar .logo img{width:100%!important;height:100%!important;object-fit:contain!important;max-width:none!important}
+.sidebar .nico2-brandname{display:none!important}
+.sidebar .nav{margin:0!important;display:flex!important;flex-direction:column!important;gap:5px!important;flex:none!important}
+.sidebar .navbtn,.sidebar button.navbtn{height:46px!important;min-height:46px!important;max-height:46px!important;width:100%!important;display:flex!important;flex:none!important;align-items:center!important;justify-content:center!important;padding:7px!important;margin:0!important;gap:13px!important;border:1px solid transparent!important;background:transparent!important;border-radius:14px!important;color:#e9d9b7!important;text-align:left!important;transform:none!important;box-shadow:none!important;transition:background .15s,border-color .15s,box-shadow .15s!important}
+.sidebar .navbtn .ico{display:flex!important;align-items:center!important;justify-content:center!important;min-width:28px!important;width:28px!important;font-size:23px!important;font-weight:750!important;line-height:1!important;filter:drop-shadow(0 1px 1px #0009)}
+.sidebar .navbtn .navlabel{display:none!important;position:static!important;transform:none!important;visibility:visible!important;opacity:1!important;pointer-events:none!important;border:0!important;background:transparent!important;box-shadow:none!important;font-size:14px!important;font-weight:750!important;color:inherit!important;padding:0!important;white-space:nowrap!important}
+.sidebar .navbtn.active,.sidebar .navbtn[aria-pressed=true],.sidebar .navbtn:focus-visible,.sidebar .navbtn:focus{background:linear-gradient(145deg,#ffe188 0%,#eeb42b 52%,#aa6716 100%)!important;color:#191006!important;border:2px solid #ffd55d!important;box-shadow:0 0 0 2px #f3b94533,0 0 24px #d78c26aa,inset 0 1px 1px #fff6!important;outline:0!important}
+.sidebar .navbtn:hover{background:#59401888!important;border-color:#b77a27!important}
+.sidebar .nico-menu-toggle{margin-top:8px!important;margin-bottom:5px!important;border:1px solid #b98a35!important;box-shadow:inset 0 0 0 1px #38230c!important;color:#f7cb65!important}
+.sidebar .nico-menu-toggle .ico{font-size:18px!important}
+.sidebar .nico2-premium{margin:10px auto!important;width:100%!important;max-width:75px!important;min-height:50px!important;height:50px!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:4px!important;background:linear-gradient(145deg,#2b2113,#0a0907)!important;border:1px solid #b37b28!important;border-radius:12px!important;color:#ffcb59!important;box-shadow:0 0 12px #b77a2720!important}
+.sidebar .nico2-premium>span{font-size:27px!important;line-height:1!important}
+.sidebar .nico2-premium div{display:none!important}
+body.nico-expanded .sidebar{padding-left:16px!important;padding-right:16px!important}
+body.nico-expanded .sidebar .logo{margin:7px 0 19px!important;width:67px!important;height:67px!important}
+body.nico-expanded .sidebar .nico2-brandname{display:block!important;position:absolute!important;top:32px!important;left:91px!important;margin:0!important;width:auto!important;height:auto!important;min-height:0!important;font-size:22px!important;line-height:1.4!important;color:#fff!important}
+body.nico-expanded .sidebar .navbtn{justify-content:flex-start!important;padding:7px 12px!important}
+body.nico-expanded .sidebar .navbtn .navlabel{display:inline-block!important}
+body.nico-expanded .sidebar .nico2-premium{max-width:100%!important;justify-content:flex-start!important;padding:7px 10px!important;gap:8px!important}
+body.nico-expanded .sidebar .nico2-premium div{display:block!important;font-size:12px!important}
+body.nico-expanded .sidebar .nico-menu-toggle .ico{transform:rotate(180deg)}
+.topbar{left:var(--nico-side-width,104px)!important;height:76px!important;padding:16px 22px!important;background:linear-gradient(180deg,#080705be,transparent)!important;transition:left .18s ease!important}
+.topbar .search{background:#110f0ded!important;border:1px solid #af7e35!important;border-radius:28px!important;box-shadow:0 4px 20px #0008!important}
+.topbar .search input{color:#fff8ee!important}
+.topbar .search input::placeholder{color:#c2b8aa!important}
+#app{background:#080706!important;color:#f8f3ea!important}
+#app .nico2-welcome{background:radial-gradient(ellipse at 85% 18%,#62411c55,transparent 55%),linear-gradient(115deg,#0d0906,#070605 75%)!important;color:#fff6e7!important}
+#app .nico2-welcome p{color:#d3c8bb!important}
+#app.nico2-home .empty-hero,#app.nico2-home .welcome,#app.nico2-home .empty-state{background:radial-gradient(ellipse at 78% 10%,#66451b30,transparent 55%),linear-gradient(115deg,#120d09,#080706)!important}
+#app.nico2-home{background:#070605!important;padding-left:clamp(17px,2.3vw,34px)!important;padding-right:clamp(17px,2.3vw,34px)!important}
+#app.nico2-home .nico2-hero{background:#100c09!important;height:clamp(430px,48vh,590px)!important;min-height:430px!important;margin-top:0!important;border-color:transparent!important;overflow:hidden!important}
+#app.nico2-home .nico2-hero-backdrop{filter:saturate(1.2) contrast(1.1) brightness(.75)!important;opacity:1!important}
+#app.nico2-home .nico2-hero.nico2-portrait .nico2-hero-backdrop{filter:blur(24px) saturate(1.2) brightness(.72)!important;opacity:.96!important}
+#app.nico2-home .nico2-hero-shade{background:linear-gradient(90deg,#080605 0%,#080605f5 18%,#0a0808cc 44%,#0907061a 82%),linear-gradient(0deg,#080605 0%,transparent 38%)!important}
+#app.nico2-home .nico2-hero.nico2-portrait .nico2-hero-poster{border:2px solid #d6a03a!important;border-radius:16px!important;box-shadow:0 0 0 3px #a975182a,0 0 34px #d19a346b,0 20px 50px #0009!important;background:#090807!important}
+#app.nico2-home .nico2-hero.nico2-portrait .nico2-hero-poster img{background:#090807!important;object-fit:contain!important}
+#app.nico2-home .nico2-hero .kicker,#app.nico2-home .nico2-hero .nico2-feature{color:#ffce54!important;text-shadow:0 2px 6px #000!important}
+#app.nico2-home .nico2-hero h1{font-size:clamp(40px,4.25vw,72px)!important;line-height:1.07!important;color:#fff8ee!important;max-width:730px!important;text-shadow:0 3px 16px #000d!important}
+#app.nico2-home .nico2-hero .hero-copy p{color:#e9e2d9!important;font-size:clamp(14px,1.15vw,18px)!important}
+#app.nico2-home .nico2-hero .chip{background:#201b15e8!important;color:#f3e6d3!important;border:1px solid #74532999!important}
+#app.nico2-home .nico2-hero .hero-actions .btn.main{background:linear-gradient(115deg,#ffdd7a,#e5a427 66%,#bd7b1c)!important;border-color:#ffde77!important;box-shadow:0 0 19px #ffb33375,0 5px 20px #0009!important;color:#201404!important}
+#app.nico2-home .nico2-hero .hero-actions .btn:not(.main){background:#0f0c09db!important;border:1px solid #c78f30!important;color:#faf1e2!important}
+#app.nico2-home .nico-f2-shelf-head h2{color:#fef9ef!important;font-size:clamp(20px,1.6vw,25px)!important}
+#app.nico2-home .nico-f2-rail{scrollbar-color:#8d6426 transparent!important;gap:13px!important}
+#app.nico2-home .nico-f2-tile,#app.nico2-home .nico-f2-all{border:1px solid #674a24!important;background:#14100c!important;border-radius:14px!important;box-shadow:0 6px 20px #0008!important}
+#app.nico2-home .nico-f2-art{background:#1b140b!important;border-radius:12px 12px 0 0!important}
+#app.nico2-home .nico-f2-info{background:#100c09!important}
+#app.nico2-home .nico-f2-info strong{color:#fff7ea!important}
+#app.nico2-home .nico-f2-progress .nico-f2-info{background:linear-gradient(0deg,#090604f9,#090604e0 78%,transparent)!important}
+#app.nico2-home .nico-f2-progress .nico-f2-track{background:#37302a!important}
+#app.nico2-home .nico-f2-progress .nico-f2-track i{background:linear-gradient(90deg,#c9871b,#ffd65a)!important}
+#app.nico2-home .nico-f2-all{background:linear-gradient(140deg,#25180b,#100b07)!important}
+#app.nico2-home .nico-f2-tile:focus-visible,#app.nico2-home .nico-f2-tile:focus,#app.nico2-home .nico-f2-all:focus-visible,#app.nico2-home .nico-f2-all:focus{border-color:#ffd366!important;outline:3px solid #f8c545!important;outline-offset:2px!important;box-shadow:0 0 0 3px #ffc3443d,0 0 26px #eda32d95!important;z-index:10!important}
+#app:not(.nico2-home){background:#080706!important}
+#app:not(.nico2-home) .card{background:#15110d!important;border:1px solid #4d381c!important}
+#app:not(.nico2-home) button:focus-visible,#app:not(.nico2-home) .card:focus-visible{outline:3px solid #ffd36e!important;box-shadow:0 0 0 5px #bd802f44!important}
+@media(max-height:800px){.sidebar{padding-top:8px!important;padding-bottom:8px!important}.sidebar .logo{width:56px!important;height:56px!important;min-width:56px!important;margin:2px auto 8px!important}.sidebar .nav{gap:1px!important}.sidebar .navbtn,.sidebar button.navbtn{height:38px!important;min-height:38px!important;max-height:38px!important}.sidebar .nico2-premium{height:39px!important;min-height:39px!important;margin:5px auto!important}.sidebar .nico2-brandname{top:15px!important}body.nico-expanded .sidebar .logo{width:56px!important;height:56px!important;margin:2px 0 10px!important}body.nico-expanded .sidebar .nico2-brandname{top:19px!important;left:83px!important}}
+@media(max-width:900px){body.nico-expanded{--nico-side-width:224px}body.nico-collapsed{--nico-side-width:82px}.sidebar .navbtn .ico{font-size:20px!important}#app.nico2-home .nico2-hero .hero-copy{width:66%!important}}
+@media(max-width:650px){body.nico-expanded{--nico-side-width:195px}body.nico-collapsed{--nico-side-width:72px}.sidebar .logo{width:52px!important;height:52px!important;min-width:52px!important}#app.nico2-home .nico2-hero{min-height:340px!important;height:390px!important}#app.nico2-home .nico2-hero h1{font-size:34px!important}}
+/* override specificity of the legacy Home-only fixed 270px sidebar */
+body.nico-collapsed:has(#app.nico2-home) .shell .sidebar,
+body.nico-collapsed:has(#app.nico2-home) .shell .sidebar:hover,
+body.nico-collapsed:has(#app.nico2-home) .shell .sidebar:focus-within,
+body.nico-collapsed .shell .sidebar{position:sticky!important;width:104px!important;min-width:0!important;max-width:104px!important;padding-left:9px!important;padding-right:9px!important}
+body.nico-expanded:has(#app.nico2-home) .shell .sidebar,
+body.nico-expanded:has(#app.nico2-home) .shell .sidebar:hover,
+body.nico-expanded:has(#app.nico2-home) .shell .sidebar:focus-within,
+body.nico-expanded .shell .sidebar{position:sticky!important;width:268px!important;min-width:0!important;max-width:268px!important;padding-left:16px!important;padding-right:16px!important}
+body.nico-collapsed:has(#app.nico2-home) .shell .main,
+body.nico-expanded:has(#app.nico2-home) .shell .main,
+body.nico-collapsed .shell .main,body.nico-expanded .shell .main{margin-left:0!important;width:100%!important;min-width:0!important;background:#080706!important}
+body.nico-collapsed:has(#app.nico2-home) .main .topbar,
+body.nico-expanded:has(#app.nico2-home) .main .topbar,
+body.nico-collapsed .main .topbar,body.nico-expanded .main .topbar{left:var(--nico-side-width)!important;right:0!important}
+body.nico-collapsed:has(#app.nico2-home) .sidebar .navbtn .navlabel,
+body.nico-collapsed:has(#app.nico2-home) .sidebar .nico2-brandname,
+body.nico-collapsed:has(#app.nico2-home) .sidebar .nico2-premium div{display:none!important;opacity:0!important;visibility:hidden!important}
+body.nico-expanded:has(#app.nico2-home) .sidebar .navbtn .navlabel,
+body.nico-expanded:has(#app.nico2-home) .sidebar .nico2-brandname,
+body.nico-expanded:has(#app.nico2-home) .sidebar .nico2-premium div{opacity:1!important;visibility:visible!important}
+@media(max-width:900px){body.nico-expanded:has(#app.nico2-home) .shell .sidebar{width:224px!important;max-width:224px!important}body.nico-collapsed:has(#app.nico2-home) .shell .sidebar{width:82px!important;max-width:82px!important}}
+@media(prefers-reduced-motion:reduce){.shell,.topbar,.sidebar .navbtn{transition:none!important}}
+
+
+/* NicoTV 2.0 - Sidebar preto/grafite e dourado - somente apresentação */
+body .shell .sidebar,
+body.nico-collapsed .shell .sidebar,
+body.nico-expanded .shell .sidebar,
+body.nico-collapsed:has(#app.nico2-home) .shell .sidebar,
+body.nico-expanded:has(#app.nico2-home) .shell .sidebar {
+  background:linear-gradient(180deg,#090807 0%,#0c0a08 42%,#050504 100%)!important;
+  background-color:#080706!important;
+  border:0!important;
+  border-right:1px solid #8b6029!important;
+  border-radius:0 0 17px 0!important;
+  box-shadow:inset -1px 0 0 #dfad4b50,5px 0 21px #000b!important;
+}
+body .sidebar .logo,
+body.nico-expanded .sidebar .logo,
+body.nico-collapsed .sidebar .logo,
+body.nico-collapsed:has(#app.nico2-home) .sidebar .logo,
+body.nico-expanded:has(#app.nico2-home) .sidebar .logo {
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 auto!important;
+  width:79px!important;
+  min-width:79px!important;
+  max-width:79px!important;
+  height:99px!important;
+  min-height:99px!important;
+  max-height:99px!important;
+  padding:0!important;
+  margin:2px auto 12px!important;
+  overflow:hidden!important;
+  border:1px solid #9d6a28!important;
+  border-radius:17px!important;
+  background:#070706!important;
+  box-shadow:0 0 14px #c18b2c24!important;
+}
+body .sidebar .logo img,
+body.nico-collapsed .sidebar .logo img,
+body.nico-expanded .sidebar .logo img {
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  object-fit:fill!important;
+  border-radius:16px!important;
+}
+/* A marca já contém NicoTV 2.0 na imagem; não duplicar o nome ao expandir. */
+body .sidebar .nico2-brandname,
+body.nico-expanded .sidebar .nico2-brandname,
+body.nico-collapsed .sidebar .nico2-brandname {display:none!important}
+body .sidebar .navbtn,
+body .sidebar button.navbtn,
+body .sidebar .navbtn.soft {
+  background:transparent!important;
+  border-color:transparent!important;
+  color:#f1e6d6!important;
+  box-shadow:none!important;
+}
+body .sidebar .navbtn .ico{color:inherit!important;filter:none!important}
+body .sidebar .navbtn .ico svg{width:23px;height:23px;display:block;flex-shrink:0}
+body .sidebar .navbtn:hover:not(.active){background:#30200d!important;border-color:#a8793280!important}
+body .sidebar .navbtn.active,
+body .sidebar .navbtn[aria-pressed="true"],
+body .sidebar .navbtn:focus,
+body .sidebar .navbtn:focus-visible {
+  background:linear-gradient(145deg,#52330e,#1c1409 68%,#110d08)!important;
+  border:2px solid #e7ac33!important;
+  color:#ffca4b!important;
+  box-shadow:inset 0 0 12px #ce93352c,0 0 0 2px #b8813240,0 0 18px #ffbd3970!important;
+  outline:none!important;
+}
+body .sidebar .nico-menu-toggle,
+body .sidebar .nico-menu-toggle:not(.active):not(:focus) {
+  background:#110e09!important;
+  border:1px solid #c18e37!important;
+  color:#f9d777!important;
+  box-shadow:inset 0 0 0 1px #6e451755!important;
+}
+body .sidebar .nico2-premium {
+  background:linear-gradient(135deg,#211507,#0d0a07)!important;
+  border:1px solid #bb8937!important;
+  box-shadow:0 0 12px #ffbe3822!important;
+  color:#ffcd6c!important;
+}
+body .sidebar .spacer{background:transparent!important}
+@media(max-height:800px){
+  body .sidebar .logo,body.nico-expanded .sidebar .logo,body.nico-collapsed .sidebar .logo{
+    width:70px!important;min-width:70px!important;max-width:70px!important;
+    height:88px!important;min-height:88px!important;max-height:88px!important;
+    margin:0 auto 7px!important;
+  }
+}
+@media(max-width:900px){
+  body .sidebar .logo,body.nico-expanded .sidebar .logo,body.nico-collapsed .sidebar .logo{
+    width:64px!important;min-width:64px!important;max-width:64px!important;
+    height:80px!important;min-height:80px!important;max-height:80px!important;
+  }
+}
+
+
+
+/* Nico TV — Menu Fire TV: icones SVG independentes de fonte do dispositivo. */
+body .sidebar .navbtn .ico {display:flex!important;align-items:center!important;justify-content:center!important;font-family:inherit!important;font-size:0!important;line-height:1!important;color:#f4efe6!important;flex:none!important;}
+body .sidebar .navbtn .ico svg {display:block!important;width:25px!important;height:25px!important;min-width:25px!important;min-height:25px!important;stroke:currentColor!important;overflow:visible!important;}
+body .sidebar .navbtn.active .ico,
+body .sidebar .navbtn[aria-pressed="true"] .ico,
+body .sidebar .navbtn:focus-visible .ico {color:#ffc94d!important;}
+body .sidebar .navbtn.active,
+body .sidebar .navbtn:focus-visible {background:linear-gradient(140deg,#49300d,#181109)!important;border-color:#e9b345!important;box-shadow:0 0 0 2px #e6b241,0 0 19px #ecaf3380!important;}
+body .sidebar {background:linear-gradient(180deg,#080705,#0d0a08 58%,#060504)!important;border-right:1px solid #9a6b24!important;}
+body .sidebar .navbtn {transition:background .14s,border-color .14s,box-shadow .14s!important;}
+body.nico-collapsed .sidebar .navbtn.active .ico,
+body.nico-expanded .sidebar .navbtn.active .ico,
+body .sidebar #homeNav.active .ico,
+body .sidebar .navbtn:focus-visible .ico {color:#ffd25b!important;}
+body.nico-collapsed .sidebar .navbtn.active .ico svg,
+body.nico-expanded .sidebar .navbtn.active .ico svg,
+body .sidebar #homeNav.active .ico svg {stroke:#ffd25b!important;}
+@media (prefers-reduced-motion:reduce){body .sidebar .navbtn{transition:none!important}}
+
+
+/* NICO TV 2.0 | Busca unificada — mesmo campo grafite/dourado da arte aprovada. */
+.topbar .searchwrap{align-items:center!important;justify-content:flex-end!important;gap:12px!important;min-width:0!important;}
+.topbar label.search{
+  box-sizing:border-box!important;
+  display:flex!important;align-items:center!important;gap:12px!important;
+  width:clamp(275px,31vw,490px)!important;min-width:220px!important;max-width:490px!important;
+  height:49px!important;min-height:49px!important;padding:0 19px!important;
+  border-radius:28px!important;border:1.5px solid #bd8937!important;
+  background:linear-gradient(95deg,rgba(8,8,8,.98),rgba(23,21,17,.97))!important;
+  box-shadow:inset 0 1px 0 #f9cf7220,0 7px 22px #0008!important;
+  overflow:hidden!important;cursor:text!important;
+}
+.topbar label.search .nico-search-icon{display:flex!important;align-items:center!important;justify-content:center!important;flex:0 0 22px!important;width:22px!important;height:22px!important;color:#f8f4e9!important;background:transparent!important;border:0!important;box-shadow:none!important;}
+.topbar label.search .nico-search-icon svg{display:block!important;width:22px!important;height:22px!important;stroke:currentColor!important;}
+.topbar label.search input#search,
+.topbar label.search input#search:hover,
+.topbar label.search input#search:focus{
+  display:block!important;flex:1 1 auto!important;box-sizing:border-box!important;
+  width:100%!important;min-width:0!important;max-width:none!important;
+  height:100%!important;min-height:0!important;margin:0!important;padding:0!important;
+  color:#f7f1e5!important;background:transparent!important;background-color:transparent!important;
+  border:0!important;border-radius:0!important;outline:none!important;
+  box-shadow:none!important;appearance:none!important;-webkit-appearance:none!important;
+  font-size:15px!important;font-weight:500!important;line-height:normal!important;
+  letter-spacing:0!important;text-align:left!important;
+}
+.topbar label.search input#search::placeholder{color:#bfb8ac!important;opacity:1!important;font-weight:400!important;}
+.topbar label.search:focus-within{border-color:#ffcf68!important;box-shadow:0 0 0 3px #efb84445,0 0 22px #f4b63545,inset 0 1px 0 #ffd77726!important;}
+@media(max-width:750px){.topbar label.search{width:clamp(178px,38vw,330px)!important;min-width:155px!important;height:46px!important;min-height:46px!important;padding:0 12px!important;gap:8px!important}.topbar label.search input#search{font-size:12px!important}.topbar label.search .nico-search-icon{flex-basis:19px!important;width:19px!important}}
+
+</style>
+<style id="nicoGoldFinalTheme">
+
+/* Nico TV — padronização grafite/dourado: apresentação, sem alterar lógica existente */
+:root { --bg:#080807!important; --bg2:#13110e!important; --panel:#15130f!important; --panel2:#201b14!important; --line:#66502b!important; --muted:#b9aea0!important; --gold:#f0bc48!important; --gold2:#c68b2e!important; --focus:#ffd16a!important; }
+#dlg, dialog#dlg { background:linear-gradient(145deg,#1b1711 0%,#100f0d 65%,#0b0b0a 100%)!important; border:1px solid #8e692f!important; color:#fff7e9!important; box-shadow:0 26px 95px #000e,0 0 35px #b67c1918!important; }
+#dlg h2 { color:#fff9ec!important; }
+#dlg label {color:#e8d3a6!important;}
+#dlg .tabs button.btn, #dlg .row2 .btn, #dlg .password-toggle { background:#201b15!important; border:1px solid #69502a!important; color:#f5e9d2!important; box-shadow:none!important; }
+#dlg .tabs button.btn[aria-pressed="true"], #dlg .tabs button.btn[aria-pressed="true"]:focus-visible {background:linear-gradient(130deg,#ffd16b,#d99c32)!important;color:#231707!important;border-color:#ffd16b!important;font-weight:800!important;}
+#dlg input:not([type="file"]),#dlg textarea {background:#100f0d!important;color:#fff8ec!important;border:1px solid #65502f!important;box-shadow:inset 0 1px 3px #0008!important;caret-color:#ffd16a!important;}
+#dlg input::placeholder,#dlg textarea::placeholder {color:#a8987c!important;}
+#dlg input:focus,#dlg textarea:focus {border-color:#f2bc49!important;outline:2px solid #f2bc49!important;outline-offset:1px!important;}
+#dlg .hint {color:#b9ae9d!important;}
+#dlg .row2 #confirmImport.btn.main {background:linear-gradient(110deg,#ffd16b,#e2a337)!important;color:#1d1305!important;border:1px solid #f4c45e!important;font-weight:900!important;opacity:1!important;text-shadow:none!important;}
+#dlg .row2 #confirmImport.btn.main:is(:focus,:focus-visible) {box-shadow:0 0 0 4px #f3c15d44,0 0 20px #c88a2c44!important;outline:2px solid #fff0bb!important;}
+#dlg .row2 #cancelImport {background:#1a1712!important;color:#f7e6c8!important;}
+#dlg #err {color:#ffb4a6!important;}
+#dlg::backdrop {background:#000c!important;}
+/* Categorias: substitui todas as superfícies azuladas em todos os catálogos */
+#app .nico-category-picker {color:#f8f0e1!important;}
+#app .nico-category-top {background:linear-gradient(145deg,#191611,#100f0e)!important;border:1px solid #72532b!important;box-shadow:0 12px 28px #0009!important;}
+#app .nico-category-title strong {color:#fff3dc!important;}
+#app .nico-category-title span {color:#baad98!important;}
+#app .nico-category-option,#app .nico-category-trigger {background:linear-gradient(140deg,#2a2319,#191611)!important;border-color:#7b5a2d!important;color:#f1dfba!important;}
+#app .nico-category-option.active,#app .nico-category-trigger[aria-expanded="true"] {background:linear-gradient(120deg,#ffd16b,#dfa13c)!important;border-color:#ffe2a0!important;color:#211608!important;}
+#app .nico-category-panel {background:#13110e!important;border:1px solid #79572e!important;box-shadow:0 20px 60px #000b!important;}
+#app .nico-category-panel-heading {color:#f6c65d!important;}
+#app .nico-category-tile {background:#201a12!important;border:1px solid #644c2e!important;color:#f6eddf!important;}
+#app .nico-category-tile small {color:#b6a78d!important;}
+#app .nico-category-tile.active {background:#45321b!important;border-color:#ffd16b!important;}
+#app :is(.nico-category-option,.nico-category-trigger,.nico-category-tile):is(:focus,:focus-visible) {outline:3px solid #ffd16b!important;outline-offset:3px!important;box-shadow:0 0 22px #f2b53a45!important;}
+
+/* Acabamento consistente dos controles nativos e feedback */
+#dlg input[type="file"] {background:#16120e!important;color:#e9d3a8!important;border:1px solid #66502e!important;border-radius:12px!important;padding:9px!important;width:100%!important;}
+#dlg input[type="file"]::file-selector-button {background:#302418!important;color:#ffdfa0!important;border:1px solid #a67b3b!important;border-radius:9px!important;padding:10px 14px!important;margin-right:14px!important;cursor:pointer!important;}
+#toast {background:#1e1810!important;color:#ffdf9a!important;border:1px solid #c99534!important;box-shadow:0 12px 35px #000a!important;}
+#app .card,#app .card .placeholder {border-color:#5f4728!important;}
+#app .card .placeholder {background:linear-gradient(150deg,#2a2115,#11100e)!important;}
+#app .nico-category-picker small,#app .nico-category-picker .muted {color:#c6b495!important;}
+
+/* Recarregar lista no mesmo padrão da barra preta com iconografia SVG */
+#nicoReloadNav {border:1px solid transparent!important;color:#eee2ca!important;}
+#nicoReloadNav:is(:focus,:focus-visible,.active) {border-color:#f3bc4b!important;outline:2px solid #f3bc4b!important;box-shadow:0 0 16px #eeb84a44!important;color:#ffd168!important;}
+body:not(.nico-expanded) #nicoReloadNav .navlabel {display:none!important;}
+
 </style>
 </head>
 <body>
 <div class="shell">
   <aside class="sidebar" id="nico2Sidebar">
 <div class="nico2-brandname">Nico<span>TV</span><small> 2.0</small></div>
-    <div class="logo" tabindex="0" aria-label="Nico TV"><img alt="Nico TV, mascote chihuahua" src="data:image/webp;base64,UklGRmwfAABXRUJQVlA4IGAfAAAwdwCdASrwAPAAPmEqkUYkIqYhKXNtEMAMCWRuSSDUFnYs5+Sdze0OcfjcdoZIvDTr7zhejvNp/w/V7+s/+57hf609On9zPUT+z/7k+8L/0vWH/fPUA/vP+z6230Dv3K9OH91Phj/tf/T/dn2usx37nP+B4r+Xz257o6BH8q/Jn7L+4fuhyv/MTUF/JP6R/l/yl/NTmOLbegX7efW/+L9xvxnzWfDnsA/rT/w/LF8XL8H6gX8+/uH/U/wXsJf9n+g9Af6N/lP/J/mvgN/mX9p/63989sD1/fuH///dT/bH//pFWQGWfvaltwh6QZIixn5/evBekkd+8sTG2fJX1GHCjaPhg3iZUuvOb+wE20zjQzfX+eWJS00uHAMyDcGXFdNHDEJeHksjfvVQzOv+1SglXrDW4HY9BxfS0t13XAyuHO9wep7HW3dATd/zdxvaCuN2oWxfgeBBr0faAvyin6hD+BEr8hdBEGigA1wF0FoqKnApO1gmeIBAyycBXOblRNOeVPvCkxI/PzpROQUKg8sSEbVEgXe5UF7SAkCEinTlVdV0GUSBmI7fVdbqSthaBiRWcA+4D1Hx1/UgBtT/5u1NjLS0YGKOBmEbyahovSXaJCHPeojuvqXPTmRpiv7F4NKawT6Exjo97btxznECH0ARhQsoHGRJ39a8lWSC10h/9zByNTAoFVu4VLhjH7QvOXmtwH9JMIhpukesavE15pUhD8Pq4vXPUgjEoH/eOBBdO47t/QRnZendSZM0vHdIFu7KJjmXVpu3WV8+GBdJ37HkmoUesGg4cX6SUFjJoxzYEodct3fBfJxlLWvucwZX7cRpyoejPTLgaiBWVe7ofZS2PysreJxdSqfV+uMIjlvo3gULW3me3DJbc3EiYmfjDnL+rcObkSzN9Ss6hf/07vGZmq+BS2wWc2PKxVVZ0SBrfeuD2o/RoMuOR+P3mwpjFBvogPZChCgDPZoDQq7WB+Os11RKlE6mo6gQfhE2I5G37o12X0jrvW8a86WpVcY7rob4OFwJQp1tIYkAdMTCIWIp0Bxj6woaq7x964ueNTRw6PtAMBR/D6QSCGsYdp2vNlHNHX3p7U1rECGF+ZaU2Bc2Iuc40PqrebnOppHdkPof4ggkpNfpA+WkaPct9tQLx+k1iWpA3klOcqFg81FmzC4mhcE5PpnziuLQWMkIdO7F88nLdRll1kXIJecsSuLIMHl9skciTosAJkckXeTOOmhyaCcDNpvAoWreRwHqpe3dtnWvfr278x/blsiI0SZL8upq6AD+/I1LFMvdj82avXO3gkuDKutryeVxnWC49UBKRFSTfArIbWxmkMTnRq7FjE6I80cWTCPssjfz0MN+VTN/RbMtUJeqJsyv/sLhhHCdNukEsqFSrfWA/WHmhRSpn1Z2jBioGgtNPpbCaklSMb/OGHzyiwrYKKvaQd5xHMVWJY4DGEdTOpUiuSa5+3Go3Igzfs1tJHc4WswCVQptMu9VcI/1zch8M9TciXRtW82U+/5urFO3GFy5jPCBJCzFbFpHRHWp8UqJYO7WBw4hSH5g4jchX06Ao7EiUnkfcySsysccHxQBm/wiS2Vw0aI8/ArNBihEMpf89gH2SnnjylWNkDyfpncQ6r61RhK4Hn2sbJtq9XeJz5aKPCMO1YeprsWtgowvL5gc5NxcuHms6PkZ5eVxTESjOkC4VPLTCqG7V+jECNDCqGFIa7MsFxf69m9FO+CAjH1Z0mDz8Q9Bc0CakYhiSvsUdHvzzXicb6rphtOFOOJuYiaL8FjS9Svsr/eNL2D8sL/AVW7xIfD3XR+zhiMVwiYHPjKdSPuxYx07ZnGA0aCAe6OVk3Hhnx5hVJ4DkgtiJh4gqKIfa159KyN+p4sZ80H7zqtWeQyx+TFx1JSUBFr+WrVMx7y0NXjMcnWUFIeL2hFirWWOC4N56fkWEHXqyDrzVxJAFQWpkIoW7gceoc9UpTWroGQ8KU4fDV65k+jhoj+Q4zevxfSHdvVXod/XmUiKEsQUGs5ijwF/drWleW9mm1dHztTbc0FZROidzdv8A+QNsRn7RFlelQVQCR+TKzreRXAmk0TU3/MdRNYPmMhkluL6lk2D3uB9mtS+M4BVIq/OK7oMkErXEQJyF/UDfKhXZu2xigWNlrYG3E62/Nr9xz+WBWhGmfNxIE3Yc0blty8maqqcymLUD9WmpHcK+QEeUMA4OsY/E46vZ6XynCS11k+/J4kxr+MJ2RUAHSzmC63bpPCr4xy+3146qukjmfqxSg+C2zYYwvd1zZNYKN+lWbiv8XEyEaOio24kS9fRXkKsSmDKK5hBaQ31aRd9Mbep/xWFn6diLrC7AIq4xdcGCbnQRQBVwVE/O8P7FZTTa+DM53ClNhpgmW6RhnuWNMFaCJJBeGe6YJzZQ1oVDJp4ShJwhIGzVRGwlk2qDXaT+Z+e1+xIXAeU2yhzlXaCbuhpHDj7pT6tPiGPcKbezV7wzsGsyxAsk/yOhCLdM4LPgzpqKLT2tVVAKYZt97jsHpyx93sMyFcRqzUdmxOY9Cwz/Te6seGFVd7avz3HnDtr3Z3F2XpPtz0/QZenJHUJ9mMbdLXdmTt5KgJYJowqiuVwOx/+1Qj8y1IM+Q0DSKsiYQCtKIH5kM2BdVMaaiUapahrEHNEHuKaMAtfg3pNuaUmM/xYgb31cW1ZYnliurF47eGSpn0P0B1s3yNPzExxJ2/B33JqKsTTJHdHcS8MVLpRbcg/OQkNQNm15xB6QtArFIpUumFDU3fs6Nis35Zr1+7BcFU/rBmAhcCbL4RCb/PiVbxUnk0f4SG27FS6lxgoc+JN0IxFbBve6DP1meptsjxBYTfZYKrtjPZva0BfqKSOhbpxs83rzW55YWhJuH5cTGt3vGL1meu3oJcYT5jt4Tjac365r0ETvTXDZ5b+OC4HFTld5/pyboLS3MZgEtQWR56/nq1EtQHw7wtaDTbH1QS3/p5v+OIJdP7IQfcDyZAQKlJWaugcP9/NrXa62J6JwJu9Z6KFuPAXu6Q/BP6ZvNHNqWNcP1ThnwfPUrzbahh9QWnxgn75jn0GMP5Bt1PeqMx0Y0zJsyrS8m0oPA1MNWftrpu7+FqTe0fYpOo7i+9XKywKPKmMBAJeX5vNQw1iDGnczJXCJ5kZWwGtHQC8Xm1smkV8q8bX9BZtzR4lLmQk6M+kUDn45LmGFs7sgyryJVMwx5h4F8K4/A/2au11Dia5F+FPDjXhHjx/6oIaLFxqn/COiSsyi4uiuLoHnQH4IrfBBvmVBKicqwMYsyp7cXUi+dKAZ8Xzp8lmFzJVSgxMQav/498yPn71XamuXVBI67EjXfJK/Q0jI8y8SIYTwF33kvjmjQeuJmEVV0BcZebD9q/qL0yLIcNqK2qzP6WymLxhclGiu4Ycrmps2ppbOpXfpsXIWQsdxkhcOwyvU3BYqJTiYc1lT+nbV/1sYpPc9/j7Yu5zu+Qf/1dMHXqp+fRa+9kIwGPduFjbiP3/0IDEV9fJFe+wQyiK3sionmA3M8h7srHw7/81ujGM47bBUjWztXCYI11ZbVvSrm+IzljuOCZt2YGqlqbeNkJSHNcr4S68WT7lQMDnkHc22B0WuVlVY6jQVsKUeVIZf/d6GyXMJ7dISBf4/vyZxXL6wSPdlaNepbNEF/PSE6jgEAWXdp6wc3muSIFkKaEyqeNyb6T5Q/116Ec3F4pirRYaljleHCVUa3yvNVfsX+ssu+tQTw36lU6hO9flQCsSy4Q4lUD2LhTLzy43IGqYFdBzbyZttqD+pofDXjhWozs/ta+w6MWfn158xW8EdjeYn6EdjqpvNSIoAceC0giWICaVWZBLTuWJlqh4cH3ql5nrTHleZd+rr1KltRlcKcE+dv6QrdKxtwrkDA3iYRIeRJMz9+red/j9wxsu1KcNb9GvTrKEJLFgXmH6idY9nfiZlD8PL1JRH7tB57/aM6g0/EfG4vO6auJ/i6PmZySUSCmACu9QBJyR0c8D2xxhm+N8XB0joYG1lrqfzxFcc9yrGtbrRNz6QVwn52cEb+uT+W6lrmm1oM/o3Qt4Y99YGIOdCbhsMhwnUx9q0z0ieYmZ/aBQ01rGxfJK+ArOVRhsSD+TRIG9ydycUs0OzqmpYSAKQ5u6TkbFSGojre9330TMow0GJ5j8bSDAUw8isqHyGWRH9AtVD6OXNvhXqNE061p8dPpPaA/lu8xpCqcb6gLl/ZqonIfuJEV03VHsaFLXs1zlwqud7eKab293xb/q3p0Yojia77otLTvzso6nnaYkq+zFNRBmGnFvLUpaT8mbjGSMvrC0tcIGyKZV6Jt0x16Ng6RKU+UV5OPbmduaVCYQJit1I1Tbg3q6LSS14cUsOphIpu5YP9Kpdv6XdbNvfqjLZvqCXgyjzb/MKYO/CCfJVmS05mruTx9HI8d7KfqE7RQYzJaxAu7vs9woit28G3bklNGdd9mV4A5HckM6JGLBjWXyZtKLDtfVMpU4ug4YQKsT474+J1H+Wu4vzMtg0VsRNpue6ZSSEGcQ2kudlWO1k9Wk2eZDzzqZLtRr0OPLoBQceeHZ01i0qi8sOa3MoyWna/PCkb5bYwIElP3UJTcdMm3gt5Phkwb1/I+UEzF9kdLK/PS/rZPQZh6RUWZyMdZBoTIbWRt7WAenQ+NrDwhb5FNaaobYfeG1spVgxmrjpV207zTYmTHb7uVCyG8gLGUAdm/T3/XbHKIMDulRSuHTbs2sVfcdcEyPH/FXvBnEd27GifLs5E3wDmLOj+mZQgPy7NpaBMW/D4Y/j4BgbOhLI+cMrlJHt2CU0F5yUnNgY+7JALJt244/KQSLtDrYw/AAXCJ2UI2gIsFRKpZXrwVmZNQ6QRLtPpfRxhOVwXy31vUDQsHds6shoDyFaCNQxJwQomjTs6AZ6156kJzyzEptfue/6EJOPJAz9/0GiNuMRrL/YPTdNfmHXfN+/90PEpXM19MZOzWXSx9+z1gf900IzhDsXUEk5Rl7IOMqJXJaSPGkTPt81CEYAKIRyTJ0i6K4fhiwWBcOOFHryS4hHL8tFpgauKbufh9n6Ej8UN+by4XTrY2tO76jPIJiljDrPqwTDQLzMa6+MEJug3wK05TDO5rSZV6ky00j2rxTd2Lq8dOTvSQe6Mq5A6d1JJTItYMHlxIWDGSmXVVh9RqOFiuOmZEocbOFHABFB6FswRlkLPgbI9M2ealj4LhgETB52pu3YsXjX9Gi5Nod9jLaddXzZXO2s/IIBuic6I/jPTqQFigJPMJG2JVoNXAD1g2b1VZ6HTVTH1rBnT2ifMNLmqUy4Xq+gL05REapz1JrBepU+qxMdt5f1Z4MW7FjsrVyiaBo5yVmVe1XQRJJ4WVO5MTrU6nNFO/cf3W694jhP0dhnYUw8crutr8ppjUKRogL0VCs6ZOfwXNX50CZ9UqGBPmJ0zK5m6b0lWQIf9MzUQyLrIsJ4Qo5vIvsazcDSp6igfLGutp5gysqN6olJIo+x9TsH0dUlCDrwwRGtKeoudnPkwhhf+CH0A+VWz1pTETiXTryhh8SLZ+7QIASpP7k87/8BcTWds4uA1G1ehG2q55nLKrSCDBj6YoTEI8dQD++HimfHANtf+V9rqv5dDr8tF4gvTx0S6y4VLsl0U5ls5oRTZMJ5qfBVB1bzhYJEZaxcMzkDS4fOJwGXlsl65I0FkFnlma3gcECwg5qpVrLjZa/XJs1KcwO2J1QYjTtplGCJlVOIR75muK3hon58fimPLjPjYPr/t4BfcOSSyfWpQovBC7CT87rcuhRBRLUo2R5XoVX9nfgpIjESuNfLA0yc0DE9k7T9iRvOZt/NcGBjALrRAwTvuiPViE9D3GsRGtFFudSawDjZmlb4auO9fqtpy1tKV6eNu9HruMmO2f9buW+XcyfXRKONUMyGMsWNbm/9Fkwr8PD+U3/ckB1LfQ2rLbbTi6u63Xsqy3MYxAv7gkIogncldDCc92zJQchC31owTIj5XmLbpbp1fbVb239WLI6JOsIqpMEuXPBqNJvQ2+QKnUpd3nBMd5H/449Yhu8QfgwVMPdcg2JEpu2ec0y8chXHCgo7ovmH7GI55joNEgLbBkzNadRU86tLNn5ukJ1Kn1eXT4ERIyEAg2W/27/+D07iiUUx2YYvJJLEZ8cKtW3Fy57rNdWLtb3qSO5+W5O344tTueSw+W1bHZYsLDNczBFxg7+4gJJZjPycSD5gbMFrK/Yc3ucgQ9dIt/7ptcsfr5rX3Ghg/MWMfrAbpnhu28l4nzcY3t2f3NoNAV132Tt4yUPWlXfizWsCi0mbzzMIy7iOKIE335+Kd4tJctKWrT3NnovINWr2/F2n3ThA7uZWSsEhGB48NAz7FlaJVRIIrFdoiJP/WYu9XNxLp2chvJ0eGD/XhSDL5m+nM1B6j7ffAmXWdjn8I2ObtOGAeZsjEgPaJjmxykc6+wtS7x9XHSfIWq9iAOyx5mcu/7fLTAAnEc+WP3QGnNWKsVOp8mA031W9lQpda2BDMi2BDIxJAHtECc9DUqWhM60SyRsf8qaP5QtGcFaPVF66TggAXUWHCYffhYCGAVEADk3yBESupVNHmI9bfohRgRJeQdvlgPSbDZeCQ/+Y0sTGcf/1AE528bgAnRlapw9yedD1s/eRxKbFYwSaz3A/4CHtrwakO3uJ+xdP8E7OICNMLloLDzTqa6Fjg00t9dm/MecZys6w1Bzh+/z/ow0hpTiqYBjRAkwPRDgchi9a3awqI5UT0JJjcSBSOfMXTOiPwZgngTYes05Fm5bqWIa94iRTYdEKM9a8KqBubXo3dovhSG7TrCBc04tyLJWtmCxsosakYqiD3PGSwPRtufTwupQEQVaXX0mJU5q0agWTkeZobn59w4NqZC7zF5DPaWhfrOt8p5GyvkavW5vSyzzjmOoLD5xy/W0vqc2ZZSKak/sCvHvzCPj/jClWG5UQrlHP6P7Rp08G8enVvkhpgpQC51jc/IpeHz5rRCP2QR29m+VUfr+ehNNwzjpcfORvwWgOA/e6k/ViQbnHx77N188YlCfgJMaiN9WwIKYUA0VR27nDsR54Po8bNYTKUnCr0F33hjk6AAzhNLV/FDorz8zVlJt2pvX6U8UXEPoGbxafsn15Wis8Qna+2IYdHGGu4Nu7934lk9PSPGROrpKcQD8yohWvyO8INsJvLFBhwEDnoOhE8mwd7lc9aYu3/QG2+usxcHGR8Oim2M5c5XAiUljkZvM46nFlPBc033jcdgqLpZngVRHdFB/WhfiVldhxXvV2cMueVaY2Q8/J8dVL32DTNlI1yE7pXAikHnkQpIGXQ6rrG7ePGHFAOJ1sZLGnX6aEAbsQYj/f6Ph8RIx9RhxXjiUSAGaQHxBoZom4vTerF6tnvdnssggDIr+gSGcxCq0Esl7VipRkgFyA2DXPKfmx0veOtf+mhvXTOV7Nt409WoBE6TavedphIq+Shiq7OjoKYU3LhHqgvTuqEvqYguIF4LQECZzmG5Umqg5S/uIfdj6Uf1XMjyVnw6M/lnwLl/UIOZcJSZMLE21Hp5VvJnBin2QOV3VyPPub6Br1WIlJMIJh2nWYDo6fa4R9fQTfZMP6wozf4igtZkQYOxIFEEbUcRF+xezJ42l9udAmD5I+cb/kQyHLFsMp14YLk+o1iz6W9poWQyYH5YtmTWYm5Fd8wsGddZsJ/+DO8phNXxqUVg/mgL6y+2K1XNIBd4bRcsYq3BPye7dvfZNtrLz+/ngScoVat5Ye/zbz7uv3LYYFnDKxHcQyXAOb4e+J2AokSTcHZboaQJN4T3/6hu/bIjx1RcyJ1ymvAPL/KFEoa/clThmJEJ1lkgygjbzL08GiE860KPOVgzD6+f8oDNUOLGllo3tj6LT/u4MuihfxQOLhDRxX9sy/fOqxnHdhofvG/8xRqDLK0bD1/ofq1lx18vdcZQH4anCVreCiP5R7RZc1SxgINjTl7O+MGslUXR3iYBAvY/jZ/6ZqSkgktHvEuT++ITVWFTHa3otKxymTVWVOY9iijMurRwmCreI5dDx/jw/M/8JMMFS8PueWIdHAOL6DxGM6WkQM2yu3U+FqBGr+NLv37RkZxx2N1a1HLzDkg63i3yZl0xY89Ogu1xa99NJxQQj3/DRJu/Kt0o3QPF9jvHjo/GDQIRQOVy2dbJY2FCV64CpcePLuGizzwBo39ahzsaqNnRy4Qfv8emfdZ5zM0hECn/RIEy8aEqeCdLnMkXxpRUw5xKraPRQrHXqbUjDnUqlREJ+PIEfREh6hUrATVvmEsx5pZwn330Fa0rvysklUH9j5xf5F824PXVCt2EKiP0uV33/+sHzyZr8a/fTn/ADqtEfjsrFy4oFBVslWz5o+0Ckt9A3//RzUu/oz0OGF0I5TN+yRl7o5s7mK4IKrAGAFlpFAR3Hwlmj3zzQkrjQHlN/uy8E8fcHv5e2K76MN8Z8TPlyuL6FR724nMF0EOT9X1OLuoA9RsOKp53i6+h7TRFyZ28pN3A3BjrujZTHJmniMSqDnv0KpPVVeYwOUpuncw5njjCtJkVpdMUjeur5x7Bo4F+Ek1hKfVKqPb0X+BRrIvFsx6fbr6Q0sTv/ykfdiM24QMv9n6Loquxox5xgffYyPA0CTY/3wbKHzWuHClcI0WXA05udVeFZVPawzMVERPIiNhXw0kLn6aqjKtMGeb0XCEUHtrxIVkMjj0dJy2SoipgxHALuH3UZzBNcP/hwYaAHCx9Jx2wvrd2wiieUXZCftOCuySwxIBViH3m8wubk9ZrMykt1dFSpjiPyONh3WHQQvBuQ1wjZUnway1SdCIJ8A3pZxfNDdNHh04HOC9f/SCr/L1GLf2nrjxDPQTkEdLfvp1/Gs66WM/ccoL0DGvJS9CwjdcmyI+vyFbrX/B6NUMEPXwZ/Xh8ohPeLHY3Mw/5eKLvPTzW+Kaarx7xRc5vJC6Ip2t5QsHhFeDMU4ou4z4b9Z+QR5aUTtc0MYRhHhd/UrYBdiVBZo8KPR7fTmccC2yxMjrUo74emhMgmzBUFxR1+6Drv0Y1qd8hSOrc4msAWS/E7Wox/aHUyE/QWLz11K9v69UK6GndYVgK6wzvCS3lsUx6vYdLi+fW/oIxWeDgCZFFsaT0V1U6Ms8tiqIXrvusQNyL19Qdj8qO22olYJgELvJF1cxkVYNgyyeamiZB04ZTh4aONOHTVuDqcGnJ8kxrEt/c4lLnSZLhJsFUV7J1cotWkanYLdra3H+1b883nmRB7Fwq9KXP/JVqbBx7VyTUiXOglztGoRE8Vk9J1Fm7k5mwlE2EDYepDfez7uN5t3rXCoulKkt3cZe+QUt2jdDZLGd7vHWrM911UpgMfHaV2qAPh260nzE42DpiTlfSOUFXWyUAlPEQ0D5aPE4JE2pdR9FS7U6qo3xJqopezEPxe7TOZrW4HRHCm/T3R6LMoK9KR/uBVHjHySoWLa7JeFi97M3oDKv498DH4FTEJtoTsSX0VnKJKCnz3lnablTinmgBDAfLSBqSEqCfzZ6LZbvXd0ApmJhtT7PH873u9lvMaXlC+94+aOqj2f315U7X6J5OfH3OeUpco8fc/cZj5Wr0CtB7JCp/a4OboeQBQvpetZhAtl/UnLN9FtNYV2tXKYxgPImjFHpALDQCNBGUDrKBuwyU6EgDurSyShWdea3g+mrP+abpdyVqbP4Fjdh5LWDKkMNkrxQp57WTkGu1G4QteDNx1nTw3vtd3euUQbzbI0Z/aBM37sB+tYLtpVVSzRZvw/+d5gOb7keh4KFz+0lBAJgGz8fJWZVbBkzyK92YT2SmLKdQr/8/90FriCuuq6Z1hjtxwKGpnXgqgdoZSdCvjdUHxJ1O9pH2qRqHFqPNXasuKJcx8uKRwKGoRKznN2BSUDtvfsMxtvx6yKXMPf0dzFKwkywLFDiGuCmfEjIfTc2CfzoScYZ3yxNvpM4aLf1HDdKYkEU0jEG9mTuEnB7aIoPOyI2BAJRrrePWmLL6IxfkggETI4CMj6lcTOnDdbNykKBNFtcpFoIQoAxQPqY7Tb/O562JzVHSaLPL9bNPTkCsLErVLlLeiCpcLKBz0s2RNQhnFRjqElKwvWU5flf2qO6dfvx0OW44Xe5iWSj26/vFKEYq9S/Z0yIf42aD134AZiED5NsMEBctP6V06xGX/u6V1YZOkeKACec52lQcZAK5wwftoKrZjGAlhs5zdE6pIpe40c3DvmfbNsrF0CixQoqHq/rgZK0axvSIBLXOH9kKFzg/06oLA3VOgPAgkKTZcyaI8A5F5ZsaFO4k5W6/LgWPuNuYGy9cMEGohCs/HslBNnsWw308J5yVjCl+00FnU8rdYJTRB7Kb3uuryRMudC2tWifw872Gv2Vm4GRceHw8dX+uBGvf0Qv5PndvTHOQOPRhjFDUJla6mfA43lOwKLs5VMnIpxPM8EOwFS862wfhOLsq2WDtdY/qs7GDy4vBWDGnOgYtKX9woMFbzsLfjVjDELFgxzRtja22W6Jebw7AZD5OFq1IaXTHucnmFII+wyFqXRursQC8oZlHHPfyI9oKwAgDJYMSAAwyWVK7uM4rkDPwGk1c1752KhXVNaFZpthhhK+C6EO4YxmxM2uS/ekAWzbSJSWjO0n8bDCEL/DxYyzUQRhr6p5VXl9claN+1C0u7vZ/siju7gYHGumNqWsIbp1dyEoxopAKAHnsWvUptngAA"></div>
+    <div class="logo" tabindex="0" aria-label="Nico TV"><img alt="Nico TV, mascote chihuahua" src="data:image/webp;base64,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"></div>
     <nav class="nav" aria-label="Navegação principal">
-      <button class="navbtn active" id="homeNav"><span class="ico">⌂</span><span class="navlabel">Início</span></button>
-      <button class="navbtn" id="liveNav"><span class="ico" aria-hidden="true">📺</span><span class="navlabel">Ao vivo</span></button>
-      <button class="navbtn hidden" id="movieNav"><span class="ico" aria-hidden="true">🎞️</span><span class="navlabel">Filmes</span></button>
-      <button class="navbtn hidden" id="seriesNav"><span class="ico" aria-hidden="true">🎬</span><span class="navlabel">Séries</span></button>
-      <button class="navbtn" id="favNav" aria-pressed="false"><span class="ico">★</span><span class="navlabel">Minha Lista</span></button>
-      <button class="navbtn" id="recentNav" aria-pressed="false"><span class="ico">↺</span><span class="navlabel">Continuar Assistindo</span></button>
-      <button class="navbtn" id="searchNav"><span class="ico">⌕</span><span class="navlabel">Buscar</span></button>
-      <button class="navbtn" id="importNav"><span class="ico">＋</span><span class="navlabel">Importar</span></button>
+      <button class="navbtn active" id="homeNav"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span><span class="navlabel">Início</span></button>
+      <button class="navbtn" id="liveNav"><span class="ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="m8 2 4 4 4-4"/><path d="M9 23h6"/><path d="m10 11 5 2-5 3z" fill="currentColor" stroke="none"/></svg></span><span class="navlabel">Ao vivo</span></button>
+      <button class="navbtn hidden" id="movieNav"><span class="ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="7" r="1.5"/><circle cx="7" cy="12" r="1.5"/><circle cx="12" cy="17" r="1.5"/><circle cx="17" cy="12" r="1.5"/></svg></span><span class="navlabel">Filmes</span></button>
+      <button class="navbtn hidden" id="seriesNav"><span class="ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 8 5 3h16l-2 5M7 3l3 5m3-5 3 5"/></svg></span><span class="navlabel">Séries</span></button>
+      <button class="navbtn" id="favNav" aria-pressed="false"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 3.1 6.4 7 .9-5.1 5 .9 7-5.9-3.3-6.2 3.3 1.2-7-5.1-5 7-.9z" fill="currentColor" stroke="none"/></svg></span><span class="navlabel">Minha Lista</span></button>
+      <button class="navbtn" id="recentNav" aria-pressed="false"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg></span><span class="navlabel">Continuar Assistindo</span></button>
+      <button class="navbtn" id="searchNav"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="7"/><path d="m16 16 5 5"/></svg></span><span class="navlabel">Buscar</span></button>
+      <button class="navbtn" id="importNav"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg></span><span class="navlabel">Importar</span></button>
+      <button class="navbtn" id="nicoReloadNav" type="button" title="Recarregar lista" aria-label="Recarregar lista"><span class="ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7v5h-5"/><path d="M4 17v-5h5"/><path d="M5.7 9A7.5 7.5 0 0 1 19 7l1 5M4 12l1 5a7.5 7.5 0 0 0 13.3-2"/></svg></span><span class="navlabel">Recarregar lista</span></button>
     </nav>
+    <button class="navbtn nico-menu-toggle" id="nicoMenuToggle" type="button" aria-label="Expandir menu lateral" aria-expanded="false" title="Expandir menu lateral"><span class="ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 7 5 5-5 5m7-10 5 5-5 5"/></svg></span><span class="navlabel">Expandir menu</span></button>
     <div class="spacer"></div>
     <div class="nico2-premium"><span>♛</span><div><b>Nico TV Premium</b><small>Cinematic Experience</small></div></div>
-    <button class="navbtn soft" id="updateNav"><span class="ico">⤓</span><span class="navlabel">Verificar atualizações</span></button>
-    <button class="navbtn soft" id="importNav2"><span class="ico">⚙</span><span class="navlabel">Gerenciar listas</span></button>
+    <button class="navbtn soft" id="updateNav"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M4 17v-5h5"/><path d="M5.7 9A7.5 7.5 0 0 1 19 7l1 5M4 12l1 5a7.5 7.5 0 0 0 13.3-2"/></svg></span><span class="navlabel">Verificar atualizações</span></button>
+    <button class="navbtn soft" id="importNav2"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M10 2h4l.6 2.2 2.1.9 2-1.1 2.8 2.8-1.1 2 1 2.1 2.1.6v4l-2.1.6-1 2.1 1.1 2-2.8 2.8-2-1.1-2.1.9L14 22h-4l-.6-2.2-2.1-.9-2 1.1-2.8-2.8 1.1-2-1-2.1L.5 12.5v-1l2.1-.6 1-2.1-1.1-2L5.3 4l2 1.1 2.1-.9z"/></svg></span><span class="navlabel">Gerenciar listas</span></button>
   </aside>
 
   <main class="main">
@@ -666,7 +1203,7 @@ body:has(#app.nico2-home) .main .topbar .metric-pill{display:none!important}
         </div>
       </div>
       <div class="searchwrap">
-        <label class="search" for="search"><span>⌕</span><input id="search" type="text" placeholder="Buscar canal, filme, série ou categoria" autocomplete="off"></label>
+        <label class="search" for="search"><span class="nico-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span><input id="search" type="text" placeholder="Buscar canal, filme, série ou categoria" autocomplete="off"></label>
         <div class="metric-pill" id="counter">0 itens</div>
         <div class="page-actions">
           <button class="btn ghost" id="homeBtn">Início</button>
@@ -1921,6 +2458,61 @@ function escapeAttr(s){ return String(s??'').replace(/[^\w\-]+/g,'_'); }
 
 (async()=>{
   try{ const saved=JSON.parse(store.get('nico_source')||'null'); if(saved) await importFrom(saved); else render(); }catch(e){ render(); }
+})();
+</script>
+
+<script id="nicoReloadListAction">
+(function () {
+  const button = document.getElementById('nicoReloadNav');
+  if (!button) return;
+  button.addEventListener('click', async function () {
+    if (button.disabled) return;
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem('nico_source') || 'null'); } catch (e) {}
+    if (!saved || !['xt','m3u'].includes(saved.type) || (saved.type === 'm3u' && !saved.url && !saved.text)) {
+      if (typeof toast === 'function') toast('Importe uma lista primeiro para poder recarregar.');
+      else alert('Importe uma lista primeiro.');
+      return;
+    }
+    button.disabled = true;
+    button.setAttribute('aria-busy','true');
+    const priorRecent = localStorage.getItem('nico_live_recent');
+    try {
+      if (typeof toast === 'function') toast('Atualizando lista…');
+      await importFrom(saved); // usa a rotina Xtream/M3U que já funciona no aplicativo
+      if (priorRecent != null) {
+        localStorage.setItem('nico_live_recent',priorRecent);
+        if (typeof state !== 'undefined') {
+          try { state.liveRecent=JSON.parse(priorRecent)||[]; } catch(e) {}
+          render();
+        }
+      }
+      if (typeof toast === 'function') toast('Lista recarregada com sucesso.');
+    } catch(e) {
+      if (typeof toast === 'function') toast('Falha ao recarregar. Verifique a conexão ou os dados da lista.');
+    } finally {
+      button.disabled=false;
+      button.removeAttribute('aria-busy');
+      try { button.focus({preventScroll:true}); } catch(e) {}
+    }
+  });
+})();
+</script>
+<script id="nicoVisualSidebarOnly">
+(function(){
+  const trigger=document.getElementById('nicoMenuToggle');
+  if(!trigger)return;
+  const setExpanded=(expanded)=>{
+    document.body.classList.toggle('nico-expanded',expanded);
+    document.body.classList.toggle('nico-collapsed',!expanded);
+    trigger.setAttribute('aria-expanded',String(expanded));
+    trigger.setAttribute('aria-label',expanded?'Recolher menu lateral':'Expandir menu lateral');
+    trigger.title=expanded?'Recolher menu lateral':'Expandir menu lateral';
+    const label=trigger.querySelector('.navlabel');
+    if(label)label.textContent=expanded?'Recolher menu':'Expandir menu';
+  };
+  setExpanded(false);
+  trigger.addEventListener('click',()=>setExpanded(!document.body.classList.contains('nico-expanded')));
 })();
 </script>
 </body>
