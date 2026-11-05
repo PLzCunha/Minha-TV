@@ -1304,6 +1304,127 @@ body:not(.nico-expanded) #nicoReloadNav .navlabel {display:none!important;}
  #app .detail-main .ep-item .btn.main{grid-column:2!important;justify-self:start!important}
 }
 </style>
+<style id="nico-fix-live-focus-episodes">
+/* NICO TV | CORRECAO VISUAL 2026-11-05 — GRAFITE & GOLD
+   Regras finais intencionalmente isoladas. Sem alteracoes no motor IPTV/player. */
+:root{--nico-black:#080706;--nico-graphite:#15120f;--nico-gold:#edba47;--nico-line:#8c6125;}
+/* Cards de canais: retira azul antigo da miniatura, do contêiner e do placeholder. */
+body #app .nico2-card.nico2-live,
+body #app .nico2-card.nico2-live .card-body{
+ background:linear-gradient(155deg,#1b1713 0%,#100e0b 75%,#0b0a09 100%)!important;
+ border-color:#6f4c1f!important;
+ color:#f6efe3!important;
+}
+body #app .nico2-card.nico2-live .thumb,
+body #app .nico2-card.nico2-live .thumb.no-image,
+body #app .nico2-card.nico2-live .placeholder,
+body #app .nico-f2-live .nico-f2-art,
+body #app .nico-f2-live .nico-f2-missing,
+body #app .nico-f2-live .nico-f2-art.nico-f2-missing{
+ background:radial-gradient(ellipse at 78% 95%,#684613 0%,#201912 40%,#11100e 77%)!important;
+ border-color:#8b6228!important;
+ color:#eabb55!important;
+}
+body #app .nico2-card.nico2-live .thumb::before{
+ content:'';position:absolute;inset:auto 0 0;height:34%;pointer-events:none;z-index:0;
+ background:linear-gradient(150deg,transparent 35%,rgba(235,173,47,.16));
+}
+body #app .nico2-card.nico2-live .thumb img{
+ position:relative;z-index:1;object-fit:contain!important;
+ background:transparent!important;
+}
+body #app .nico2-card.nico2-live .thumb .nico2-type,
+body #app .nico2-card.nico2-live .thumb .favstar{z-index:2;}
+body #app .nico2-card.nico2-live .card-meta{color:#c5b6a1!important;}
+body #app .nico2-card.nico2-live:focus,
+body #app .nico2-card.nico2-live:focus-visible{border-color:#f5bf45!important;box-shadow:0 0 0 3px #f4bd4a,0 0 20px #dca32e6a!important;}
+/* Sidebar: destacar APENAS o item efetivamente focado; rota ativa sem segundo bloco dourado/azul. */
+html body .sidebar,
+html body.nico-collapsed .sidebar,
+html body.nico-expanded .sidebar{background:linear-gradient(180deg,#0b0907 0%,#080706 62%,#100c08 100%)!important;border-right:1px solid #8d672d!important;}
+html body .sidebar .navbtn,
+html body.nico-collapsed .sidebar .navbtn,
+html body.nico-expanded .sidebar .navbtn{background:transparent!important;color:#eeeae2!important;border-color:transparent!important;box-shadow:none!important;outline:none!important;}
+html body .sidebar .navbtn.active:not(:focus):not(:focus-visible),
+html body.nico-collapsed .sidebar .navbtn.active:not(:focus):not(:focus-visible),
+html body.nico-expanded .sidebar .navbtn.active:not(:focus):not(:focus-visible),
+html body .sidebar .navbtn[aria-pressed="true"]:not(:focus):not(:focus-visible){
+ background:transparent!important;border-color:transparent!important;
+ box-shadow:none!important;outline:none!important;
+}
+html body .sidebar .navbtn.active:not(:focus):not(:focus-visible) .ico,
+html body .sidebar .navbtn.active:not(:focus):not(:focus-visible) svg{color:#e6dfd1!important;stroke:currentColor!important;}
+html body .sidebar .navbtn:focus,
+html body .sidebar .navbtn:focus-visible,
+html body.nico-collapsed .sidebar .navbtn:focus,
+html body.nico-expanded .sidebar .navbtn:focus,
+html body .sidebar .navbtn.active:focus,
+html body .sidebar .navbtn.active:focus-visible{
+ background:linear-gradient(145deg,#534019,#272017 55%,#15110c)!important;
+ color:#ffd25b!important;border:2px solid #efbe4c!important;
+ box-shadow:0 0 0 2px #e6af4290,0 0 17px #edaf4a6c!important;
+ outline:none!important;
+}
+html body .sidebar .navbtn:focus .ico,
+html body .sidebar .navbtn:focus-visible .ico,
+html body .sidebar .navbtn:focus svg,
+html body .sidebar .navbtn:focus-visible svg{color:#ffd25b!important;stroke:currentColor!important;}
+/* Marca original: preservar proporcao e evitar chihuahua alongado. */
+html body .sidebar .logo,
+html body.nico-collapsed .sidebar .logo,
+html body.nico-expanded .sidebar .logo{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:74px!important;height:92px!important;min-width:0!important;min-height:0!important;
+ margin:5px auto 12px!important;padding:4px!important;
+ background:#0a0806!important;border:1px solid #ab7625!important;
+ border-radius:17px!important;overflow:hidden!important;
+}
+html body .sidebar .logo img,
+html body.nico-collapsed .sidebar .logo img,
+html body.nico-expanded .sidebar .logo img{
+ display:block!important;width:100%!important;height:100%!important;
+ max-width:100%!important;max-height:100%!important;
+ object-fit:contain!important;object-position:center!important;
+ aspect-ratio:auto!important;transform:none!important;
+}
+/* Miniaturas reais dos episodios: imagem recebida do servidor, fallback coerente. */
+html body #app .detail-main .ep-thumb{
+ position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ width:112px!important;min-width:112px!important;max-width:112px!important;
+ height:72px!important;min-height:72px!important;max-height:72px!important;
+ padding:0!important;overflow:hidden!important;
+ border:1px solid #86602a!important;border-radius:11px!important;
+ background:linear-gradient(135deg,#30251b,#15120f)!important;
+}
+html body #app .detail-main .ep-thumb img{
+ display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;
+ border:0!important;border-radius:inherit!important;
+}
+html body #app .detail-main .ep-thumb.nico-ep-no-image::after{
+ content:'▶';color:#e8ba54;font-size:24px;font-weight:700;
+}
+html body #app .detail-main .ep-item{
+ display:grid!important;grid-template-columns:112px minmax(0,1fr) auto!important;
+ gap:15px!important;align-items:center!important;min-height:104px!important;
+ background:linear-gradient(145deg,#1c1814,#12100e)!important;
+ border:1px solid #684c29!important;
+ border-radius:16px!important;
+}
+html body #app .detail-main .ep-item .btn.main{
+ width:auto!important;min-width:106px!important;min-height:48px!important;
+ background:linear-gradient(145deg,#ffd568,#d7a335)!important;color:#1b1407!important;
+ border:1px solid #ffc95c!important;
+}
+html body #app .detail-main .ep-item:focus,
+html body #app .detail-main .ep-item:focus-within{
+ outline:none!important;border-color:#f7c04d!important;box-shadow:0 0 0 2px #edb54488!important;
+}
+@media(max-width:850px){
+ html body #app .detail-main .ep-thumb{width:84px!important;min-width:84px!important;max-width:84px!important;height:58px!important;min-height:58px!important;max-height:58px!important;}
+ html body #app .detail-main .ep-item{grid-template-columns:84px minmax(0,1fr)!important;gap:11px!important;}
+ html body #app .detail-main .ep-item .btn.main{grid-column:2!important;justify-self:start!important;}
+}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -1984,7 +2105,20 @@ function renderDetail(app){
   app.append(wrap);
   $('#playFirstEpisode').onclick=()=>{ const flat=[].concat(...d.seasons.map(s=>s.eps));const next=flat.find(e=>!entryFor(e)?.completed)||flat[0];if(next)openItem(next,flat); };
   const row=$('#seasonRow'); d.seasons.forEach((s,idx)=>{ const b=document.createElement('button'); b.className='season-btn'+(idx===state.detailSeason?' active':''); b.textContent=`Temporada ${s.n}`; b.onclick=()=>{ state.detailSeason=idx; render(); }; row.append(b); });
-  const list=$('#episodeList'); season.eps.forEach((ep,idx)=>{ const item=document.createElement('div'); item.className='ep-item'; item.tabIndex=0; const history=entryFor(ep),pct=watchPercent(history);item.classList.toggle('completed',!!history?.completed);item.innerHTML=`<div class="ep-thumb"></div><div><div class="ep-name">${escapeHtml(ep.name)}</div><div class="ep-meta">Temporada ${season.n} · Episódio ${idx+1}</div><div class="ep-watch">${history?.completed?'✓ Concluído':pct>0?`▶ Em andamento · ${pct}%`:'Não assistido'}</div>${pct>0?`<div class="ep-track"><span style="width:${pct}%"></span></div>`:''}</div><button class="btn main">${history?.completed?'Rever':pct>0?'Continuar':'Assistir'}</button>`; item.onclick=()=>openItem(ep,[].concat(...d.seasons.map(s=>s.eps))); item.onkeydown=e=>{ if(e.target!==item)return; if(e.key==='Enter'||e.key===' '){ e.preventDefault(); item.click(); } }; item.querySelector('button').onclick=e=>{ e.stopPropagation(); item.click(); }; list.append(item); });
+  const list=$('#episodeList'); season.eps.forEach((ep,idx)=>{ const item=document.createElement('div'); item.className='ep-item'; item.tabIndex=0; const history=entryFor(ep),pct=watchPercent(history);item.classList.toggle('completed',!!history?.completed);item.innerHTML=`<div class="ep-thumb"></div><div><div class="ep-name">${escapeHtml(ep.name)}</div><div class="ep-meta">Temporada ${season.n} · Episódio ${idx+1}</div><div class="ep-watch">${history?.completed?'✓ Concluído':pct>0?`▶ Em andamento · ${pct}%`:'Não assistido'}</div>${pct>0?`<div class="ep-track"><span style="width:${pct}%"></span></div>`:''}</div><button class="btn main">${history?.completed?'Rever':pct>0?'Continuar':'Assistir'}</button>`;
+    // APRESENTACAO APENAS: usa o frame do episodio do Xtream; quando ausente, a capa da serie.
+    const episodeThumb=item.querySelector('.ep-thumb');
+    const episodeArt=ep.logo || d.logo;
+    if(episodeThumb){
+      if(episodeArt){
+        const episodeImage=document.createElement('img');
+        episodeImage.alt='';episodeImage.loading='lazy';episodeImage.decoding='async';
+        episodeImage.src=episodeArt;
+        episodeImage.onerror=()=>{episodeImage.remove();episodeThumb.classList.add('nico-ep-no-image');};
+        episodeThumb.appendChild(episodeImage);
+      } else episodeThumb.classList.add('nico-ep-no-image');
+    }
+    item.onclick=()=>openItem(ep,[].concat(...d.seasons.map(s=>s.eps))); item.onkeydown=e=>{ if(e.target!==item)return; if(e.key==='Enter'||e.key===' '){ e.preventDefault(); item.click(); } }; item.querySelector('button').onclick=e=>{ e.stopPropagation(); item.click(); }; list.append(item); });
   focusFirst();
 }
 function openItem(c,list){ markRecent(c); if(c.kind==='series'){ openSeries(c); } else if(c.kind==='movie'){ openMovieInfo(c); } else if(c.kind==='ep'){ play(list,list.indexOf(c),true); } else { play(list,list.indexOf(c),false); } }
