@@ -2784,6 +2784,22 @@ function nico21Visible(el){
   const r=el.getBoundingClientRect();return r.width>3&&r.height>3&&getComputedStyle(el).visibility!=='hidden';
 }
 function nico21Elements(selector,root=document){return [...root.querySelectorAll(selector)].filter(nico21Visible);}
+function nico24ScrollCatalogTop(){
+  const app=document.getElementById('app');
+  if(!app)return;
+  // Fire TV WebView: o scroll pode pertencer ao documento ou a um contêiner.
+  for(let node=app;node;node=node.parentElement){
+    if(node.scrollTop>0)node.scrollTop=0;
+  }
+  if(document.scrollingElement)document.scrollingElement.scrollTop=0;
+  window.scrollTo(0,0);
+}
+function nico24TopTarget(current){
+  const root=document.getElementById('app');
+  if(!root)return null;
+  const controls=nico21Elements('.nico-category-option,.nico-category-trigger,.live-filter-chip,.nico2-hero button,.nico2-welcome button,.nico2-page-heading button',root);
+  return controls.find(el=>el!==current)||nico21Content().find(el=>el!==current&&!el.closest('.nico2-shelf'))||null;
+}
 function nico21Focus(el){
   if(!el)return false;
   try{el.focus({preventScroll:true});}catch(_){el.focus();}
@@ -2828,7 +2844,7 @@ function nico21VerticalShelf(el,dir){
  const idx=all.indexOf(shelf),other=all[idx+(dir==='ArrowDown'?1:-1)];
  if(!other){
    // Ao subir da primeira prateleira, regressar aos filtros/cabecalho do catalogo.
-   if(dir==='ArrowUp')return nico21Elements('.nico-category-option,.nico-category-trigger,.live-filter-chip,#app .nico2-page-heading button',document.getElementById('app'))[0]||nico21Content()[0]||null;
+   if(dir==='ArrowUp'){nico24ScrollCatalogTop();return nico24TopTarget(el);}
    return null;
  }
  const cards=nico21Elements('.card',other);if(!cards.length)return null;
@@ -2950,8 +2966,8 @@ document.addEventListener('keydown',e=>{
    // Nunca aplicar no player, dialogos ou navegação lateral.
    if(!target && key==='ArrowUp'){
      const topControls=nico21Elements('.nico-category-option,.nico-category-trigger,.live-filter-chip,#app .nico2-hero button,#app .nico2-welcome button',document.getElementById('app'));
-     target=topControls[0]||nico21FirstContent();
-     if(target===el)window.scrollTo({top:0,behavior:'auto'});
+     target=topControls.find(x=>x!==el)||nico24TopTarget(el);
+     nico24ScrollCatalogTop();
    }
    if(!target && (key==='ArrowLeft'||key==='ArrowRight')&&!el.closest('.nico2-shelf'))target=nico21Directional(content,el,key);
    if(!target && key==='ArrowLeft' && el.closest('.nico2-shelf') && !nico21ShelfNeighbor(el,key))target=sidebar.find(x=>x.classList.contains('active'))||sidebar[0];
@@ -2959,7 +2975,8 @@ document.addEventListener('keydown',e=>{
    target=key==='ArrowLeft'?sidebar[0]:nico21FirstContent();
  }
  e.preventDefault();e.stopImmediatePropagation();
- if(target)nico21Focus(target);
+ if(target && target!==el)nico21Focus(target);
+ else if(key==='ArrowUp')nico24ScrollCatalogTop();
 },true);
 let nico21DesktopMouseActive=false;
 document.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&!window.Android)nico21DesktopMouseActive=true;});
