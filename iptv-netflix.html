@@ -1619,6 +1619,19 @@ html body.nico-expanded .sidebar .logo img {
   filter:drop-shadow(0 0 8px rgba(255,170,40,.45))!important;
 }
 </style>
+<style id="nico23-continuar-inteligente">
+/* Nico TV 2.3: progress shown only for VOD with known duration. No changes to core streaming or playback. */
+#app .nico23-progress-badge{position:absolute!important;left:0!important;right:0!important;bottom:0!important;z-index:6!important;display:flex!important;flex-direction:column!important;gap:4px!important;pointer-events:none!important;padding:18px 8px 6px!important;background:linear-gradient(0deg,rgba(6,5,4,.97),rgba(6,5,4,.68) 56%,transparent)!important;}
+#app .nico23-progress-line{height:5px!important;width:100%!important;background:#504538!important;border-radius:99px!important;overflow:hidden!important;}
+#app .nico23-progress-line span{display:block!important;background:linear-gradient(90deg,#c28a22,#ffce62)!important;height:100%!important;border-radius:99px!important;}
+#app .nico23-progress-badge small{font-size:11px!important;line-height:1.2!important;color:#fff4df!important;text-shadow:0 1px 4px #000!important;white-space:nowrap!important;}
+#app .nico-f2-tile,#app .nico2-card,#app .nico23-continue-card{position:relative!important;}
+#app .nico23-dismiss{position:absolute!important;z-index:16!important;top:7px!important;right:7px!important;width:34px!important;height:34px!important;min-height:34px!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;border:1px solid #b98a3a!important;border-radius:50%!important;background:#100d0aee!important;color:#ffe3a0!important;font-size:27px!important;line-height:1!important;cursor:pointer!important;}
+#app .nico23-dismiss:focus,#app .nico23-dismiss:focus-visible{outline:3px solid #ffd26e!important;outline-offset:2px!important;background:#e2ac3d!important;color:#171008!important;}
+#app .nico23-continue-card:focus{outline:3px solid #ffd26e!important;outline-offset:2px!important;}
+#app .nico-f2-progress .nico-f2-tile .nico23-dismiss{top:8px!important;right:8px!important;}
+#app .nico-f2-progress .nico-f2-tile .nico23-progress-badge{bottom:0!important;padding-bottom:5px!important;}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -2038,8 +2051,31 @@ function saveHistory(c,pos,duration,completed=false){
 }
 function entryFor(c){return c?.url?combinedHistory()[historyKey(c)]:null;}
 function watchPercent(entry){return Math.max(0,Math.min(100,Number(entry?.percent)||0));}
-function continueEntries(){return Object.values(combinedHistory()).filter(v=>v&&v.url&&!v.completed&&v.position>=3&&v.duration>0&&v.position<v.duration-8)
- .sort((a,b)=>(b.when||0)-(a.when||0)).slice(0,30);}
+const NICO23_DISMISSED_KEY='nico23_dismissed_continue_v1';
+function nico23Dismissed(){try{const v=JSON.parse(store.get(NICO23_DISMISSED_KEY)||'{}');return v&&typeof v==='object'?v:{};}catch(e){return {};}}
+function nico23Dismiss(entry){
+  if(!entry?.url)return;
+  const removed=nico23Dismissed();removed[historyKey(entry)]=Date.now();
+  const keys=Object.keys(removed);if(keys.length>240)keys.slice(0,keys.length-240).forEach(k=>delete removed[k]);
+  store.set(NICO23_DISMISSED_KEY,JSON.stringify(removed));render();toast('Removido de Continuar Assistindo');
+}
+function nico23IsPending(entry){
+  return !!(entry&&entry.url&&(entry.kind==='movie'||entry.kind==='ep')&&!entry.completed&&Number(entry.duration)>0&&Number(entry.position)>=3&&Number(entry.position)<Number(entry.duration)-8);
+}
+function nico23Percent(entry){return Math.max(0,Math.min(100,Math.round((Number(entry.position)||0)/(Number(entry.duration)||1)*100)));}
+function nico23Remaining(entry){return Math.max(0,Math.ceil((Number(entry.duration)-Number(entry.position))/60));}
+function nico23ProgressOverlay(item){
+  const h=entryFor(item);if(!nico23IsPending(h))return null;
+  const wrap=document.createElement('div');wrap.className='nico23-progress-badge';
+  wrap.setAttribute('aria-label',`${nico23Percent(h)} por cento assistido`);
+  wrap.innerHTML=`<div class="nico23-progress-line"><span style="width:${nico23Percent(h)}%"></span></div><small>${nico23Percent(h)}% · ${nico23Remaining(h)} min restantes</small>`;
+  return wrap;
+}
+function continueEntries(){
+  const dismissed=nico23Dismissed();
+  return Object.values(combinedHistory()).filter(v=>nico23IsPending(v)&&(!dismissed[historyKey(v)]||Number(v.when)>Number(dismissed[historyKey(v)])))
+  .sort((a,b)=>(b.when||0)-(a.when||0)).slice(0,30);
+}
 function completeEpisodeCount(d){return d.seasons.reduce((n,s)=>n+s.eps.filter(e=>entryFor(e)?.completed).length,0);}
 async function resumeHistoryEntry(entry){
   if(entry.kind==='ep'&&entry.seriesId&&state.xt){
@@ -2059,11 +2095,14 @@ function renderContinue(app){
   const section=document.createElement('section');section.className='row';section.innerHTML='<div class="row-head"><div><div class="row-title">▶ Continuar Assistindo</div><div class="row-subcount">Retome exatamente de onde parou neste dispositivo</div></div></div>';
   const strip=document.createElement('div');strip.className='continue-grid';
   entries.forEach(entry=>{
-    const b=document.createElement('button');b.className='continue-card';b.type='button';
+    const b=document.createElement('div');b.className='continue-card nico23-continue-card';b.tabIndex=0;b.setAttribute('role','button');
     const label=entry.kind==='ep'?[entry.seriesName||entry.name,entry.season?'T'+entry.season:'',entry.episode?'E'+entry.episode:''].filter(Boolean).join(' · '):entry.name;
     b.setAttribute('aria-label','Continuar '+label+' de '+clock(entry.position));
-    b.innerHTML=`<div class="continue-poster">${entry.logo?`<img loading="lazy" alt="" src="${escapeHtml(entry.logo)}">`:''}<div class="continue-progress"><span style="width:${watchPercent(entry)}%"></span></div></div><div class="continue-detail"><div class="continue-title">${escapeHtml(label)}</div><div class="continue-meta">${clock(entry.position)} / ${clock(entry.duration)} · ${watchPercent(entry)}% assistido</div></div>`;
-    b.onclick=()=>resumeHistoryEntry(entry);strip.append(b);
+    b.innerHTML=`<div class="continue-poster">${entry.logo?`<img loading="lazy" alt="" src="${escapeHtml(entry.logo)}">`:''}<div class="continue-progress"><span style="width:${nico23Percent(entry)}%"></span></div></div><div class="continue-detail"><div class="continue-title">${escapeHtml(label)}</div><div class="continue-meta">${clock(entry.position)} / ${clock(entry.duration)} · ${nico23Percent(entry)}% assistido · ${nico23Remaining(entry)} min restantes</div></div>`;
+    b.onclick=e=>{if(e.target.closest('.nico23-dismiss'))return;resumeHistoryEntry(entry);};
+    b.onkeydown=e=>{if(e.target!==b)return;if(e.key==='Enter'||e.key===' '){e.preventDefault();resumeHistoryEntry(entry);}};
+    const x=document.createElement('button');x.type='button';x.className='nico23-dismiss';x.textContent='×';x.setAttribute('aria-label','Remover '+label+' de Continuar Assistindo');x.onclick=e=>{e.stopPropagation();nico23Dismiss(entry);};
+    b.append(x);strip.append(b);
   });
   section.append(strip);app.append(section);
 }
@@ -2083,6 +2122,7 @@ function card(c,list){
  const div=document.createElement('div');div.className='card nico2-card nico2-'+(c.kind||'live')+((c.kind==='movie'||c.kind==='series')?' poster':'');div.tabIndex=0;div.setAttribute('role','button');div.setAttribute('aria-label',c.name+' — OK abre; segure OK para favoritar');div.dataset.nicoItemKey=keyOf(c);
  div.innerHTML=`<div class="thumb">${c.logo?`<img alt="" loading="lazy" src="${escapeHtml(c.logo)}">`:`<div class="placeholder">${placeholderFrom(c)}</div>`}<span class="nico2-type">${c.kind==='movie'?'FILME':c.kind==='series'?'SÉRIE':'AO VIVO'}</span><button class="favstar" aria-label="${isFav(c)?'Remover dos':'Adicionar aos'} favoritos">${isFav(c)?'★':'☆'}</button></div>
  <div class="card-body"><div class="card-title">${escapeHtml(c.name)}</div><div class="card-meta">${escapeHtml(c.group||'Catálogo')}</div></div>`;
+ const progress=nico23ProgressOverlay(c);if(progress)div.querySelector('.thumb')?.append(progress);
  const img=div.querySelector('img');if(img)img.onerror=()=>{img.remove();div.querySelector('.thumb').classList.add('no-image');};
  div.onclick=e=>{if(e.target.closest('.favstar'))return;openItem(c,list);};
  // Fire TV: OK curto abre o item; OK mantido (>= 700 ms) alterna favorito.
@@ -2206,6 +2246,7 @@ function nicoF2Rail(app,title,items,variant='wide',opts={}){
     const label=document.createElement('div');label.className='nico-f2-info';
     const entry=opts.historyMap?.get(keyOf(c));
     label.innerHTML='<strong>'+escapeHtml(c.name)+'</strong>'+(entry?'<small>'+Math.max(0,Math.round((entry.duration-entry.position)/60))+' min restantes</small><i class="nico-f2-track"><i style="width:'+watchPercent(entry)+'%"></i></i>':variant==='live'?'<small>'+escapeHtml(c.group||'Ao vivo')+'</small>':'');
+    const progress=nico23ProgressOverlay(c);if(progress)art.append(progress);
     b.append(art,label);
     // reuse card keyboard behavior (including long-OK) without making separate event systems.
     b.onclick=()=>opts.onOpen?opts.onOpen(c,items):openItem(c,items);
@@ -2221,11 +2262,23 @@ function nicoF2Rail(app,title,items,variant='wide',opts={}){
 }
 function nicoF2ContinueRail(app){
   const entries=continueEntries();if(!entries.length)return;
-  const tiles=entries.map(e=>({kind:e.kind||'movie',name:e.seriesName||e.name,group:'Continuar assistindo',logo:e.logo||'',url:e.url,seriesId:e.seriesId,season:e.season,episode:e.episode}));
-  // Use a dedicated click handler so resumed episodes use the existing persistence/series resolver.
+  const tiles=entries.map(e=>({kind:e.kind||'movie',name:e.kind==='ep'?(e.seriesName||e.name)+' · T'+(e.season||'?')+' E'+(e.episode||'?'):e.name,group:'Continuar assistindo',logo:e.logo||'',url:e.url,seriesId:e.seriesId,season:e.season,episode:e.episode}));
   nicoF2Rail(app,'◴ Continuar Assistindo',tiles,'progress',{historyMap:new Map(entries.map((e,i)=>[keyOf(tiles[i]),e])),onOpen:(c)=>{const i=tiles.findIndex(t=>keyOf(t)===keyOf(c));if(i>=0)resumeHistoryEntry(entries[i]);}});
   const rail=app.lastElementChild?.querySelector('.nico-f2-rail');
-  if(rail) [...rail.querySelectorAll('.nico-f2-tile')].forEach((b,i)=>{b.onclick=()=>resumeHistoryEntry(entries[i]);});
+  if(!rail)return;
+  rail.querySelector('.nico-f2-all')?.remove();
+  [...rail.querySelectorAll('.nico-f2-tile')].forEach((b,i)=>{
+    if(!entries[i])return;
+    const entry=entries[i];
+    // Keep the original short-OK and long-OK card behavior; only add a separate dismiss control.
+    const remove=document.createElement('button');remove.type='button';remove.className='nico23-dismiss';
+    remove.textContent='×';remove.title='Remover de Continuar Assistindo';
+    remove.setAttribute('aria-label','Remover '+(entry.name||'conteúdo')+' de Continuar Assistindo');
+    remove.onclick=e=>{e.preventDefault();e.stopPropagation();nico23Dismiss(entry);};
+    remove.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.stopPropagation();}};
+    remove.onkeyup=e=>{if(e.key==='Enter'||e.key===' '){e.stopPropagation();}};
+    b.append(remove);
+  });
 }
 function renderNicoFase2HomeRails(app){
   nicoF2ContinueRail(app);
