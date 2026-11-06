@@ -248,7 +248,7 @@ jobs:
               c.setRequestProperty("User-Agent", "NicoTV-Android-Updater");
               try {
                 int status = c.getResponseCode();
-                if (status != 200) throw new IOException("GitHub HTTP " + status + ". Confira se existe uma Release publica com nicotv.apk.");
+                if (status != 200) throw new IOException("GitHub HTTP " + status + ". Confira se ha Releases publicas disponiveis.");
                 try(InputStream in = c.getInputStream()) {
                   byte[] b = new byte[8192]; int n; java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
                   while((n=in.read(b)) != -1) {out.write(b,0,n); if(out.size()>512*1024)throw new IOException("Resposta do GitHub excessiva");}
@@ -261,22 +261,38 @@ jobs:
               nicoChecking = true;
               new Thread(() -> {
                 try {
-                  JSONObject release = new JSONObject(fetchJson(NICO_RELEASE_API));
-                  String tag = release.optString("tag_name", "");
-                  int latest = releaseNumber(tag);
+                  // Consulta varias Releases: uma Release recente sem APK nao deve bloquear
+                  // uma versao anterior valida, nem oferecer um arquivo inexistente.
+                  JSONArray releases = new JSONArray(fetchJson("https://api.github.com/repos/PlzCunha/Minha-TV/releases?per_page=20"));
                   int installed = installedNicoRun();
-                  if (latest < 0 || installed < 0) throw new IOException("Nao foi possivel identificar os codigos de versao.");
-                  JSONArray assets = release.optJSONArray("assets");
+                  if (installed < 0) throw new IOException("Nao foi possivel identificar a versao instalada.");
+                  int newestValid = -1;
                   String apkUrl = null;
-                  if (assets != null) for (int j=0;j<assets.length();j++) {
-                    JSONObject asset = assets.optJSONObject(j);
-                    if (asset != null && "nicotv.apk".equalsIgnoreCase(asset.optString("name"))) {
-                      apkUrl = asset.optString("browser_download_url", ""); break;
-                    }
-                  }
                   final String expectedPrefix = "https://github.com/PlzCunha/Minha-TV/releases/download/";
-                  if (latest > installed && (apkUrl == null || !apkUrl.startsWith(expectedPrefix)))
-                    throw new IOException("A Release mais recente nao contem o arquivo nicotv.apk.");
+                  for (int i=0;i<releases.length();i++) {
+                    JSONObject release = releases.optJSONObject(i);
+                    if (release == null || release.optBoolean("draft") || release.optBoolean("prerelease")) continue;
+                    int number = releaseNumber(release.optString("tag_name", ""));
+                    if (number < 0 || number <= newestValid) continue;
+                    JSONArray assets = release.optJSONArray("assets");
+                    if (assets == null) continue;
+                    String candidate = null;
+                    for (int j=0;j<assets.length();j++) {
+                      JSONObject asset = assets.optJSONObject(j);
+                      if (asset == null || !"uploaded".equals(asset.optString("state", "uploaded"))) continue;
+                      String name = asset.optString("name", "");
+                      String url = asset.optString("browser_download_url", "");
+                      if (name.toLowerCase(java.util.Locale.ROOT).endsWith(".apk")
+                          && url.startsWith(expectedPrefix)
+                          && asset.optLong("size", 0) > 100000) {
+                        if (candidate == null || "nicotv.apk".equalsIgnoreCase(name)) candidate = url;
+                        if ("nicotv.apk".equalsIgnoreCase(name)) break;
+                      }
+                    }
+                    if (candidate != null) { newestValid=number; apkUrl=candidate; }
+                  }
+                  if (newestValid < 0) throw new IOException("Nenhuma Release publicada contem um APK valido. Verifique a etapa Publicar do GitHub Actions.");
+                  final int latest = newestValid;
                   final String validApkUrl = apkUrl;
                   runOnUiThread(() -> {
                     if (latest > installed) {
@@ -1033,10 +1049,21 @@ jobs:
           set -euo pipefail
           cp proj/app/build/outputs/apk/release/app-release.apk nicotv.apk
           test -s nicotv.apk
-      - name: Publicar
+      - name: Publicar APK na Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ github.run_number }}
           name: Nico TV ${{ github.run_number }}
           files: nicotv.apk
+          fail_on_unmatched_files: true
           make_latest: true
+          draft: false
+          prerelease: false
+      - name: Validar APK publicado
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release view "v${{ github.run_number }}" --json assets --jq '.assets[].name' | grep -Fx 'nicotv.apk'
+          echo "APK confirmado na Release v${{ github.run_number }}"
