@@ -1,3 +1,4 @@
+
 name: Build APK
 on:
   push:
@@ -283,7 +284,7 @@ jobs:
                       String name = asset.optString("name", "");
                       String url = asset.optString("browser_download_url", "");
                       if (name.toLowerCase(java.util.Locale.ROOT).endsWith(".apk")
-                          && url.startsWith(expectedPrefix)
+                          && url.regionMatches(true, 0, expectedPrefix, 0, expectedPrefix.length())
                           && asset.optLong("size", 0) > 100000) {
                         if (candidate == null || "nicotv.apk".equalsIgnoreCase(name)) candidate = url;
                         if ("nicotv.apk".equalsIgnoreCase(name)) break;
