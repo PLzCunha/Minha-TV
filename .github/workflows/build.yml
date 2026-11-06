@@ -391,6 +391,12 @@ jobs:
           import android.content.SharedPreferences;
           import android.widget.TextView;
           import android.view.View;
+          import androidx.media3.common.C;
+          import androidx.media3.common.Format;
+          import androidx.media3.common.Tracks;
+          import androidx.media3.common.TrackSelectionOverride;
+          import androidx.media3.common.TrackSelectionParameters;
+          import android.app.AlertDialog;
           import androidx.media3.common.MediaItem;
           import androidx.media3.common.PlaybackException;
           import androidx.media3.common.Player;
@@ -410,6 +416,9 @@ jobs:
             java.util.ArrayList<Runnable> tvButtonActions = new java.util.ArrayList<>();
             int selectedControl = -1; boolean seekBarSelected = false;
             boolean remoteOkHandled = false;
+            boolean resumedCurrentItem = false;
+            boolean trackDialogVisible = false;
+
             Runnable hide = () -> {
               if (selectedControl >= 0 || seekBarSelected || (p != null && vod && !p.getPlayWhenReady())) return;
               overlayVisible = false;
@@ -518,6 +527,8 @@ jobs:
               playControl = addControl(controls,"Ⅱ", "Pausar ou reproduzir", () -> togglePlay());
               addControl(controls,"↷", "Avançar 10 segundos", () -> seekSeconds(10));
               nextControl = addControl(controls,"⏭", "Próximo episódio", () -> nextEpisode());
+              addControl(controls,"♫", "Idioma e faixa de áudio", () -> showTrackDialog(C.TRACK_TYPE_AUDIO));
+              addControl(controls,"CC", "Selecionar ou desativar legendas", () -> showTrackDialog(C.TRACK_TYPE_TEXT));
               fullscreenControl = addControl(controls,"⛶", "Expandir vídeo para preencher a tela", () -> toggleFullscreen());
               nextControl.setVisibility(View.GONE);
               previousControl.setVisibility(View.GONE);
@@ -581,7 +592,7 @@ jobs:
                     status.setVisibility(android.view.View.VISIBLE);
                   } else if (state == Player.STATE_READY) {
                     status.setVisibility(android.view.View.GONE);
-                    if(p.getCurrentPosition()<1500)restorePosition();
+                    if(!resumedCurrentItem){resumedCurrentItem=true;restorePosition();}
                     refreshTimeline();
                   } else if (state == Player.STATE_ENDED && episodes) {
                     savePosition(true);clearPosition();offerNext();
@@ -598,6 +609,59 @@ jobs:
               });
               go(0);
               h.post(progressTick);
+            }
+            String trackName(Format format,int number){
+              String label=format.label;
+              String lang=format.language;
+              String suffix=(label!=null&&!label.trim().isEmpty())?label.trim():
+                (lang!=null&&!lang.isEmpty()&&!"und".equals(lang)?new java.util.Locale(lang).getDisplayLanguage(new java.util.Locale("pt","BR")):"Faixa "+number);
+              return number+"  •  "+suffix;
+            }
+            void showTrackDialog(int type){
+              if(p==null)return;
+              java.util.ArrayList<String> labels=new java.util.ArrayList<>();
+              java.util.ArrayList<androidx.media3.common.TrackGroup> groups=new java.util.ArrayList<>();
+              java.util.ArrayList<Integer> indexes=new java.util.ArrayList<>();
+              labels.add(type==C.TRACK_TYPE_TEXT?"Desativar legendas":"Seleção automática");
+              groups.add(null);indexes.add(-1);
+              int current=0;
+              TrackSelectionParameters parameters=p.getTrackSelectionParameters();
+              for(Tracks.Group group:p.getCurrentTracks().getGroups()){
+                if(group.getType()!=type)continue;
+                for(int j=0;j<group.length;j++){
+                  if(!group.isTrackSupported(j))continue;
+                  labels.add(trackName(group.getTrackFormat(j),labels.size()));
+                  groups.add(group.getMediaTrackGroup());indexes.add(j);
+                  if(group.isTrackSelected(j))current=labels.size()-1;
+                }
+              }
+              if(labels.size()==1){
+                trackDialogVisible=true;
+                android.app.AlertDialog info=new AlertDialog.Builder(this).setTitle(type==C.TRACK_TYPE_TEXT?"Legendas":"Áudio")
+                  .setMessage("Nenhuma faixa alternativa disponível neste conteúdo.")
+                  .setPositiveButton("OK",(dialog,which)->{}).create();
+                info.setOnDismissListener(dialog->trackDialogVisible=false);info.show();
+                return;
+              }
+              final int selected=current;
+              trackDialogVisible=true;
+              AlertDialog choiceDialog=new AlertDialog.Builder(this)
+                .setTitle(type==C.TRACK_TYPE_TEXT?"Nico TV  •  Legendas":"Nico TV  •  Áudio")
+                .setSingleChoiceItems(labels.toArray(new String[0]),selected,(dialog,choice)->{
+                  TrackSelectionParameters.Builder builder=p.getTrackSelectionParameters().buildUpon().clearOverridesOfType(type);
+                  if(choice==0){
+                    builder.setTrackTypeDisabled(type,type==C.TRACK_TYPE_TEXT);
+                  } else {
+                    builder.setTrackTypeDisabled(type,false);
+                    builder.addOverride(new TrackSelectionOverride(groups.get(choice),indexes.get(choice)));
+                  }
+                  p.setTrackSelectionParameters(builder.build());
+                  dialog.dismiss();show(nm());
+                })
+                .setNegativeButton("Voltar",(dialog,which)->{})
+                .create();
+              choiceDialog.setOnDismissListener(dialog->trackDialogVisible=false);
+              choiceDialog.show();
             }
             void toggleFullscreen() {
               expandedVideo = !expandedVideo;
@@ -766,6 +830,7 @@ jobs:
               go(previousChannel-i);
             }
             void go(int d) {
+              resumedCurrentItem=false;
               selectedControl=-1;seekBarSelected=false;
               savePosition(true);cancelNext();
               if(!vod && d != 0)previousChannel=i;
@@ -859,6 +924,7 @@ jobs:
             // os controles; esquerda/direita navegam, OK executa o controle destacado.
             // ACTION_UP e repeticoes sao consumidos para impedir cliques residuais em Voltar.
             @Override public boolean dispatchKeyEvent(KeyEvent event) {
+              if(trackDialogVisible)return super.dispatchKeyEvent(event);
               int code=event.getKeyCode();
               boolean ok=code==KeyEvent.KEYCODE_DPAD_CENTER || code==KeyEvent.KEYCODE_ENTER;
               boolean mediaOk=code==KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE;
