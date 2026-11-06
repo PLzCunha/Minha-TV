@@ -634,6 +634,31 @@ jobs:
               }
               return super.dispatchTouchEvent(e);
             }
+            // Fire Stick: quando um VOD foi pausado, OK deve continuar a reprodução.
+            // A captura anterior ao dispatch dos controles evita que o botão "Voltar"
+            // que ficou com foco receba o mesmo OK e feche a Activity.
+            boolean resumeCenterPendingUp = false;
+            @Override public boolean dispatchKeyEvent(KeyEvent event) {
+              int code = event.getKeyCode();
+              boolean center = code == KeyEvent.KEYCODE_DPAD_CENTER || code == KeyEvent.KEYCODE_ENTER;
+              if (center && resumeCenterPendingUp) {
+                if (event.getAction() == KeyEvent.ACTION_UP) resumeCenterPendingUp = false;
+                return true;
+              }
+              if (center && vod && p != null && !p.getPlayWhenReady()
+                    && p.getPlaybackState() != Player.STATE_ENDED
+                    && !panelVisible) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                  resumeCenterPendingUp = true;
+                  if (event.getRepeatCount() == 0) {
+                    p.play();
+                    show(nm() + "  " + tm(p.getCurrentPosition()) + " / " + tm(p.getDuration()));
+                  }
+                }
+                return true;
+              }
+              return super.dispatchKeyEvent(event);
+            }
             @Override public boolean onKeyDown(int k, KeyEvent e) {
               boolean multi = list != null && list.length() > 1;
               if (panelVisible) {
