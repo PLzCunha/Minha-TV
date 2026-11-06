@@ -81,11 +81,13 @@ jobs:
             implementation 'androidx.media3:media3-exoplayer:1.3.1'
             implementation 'androidx.media3:media3-exoplayer-hls:1.3.1'
             implementation 'androidx.media3:media3-ui:1.3.1'
+            implementation 'androidx.core:core:1.12.0'
           }
           APPBUILD
           cat > app/src/main/AndroidManifest.xml <<'MANIFEST'
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
             <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
             <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
             <uses-feature android:name="android.software.leanback" android:required="false"/>
             <application android:label="Nico TV" android:icon="@drawable/nico_icon" android:banner="@drawable/nico_banner" android:usesCleartextTraffic="true" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
@@ -97,9 +99,19 @@ jobs:
                 </intent-filter>
               </activity>
               <activity android:name=".PlayerActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden"/>
+              <provider android:name="androidx.core.content.FileProvider" android:authorities="${applicationId}.fileprovider" android:exported="false" android:grantUriPermissions="true">
+                <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/nico_file_paths"/>
+              </provider>
             </application>
           </manifest>
           MANIFEST
+          mkdir -p app/src/main/res/xml
+          cat > app/src/main/res/xml/nico_file_paths.xml <<'FILEPATHS'
+          <?xml version="1.0" encoding="utf-8"?>
+          <paths xmlns:android="http://schemas.android.com/apk/res/android">
+            <external-files-path name="nico_updates" path="updates/"/>
+          </paths>
+          FILEPATHS
           cat > app/src/main/java/com/nicotv/app/MainActivity.java <<'MAINACTIVITY'
           package com.nicotv.app;
           import android.app.Activity;
@@ -109,6 +121,16 @@ jobs:
           import android.webkit.WebSettings;
           import android.webkit.WebView;
           import android.webkit.WebViewClient;
+          import android.app.AlertDialog;
+          import android.net.Uri;
+          import android.os.Build;
+          import android.provider.Settings;
+          import androidx.core.content.FileProvider;
+          import android.content.ActivityNotFoundException;
+          import java.io.File;
+          import java.io.FileOutputStream;
+          import java.io.InputStream;
+          import org.json.JSONArray;
           import android.view.inputmethod.InputMethodManager;
           import android.content.Context;
           import android.view.View;
@@ -155,6 +177,10 @@ jobs:
                 });
               }
 
+              @JavascriptInterface public void checkUpdates() {
+                runOnUiThread(() -> checkForNicoUpdates());
+              }
+
               @JavascriptInterface public void get(final String u, final String cb) {
                 new Thread(() -> {
                   String res; boolean ok = true;
@@ -193,6 +219,131 @@ jobs:
                 startActivity(t);
               }
             }
+            private static final String NICO_RELEASE_API = "https://api.github.com/repos/PlzCunha/Minha-TV/releases/latest";
+            private static final String NICO_RELEASES_PAGE = "https://github.com/PlzCunha/Minha-TV/releases/latest";
+            private volatile boolean nicoChecking = false;
+            private volatile boolean nicoDownloading = false;
+
+            private void nicoMessage(String title, String message) {
+              runOnUiThread(() -> new AlertDialog.Builder(this)
+                .setTitle(title).setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show());
+            }
+            private int releaseNumber(String tag) {
+              if (tag == null || !tag.matches("v[0-9]+")) return -1;
+              try { return Integer.parseInt(tag.substring(1)); } catch (Exception e) { return -1; }
+            }
+            private int installedNicoRun() {
+              try {
+                if (Build.VERSION.SDK_INT >= 28) return (int)(getPackageManager().getPackageInfo(getPackageName(), 0).getLongVersionCode() - 10000L);
+                return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode - 10000;
+              } catch (Exception e) { return -1; }
+            }
+            private String fetchJson(String address) throws Exception {
+              HttpURLConnection c = (HttpURLConnection)new URL(address).openConnection();
+              c.setConnectTimeout(12000);
+              c.setReadTimeout(15000);
+              c.setRequestProperty("Accept", "application/vnd.github+json");
+              c.setRequestProperty("User-Agent", "NicoTV-Android-Updater");
+              try {
+                int status = c.getResponseCode();
+                if (status != 200) throw new IOException("GitHub HTTP " + status + ". Confira se existe uma Release publica com nicotv.apk.");
+                try(InputStream in = c.getInputStream()) {
+                  byte[] b = new byte[8192]; int n; java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+                  while((n=in.read(b)) != -1) {out.write(b,0,n); if(out.size()>512*1024)throw new IOException("Resposta do GitHub excessiva");}
+                  return out.toString("UTF-8");
+                }
+              } finally { c.disconnect(); }
+            }
+            private void checkForNicoUpdates() {
+              if (nicoChecking || nicoDownloading) return;
+              nicoChecking = true;
+              new Thread(() -> {
+                try {
+                  JSONObject release = new JSONObject(fetchJson(NICO_RELEASE_API));
+                  String tag = release.optString("tag_name", "");
+                  int latest = releaseNumber(tag);
+                  int installed = installedNicoRun();
+                  if (latest < 0 || installed < 0) throw new IOException("Nao foi possivel identificar os codigos de versao.");
+                  JSONArray assets = release.optJSONArray("assets");
+                  String apkUrl = null;
+                  if (assets != null) for (int j=0;j<assets.length();j++) {
+                    JSONObject asset = assets.optJSONObject(j);
+                    if (asset != null && "nicotv.apk".equalsIgnoreCase(asset.optString("name"))) {
+                      apkUrl = asset.optString("browser_download_url", ""); break;
+                    }
+                  }
+                  final String expectedPrefix = "https://github.com/PlzCunha/Minha-TV/releases/download/";
+                  if (latest > installed && (apkUrl == null || !apkUrl.startsWith(expectedPrefix)))
+                    throw new IOException("A Release mais recente nao contem o arquivo nicotv.apk.");
+                  final String validApkUrl = apkUrl;
+                  runOnUiThread(() -> {
+                    if (latest > installed) {
+                      new AlertDialog.Builder(this)
+                        .setTitle("Atualizacao disponivel")
+                        .setMessage("Versao instalada: " + installed + "\nNova versao: " + latest + "\n\nDeseja baixar e instalar a atualizacao da Nico TV?")
+                        .setNegativeButton("Agora nao", (d,w) -> d.dismiss())
+                        .setPositiveButton("Baixar", (d,w) -> downloadNicoUpdate(validApkUrl))
+                        .show();
+                    } else {
+                      nicoMessage("Nico TV atualizada", "Voce ja esta na versao mais recente (" + installed + ").");
+                    }
+                  });
+                } catch(Exception e) {
+                  nicoMessage("Nao foi possivel verificar", String.valueOf(e.getMessage()) + "\n\nConfira sua conexao e se ha uma Release no GitHub.");
+                } finally { nicoChecking = false; }
+              }, "NicoTV-CheckUpdate").start();
+            }
+            private void downloadNicoUpdate(String downloadUrl) {
+              if(nicoDownloading) return;
+              if (Build.VERSION.SDK_INT >= 26 && !getPackageManager().canRequestPackageInstalls()) {
+                new AlertDialog.Builder(this).setTitle("Permitir instalacao")
+                  .setMessage("Autorize a Nico TV a instalar atualizacoes. Depois, abra Verificar atualizacoes novamente.")
+                  .setNegativeButton("Cancelar", (d,w) -> d.dismiss())
+                  .setPositiveButton("Abrir configuracoes", (d,w) -> {
+                    try { startActivity(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:"+getPackageName()))); }
+                    catch(Exception e) { nicoMessage("Permissao", "Habilite instalacao de aplicativos desconhecidos para Nico TV nas configuracoes do Fire TV."); }
+                  }).show();
+                return;
+              }
+              nicoDownloading = true;
+              nicoMessage("Baixando atualizacao", "O download comecou. O instalador sera aberto quando terminar.");
+              new Thread(() -> {
+                HttpURLConnection c = null;
+                try {
+                  File dir = new File(getExternalFilesDir(null), "updates");
+                  if(!dir.exists() && !dir.mkdirs())throw new IOException("Nao foi possivel criar a pasta de atualizacoes");
+                  File apk = new File(dir, "nicotv-update.apk");
+                  c=(HttpURLConnection)new URL(downloadUrl).openConnection();
+                  c.setConnectTimeout(20000); c.setReadTimeout(60000);
+                  c.setRequestProperty("User-Agent", "NicoTV-Android-Updater");
+                  if(c.getResponseCode()!=200)throw new IOException("Erro ao baixar APK: HTTP " + c.getResponseCode());
+                  long expected = c.getContentLengthLong();
+                  long received = 0;
+                  try(InputStream input=c.getInputStream(); FileOutputStream output=new FileOutputStream(apk)) {
+                    byte[] buffer=new byte[32768]; int n;
+                    while((n=input.read(buffer))!=-1){output.write(buffer,0,n); received+=n;}
+                  }
+                  if(received<100000 || (expected>0 && expected!=received))throw new IOException("Download incompleto: " + received + " bytes");
+                  final File ready = apk;
+                  runOnUiThread(() -> {
+                    try {
+                      Uri uri=FileProvider.getUriForFile(this,getPackageName()+".fileprovider",ready);
+                      Intent install=new Intent(Intent.ACTION_VIEW);
+                      install.setDataAndType(uri,"application/vnd.android.package-archive");
+                      install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                      startActivity(install);
+                    } catch(Exception e) {
+                      nicoMessage("Instalador indisponivel", "APK baixado, mas o Fire TV nao abriu o instalador: " + e.getMessage());
+                    }
+                  });
+                } catch(Exception e) {
+                  nicoMessage("Falha no download", String.valueOf(e.getMessage()) + "\n\nConfira a conexao e tente novamente.");
+                } finally { if(c!=null)c.disconnect(); nicoDownloading=false; }
+              }, "NicoTV-DownloadUpdate").start();
+            }
+
             String fetch(String u, int n) throws Exception {
               HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();
               c.setInstanceFollowRedirects(false);
