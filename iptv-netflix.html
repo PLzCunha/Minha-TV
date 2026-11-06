@@ -2735,6 +2735,11 @@ function nico21Focus(el){
   if(!el)return false;
   try{el.focus({preventScroll:true});}catch(_){el.focus();}
   el.scrollIntoView({block:'nearest',inline:'nearest',behavior:'auto'});
+  // Os filtros ficam no comeco da pagina: subir para eles deve recuperar
+  // tambem o topo visual, nao apenas trocar o foco fora da area visivel.
+  if(el.matches('.nico-category-option,.nico-category-trigger,.live-filter-chip') && !el.closest('.nico-category-panel')){
+    window.scrollTo({top:0,left:0,behavior:'auto'});
+  }
   if(el.closest('#app'))nico21LastContent=el;
   return true;
 }
@@ -2768,7 +2773,11 @@ function nico21VerticalShelf(el,dir){
  const shelf=el.closest('.nico2-shelf');if(!shelf)return null;
  const all=[...document.querySelectorAll('#app .nico2-shelf')];
  const idx=all.indexOf(shelf),other=all[idx+(dir==='ArrowDown'?1:-1)];
- if(!other)return null;
+ if(!other){
+   // Ao subir da primeira prateleira, regressar aos filtros/cabecalho do catalogo.
+   if(dir==='ArrowUp')return nico21Elements('.nico-category-option,.nico-category-trigger,.live-filter-chip,#app .nico2-page-heading button',document.getElementById('app'))[0]||nico21Content()[0]||null;
+   return null;
+ }
  const cards=nico21Elements('.card',other);if(!cards.length)return null;
  const x=el.getBoundingClientRect(),mid=(x.left+x.right)/2;
  return cards.reduce((best,c)=>Math.abs(((c.getBoundingClientRect().left+c.getBoundingClientRect().right)/2)-mid)<Math.abs(((best.getBoundingClientRect().left+best.getBoundingClientRect().right)/2)-mid)?c:best,cards[0]);
@@ -2866,7 +2875,7 @@ document.addEventListener('keydown',e=>{
   }else if(inQuick&&key==='ArrowUp'){
     next=nico21Directional(content.filter(x=>!x.closest('.nico-category-picker')),el,key);
   }
-  if(next){e.preventDefault();e.stopImmediatePropagation();nico21Focus(next);return;}
+  if(next && next!==el){e.preventDefault();e.stopImmediatePropagation();nico21Focus(next);return;}
  }
  const insideSidebar=sidebar.includes(el),insideContent=content.includes(el);
  let target=null;
@@ -2884,6 +2893,13 @@ document.addEventListener('keydown',e=>{
      if(!earlier)target=sidebar.find(x=>x.classList.contains('active'))||sidebar[0];
    }
    if(!target && (key==='ArrowUp'||key==='ArrowDown'))target=nico21Directional(content,el,key);
+   // Ao chegar ao limite superior do catalogo, permitir voltar ao seu inicio.
+   // Nunca aplicar no player, dialogos ou navegação lateral.
+   if(!target && key==='ArrowUp'){
+     const topControls=nico21Elements('.nico-category-option,.nico-category-trigger,.live-filter-chip,#app .nico2-hero button,#app .nico2-welcome button',document.getElementById('app'));
+     target=topControls[0]||nico21FirstContent();
+     if(target===el)window.scrollTo({top:0,behavior:'auto'});
+   }
    if(!target && (key==='ArrowLeft'||key==='ArrowRight')&&!el.closest('.nico2-shelf'))target=nico21Directional(content,el,key);
    if(!target && key==='ArrowLeft' && el.closest('.nico2-shelf') && !nico21ShelfNeighbor(el,key))target=sidebar.find(x=>x.classList.contains('active'))||sidebar[0];
  }else{
