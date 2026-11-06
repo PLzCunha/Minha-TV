@@ -255,7 +255,12 @@ jobs:
             FrameLayout panel; ScrollView panelScroll; LinearLayout panelRows; boolean panelVisible = false; int selection = 0; int previousChannel = -1; TextView previousControl;
             Handler h = new Handler();
             boolean overlayVisible = false; boolean expandedVideo = false; TextView fullscreenControl;
+            java.util.ArrayList<TextView> tvButtons = new java.util.ArrayList<>();
+            java.util.ArrayList<Runnable> tvButtonActions = new java.util.ArrayList<>();
+            int selectedControl = -1; boolean seekBarSelected = false;
+            boolean remoteOkHandled = false;
             Runnable hide = () -> {
+              if (selectedControl >= 0 || seekBarSelected || (p != null && vod && !p.getPlayWhenReady())) return;
               overlayVisible = false;
               title.setVisibility(View.GONE);
               footer.setVisibility(View.GONE);
@@ -279,14 +284,21 @@ jobs:
               title = new TextView(this);
               title.setTextColor(Color.WHITE);
               title.setTextSize(24);
-              title.setBackgroundColor(0xAA000000);
+              GradientDrawable titleBg = new GradientDrawable();
+              titleBg.setColor(0xD4090909);
+              titleBg.setCornerRadius(dp(12));
+              title.setBackground(titleBg);
               title.setPadding(34, 22, 34, 22);
               root.addView(title, new FrameLayout.LayoutParams(-1, -2, Gravity.TOP));
 
               footer = new TextView(this);
               footer.setTextColor(0xFFE6F0F6);
               footer.setTextSize(15);
-              footer.setBackgroundColor(0xBB0C2235);
+              GradientDrawable footerBg = new GradientDrawable();
+              footerBg.setColor(0xD90F0D0A);
+              footerBg.setCornerRadius(dp(12));
+              footerBg.setStroke(dp(1),0x668D6427);
+              footer.setBackground(footerBg);
               footer.setPadding(28, 16, 28, 16);
               FrameLayout.LayoutParams fp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
               fp.bottomMargin = 88;
@@ -295,22 +307,29 @@ jobs:
 
               timelineBox = new LinearLayout(this);
               timelineBox.setOrientation(LinearLayout.VERTICAL);
-              timelineBox.setPadding(dp(14),dp(6),dp(14),dp(5));
-              timelineBox.setBackgroundColor(0xE5111B29);
+              timelineBox.setPadding(dp(18),dp(9),dp(18),dp(10));
+              GradientDrawable timelineBg = new GradientDrawable();
+              timelineBg.setColor(0xEB0E0C09);
+              timelineBg.setCornerRadius(dp(17));
+              timelineBg.setStroke(dp(1),0x998B6429);
+              timelineBox.setBackground(timelineBg);
               FrameLayout.LayoutParams tlp = new FrameLayout.LayoutParams(-1,-2,Gravity.BOTTOM);
-              tlp.bottomMargin = dp(82);
+              tlp.bottomMargin = dp(92);
               tlp.leftMargin = dp(18);
               tlp.rightMargin = dp(18);
               root.addView(timelineBox,tlp);
               timeline = new SeekBar(this);
               timeline.setMax(1000);
+              timeline.setFocusable(false);
+              timeline.setSplitTrack(false);
+              timeline.setProgressBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFF4A3925));
               timeline.setProgressTintList(android.content.res.ColorStateList.valueOf(0xFFE4C16D));
               timeline.setThumbTintList(android.content.res.ColorStateList.valueOf(0xFFE4C16D));
-              timelineBox.addView(timeline,new LinearLayout.LayoutParams(-1,dp(30)));
+              timelineBox.addView(timeline,new LinearLayout.LayoutParams(-1,dp(26)));
               LinearLayout timeRow = new LinearLayout(this);
               timeRow.setGravity(Gravity.CENTER_VERTICAL);
               elapsed = new TextView(this);durationLabel=new TextView(this);
-              elapsed.setTextColor(0xFFE4C16D);durationLabel.setTextColor(Color.WHITE);
+              elapsed.setTextColor(0xFFFFD36B);durationLabel.setTextColor(0xFFE4D9C9);
               elapsed.setTextSize(15);durationLabel.setTextSize(15);
               timeRow.addView(elapsed,new LinearLayout.LayoutParams(0,-2,1));
               timeRow.addView(durationLabel);
@@ -332,15 +351,15 @@ jobs:
               controls = new LinearLayout(this);
               controls.setOrientation(LinearLayout.HORIZONTAL);
               controls.setGravity(Gravity.CENTER);
-              controls.setPadding(dp(5),dp(5),dp(5),dp(5));
+              controls.setPadding(dp(9),dp(8),dp(9),dp(8));
               GradientDrawable controlsBg = new GradientDrawable();
-              controlsBg.setColor(0xDE101926);
-              controlsBg.setCornerRadius(dp(18));
-              controlsBg.setStroke(dp(1),0x665D4C2E);
+              controlsBg.setColor(0xF00B0907);
+              controlsBg.setCornerRadius(dp(20));
+              controlsBg.setStroke(dp(1),0xAA9A7232);
               controls.setBackground(controlsBg);
               controls.setElevation(dp(10));
               FrameLayout.LayoutParams cp = new FrameLayout.LayoutParams(-2,-2,Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
-              cp.bottomMargin=dp(18);
+              cp.bottomMargin=dp(16);
               root.addView(controls,cp);
               addControl(controls,"‹", "Voltar", () -> finish());
               previousControl = addControl(controls,"⇆", "Voltar ao canal anterior", () -> returnPreviousChannel());
@@ -444,20 +463,65 @@ jobs:
               TextView b = new TextView(this);
               b.setText(label);
               b.setContentDescription(description);
-              b.setTextColor(0xFFFFE8B2);
-              b.setTextSize(22);
+              b.setTextColor(0xFFF3E9D8);
+              b.setTextSize(23);
               b.setGravity(Gravity.CENTER);
-              b.setFocusable(true);
+              // Fire TV: nenhum botao recebe foco Android residual; selecao pelo D-pad abaixo.
+              b.setFocusable(false);
+              b.setClickable(true);
               b.setPadding(0,0,0,0);
               GradientDrawable bg = new GradientDrawable();
-              bg.setColor(0xFF253249);
-              bg.setCornerRadius(dp(12));
+              bg.setColor(0xFF221C14);
+              bg.setCornerRadius(dp(13));
+              bg.setStroke(dp(1),0x665D482A);
               b.setBackground(bg);
-              LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(46),dp(44));
-              lp.setMargins(dp(3),0,dp(3),0);
+              LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(53),dp(48));
+              lp.setMargins(dp(4),0,dp(4),0);
               row.addView(b,lp);
+              tvButtons.add(b);
+              tvButtonActions.add(action);
               b.setOnClickListener(v -> action.run());
               return b;
+            }
+            int indexOfControl(TextView control){return tvButtons.indexOf(control);}
+            boolean isAvailableControl(int index){return index>=0&&index<tvButtons.size()&&tvButtons.get(index).getVisibility()==View.VISIBLE;}
+            void styleSelectedControl(){
+              for(int n=0;n<tvButtons.size();n++){
+                TextView b=tvButtons.get(n);
+                boolean chosen=n==selectedControl && b.getVisibility()==View.VISIBLE;
+                GradientDrawable bg=new GradientDrawable();
+                bg.setColor(chosen ? 0xFFF2C456 : 0xFF221C14);
+                bg.setCornerRadius(dp(13));
+                bg.setStroke(dp(chosen?2:1),chosen ? 0xFFFFE49A : 0x665D482A);
+                b.setBackground(bg);
+                b.setTextColor(chosen ? 0xFF160F06 : 0xFFF3E9D8);
+                b.setElevation(chosen?dp(7):0);
+              }
+              if(timelineBox!=null){
+                GradientDrawable bar=new GradientDrawable();
+                bar.setColor(0xEB0E0C09);
+                bar.setCornerRadius(dp(17));
+                bar.setStroke(dp(seekBarSelected?2:1),seekBarSelected?0xFFFFD36B:0x998B6429);
+                timelineBox.setBackground(bar);
+              }
+            }
+            void selectControl(int index){
+              if(index>=0 && isAvailableControl(index)){
+                selectedControl=index;seekBarSelected=false;
+              } else selectedControl=-1;
+              styleSelectedControl();
+              show(nm());
+            }
+            void moveControl(int direction){
+              if(selectedControl<0){selectControl(indexOfControl(playControl));return;}
+              int x=selectedControl;
+              for(int step=0;step<tvButtons.size();step++){
+                x=(x+direction+tvButtons.size())%tvButtons.size();
+                if(isAvailableControl(x)){selectControl(x);return;}
+              }
+            }
+            void activateControl(){
+              if(isAvailableControl(selectedControl))tvButtonActions.get(selectedControl).run();
             }
             String currentMediaKey(){
               try{return "vod_"+Integer.toHexString(list.getJSONArray(i).getString(1).hashCode());}
@@ -551,6 +615,7 @@ jobs:
               go(previousChannel-i);
             }
             void go(int d) {
+              selectedControl=-1;seekBarSelected=false;
               savePosition(true);cancelNext();
               if(!vod && d != 0)previousChannel=i;
               try {
@@ -609,21 +674,25 @@ jobs:
               show(nm());
             }
             void show(String t) {
-              title.setText(t + "  •  Nico TV 1.5.0");
+              title.setText(t + "  •  Nico TV");
               String program = "";
               try { program = list.getJSONArray(i).optString(2, ""); } catch(Exception ex) {}
               footer.setText(vod
-                ? "OK pausa/continua  •  ← → avança 10s"
+                ? "OK pausa/continua  •  ↓ controles  •  ← → seleciona botoes  •  ↑ barra"
                 : (list != null && list.length() > 1
                     ? ("Canal " + (i + 1) + "/" + list.length() + "  •  → lista  •  ↑ ↓ troca  •  ⇆ anterior" + (program.isEmpty() ? "" : "\n" + program))
                     : "Voltar sai do player"));
               overlayVisible = true;
               title.setVisibility(View.VISIBLE);
+              FrameLayout.LayoutParams fLayout=(FrameLayout.LayoutParams) footer.getLayoutParams();
+              fLayout.bottomMargin=dp(vod?190:88);
+              footer.setLayoutParams(fLayout);
               footer.setVisibility(View.VISIBLE);
               controls.setVisibility(View.VISIBLE);
               refreshTimeline();
               h.removeCallbacks(hide);
-              h.postDelayed(hide, 3000);
+              if(p!=null && p.isPlaying() && selectedControl<0 && !seekBarSelected) h.postDelayed(hide, 4500);
+              styleSelectedControl();
             }
             String nm() { try { return list.getJSONArray(i).getString(0); } catch (Exception x) { return ""; } }
             String tm(long ms) { long s = Math.max(0, ms / 1000); return s >= 3600 ? String.format(java.util.Locale.US,"%d:%02d:%02d",s/3600,(s%3600)/60,s%60) : String.format(java.util.Locale.US,"%02d:%02d", s/60,s%60); }
@@ -634,29 +703,47 @@ jobs:
               }
               return super.dispatchTouchEvent(e);
             }
-            // Fire Stick: quando um VOD foi pausado, OK deve continuar a reprodução.
-            // A captura anterior ao dispatch dos controles evita que o botão "Voltar"
-            // que ficou com foco receba o mesmo OK e feche a Activity.
-            boolean resumeCenterPendingUp = false;
+            // Fire Stick: tratamento do controle remoto ANTES de qualquer View.
+            // OK sem menu selecionado sempre pausa/continua. Seta para baixo revela
+            // os controles; esquerda/direita navegam, OK executa o controle destacado.
+            // ACTION_UP e repeticoes sao consumidos para impedir cliques residuais em Voltar.
             @Override public boolean dispatchKeyEvent(KeyEvent event) {
-              int code = event.getKeyCode();
-              boolean center = code == KeyEvent.KEYCODE_DPAD_CENTER || code == KeyEvent.KEYCODE_ENTER;
-              if (center && resumeCenterPendingUp) {
-                if (event.getAction() == KeyEvent.ACTION_UP) resumeCenterPendingUp = false;
-                return true;
+              int code=event.getKeyCode();
+              boolean ok=code==KeyEvent.KEYCODE_DPAD_CENTER || code==KeyEvent.KEYCODE_ENTER;
+              boolean mediaOk=code==KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE;
+              if((ok||mediaOk) && p!=null && vod && !panelVisible){
+                if(event.getAction()==KeyEvent.ACTION_UP){remoteOkHandled=false;return true;}
+                if(event.getAction()!=KeyEvent.ACTION_DOWN||event.getRepeatCount()!=0)return true;
+                if(remoteOkHandled)return true;
+                remoteOkHandled=true;
+                if(ok && episodes && nextPrompt.getVisibility()==View.VISIBLE && selectedControl<0){nextEpisode();return true;}
+                if(ok && selectedControl>=0){activateControl();return true;}
+                if(ok && seekBarSelected){seekBarSelected=false;selectControl(indexOfControl(playControl));return true;}
+                togglePlay();return true;
               }
-              if (center && vod && p != null && !p.getPlayWhenReady()
-                    && p.getPlaybackState() != Player.STATE_ENDED
-                    && !panelVisible) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                  resumeCenterPendingUp = true;
-                  if (event.getRepeatCount() == 0) {
-                    p.play();
-                    show(nm() + "  " + tm(p.getCurrentPosition()) + " / " + tm(p.getDuration()));
-                  }
+              if(event.getAction()==KeyEvent.ACTION_DOWN && p!=null && vod && !panelVisible){
+                if(code==KeyEvent.KEYCODE_DPAD_DOWN){
+                  if(seekBarSelected){selectControl(indexOfControl(playControl));}
+                  else if(selectedControl<0){selectControl(indexOfControl(playControl));}
+                  else {show(nm());}
+                  return true;
                 }
-                return true;
+                if(code==KeyEvent.KEYCODE_DPAD_UP){
+                  if(seekBarSelected){seekBarSelected=false;selectedControl=-1;styleSelectedControl();show(nm());return true;}
+                  if(selectedControl>=0 && timeline.isEnabled() && timelineBox.getVisibility()==View.VISIBLE){
+                    selectedControl=-1;seekBarSelected=true;styleSelectedControl();show(nm());
+                  } else if(selectedControl>=0){selectedControl=-1;seekBarSelected=false;styleSelectedControl();show(nm());}
+                  else {show(nm());}
+                  return true;
+                }
+                if(code==KeyEvent.KEYCODE_DPAD_LEFT || code==KeyEvent.KEYCODE_DPAD_RIGHT){
+                  if(selectedControl>=0){moveControl(code==KeyEvent.KEYCODE_DPAD_RIGHT?1:-1);return true;}
+                  // Com a barra escolhida, pular 10s e manter o marcador atualizado.
+                  if(seekBarSelected){seekSeconds(code==KeyEvent.KEYCODE_DPAD_RIGHT?10:-10);return true;}
+                }
               }
+              if((code==KeyEvent.KEYCODE_DPAD_LEFT||code==KeyEvent.KEYCODE_DPAD_RIGHT||code==KeyEvent.KEYCODE_DPAD_UP||code==KeyEvent.KEYCODE_DPAD_DOWN)
+                 && event.getAction()==KeyEvent.ACTION_UP && p!=null && vod && !panelVisible)return true;
               return super.dispatchKeyEvent(event);
             }
             @Override public boolean onKeyDown(int k, KeyEvent e) {
