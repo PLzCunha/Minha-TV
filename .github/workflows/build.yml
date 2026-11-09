@@ -1,4 +1,3 @@
-
 name: Build APK
 on:
   push:
@@ -178,6 +177,18 @@ jobs:
                 });
               }
 
+              @JavascriptInterface public void openExternal(String url) {
+                try {
+                  Uri u = Uri.parse(url);
+                  String host = u.getHost();
+                  if (!"https".equalsIgnoreCase(u.getScheme()) || host == null ||
+                      !(host.equalsIgnoreCase("youtube.com") || host.equalsIgnoreCase("www.youtube.com"))) return;
+                  runOnUiThread(() -> {
+                    try { startActivity(new Intent(Intent.ACTION_VIEW, u)); }
+                    catch (Exception ignored) { nicoMessage("Trailer", "Não há aplicativo disponível para abrir o YouTube."); }
+                  });
+                } catch(Exception ignored) {}
+              }
               @JavascriptInterface public void checkUpdates() {
                 runOnUiThread(() -> checkForNicoUpdates());
               }
@@ -284,7 +295,7 @@ jobs:
                       String name = asset.optString("name", "");
                       String url = asset.optString("browser_download_url", "");
                       if (name.toLowerCase(java.util.Locale.ROOT).endsWith(".apk")
-                          && url.regionMatches(true, 0, expectedPrefix, 0, expectedPrefix.length())
+                          && url.startsWith(expectedPrefix)
                           && asset.optLong("size", 0) > 100000) {
                         if (candidate == null || "nicotv.apk".equalsIgnoreCase(name)) candidate = url;
                         if ("nicotv.apk".equalsIgnoreCase(name)) break;
