@@ -1682,6 +1682,14 @@ html body.nico-expanded .sidebar .logo img {
 #infoDialog button:focus,#infoDialog button:focus-visible,#nicoTmdbUrl:focus{outline:4px solid #ffca4e!important;outline-offset:3px!important;box-shadow:0 0 0 6px #ffcd4e35!important}
 @media(max-width:750px){#infoDialog #infoContent{padding:14px 16px 25px}.nico27-body{padding:18px}.nico27-details .nico-tmdb-hero{height:170px!important}#infoDialog .info-actions{padding:10px 14px!important}#infoDialog .info-actions .btn{min-height:48px!important}}
 </style>
+<style id="nico272DpadFix">
+/* Nico TV 2.7.2: foco de controle remoto sempre visível nos botões de detalhes. */
+#infoDialog .info-actions{display:flex!important;flex-wrap:nowrap!important;gap:12px!important;align-items:stretch!important}
+#infoDialog .info-actions button{position:relative!important;flex-shrink:0!important;scroll-margin:10px!important}
+#infoDialog #infoWatch:not([hidden]){flex:1 1 auto!important;min-width:0!important}
+#infoDialog .info-actions button:focus{outline:4px solid #ffdb66!important;outline-offset:2px!important;box-shadow:0 0 0 6px #000b,0 0 0 9px #f5af36!important;z-index:5!important}
+@media(max-width:700px){#infoDialog .info-actions{gap:6px!important;padding:12px!important}#infoDialog .info-actions button{font-size:15px!important;padding:8px!important}}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -2100,6 +2108,7 @@ function showInfo(c,playAction){
  $('#infoContent').innerHTML=`<h2>${escapeHtml(c.name||'Informações')}</h2><div class="info-tags">${tags.map(t=>`<span class="info-chip">${escapeHtml(String(t))}</span>`).join('')}</div><p>${escapeHtml(String(description||'Sinopse não disponível na fonte IPTV.'))}</p>`;
  $('#infoWatch').hidden=!playAction;
  $('#infoDialog').showModal();
+ requestAnimationFrame(nicoInfoDefaultFocus);
  if(c.kind==='movie')nicoTmdbEnhanceMovie(c);
 }
 function currentProgramText(c){
@@ -2770,20 +2779,75 @@ $('#fullscreenBtn').onclick=()=>setFullscreen();
 $('#guidePlayerBtn').onclick=openGuide;
 $('#guideClose').onclick=()=>$('#guideDialog').close();
 
-/* Nico TV 2.7: navegação D-pad apenas na tela de detalhes (não interfere no player) */
-document.addEventListener('keydown',function(ev){
- const dlg=document.getElementById('infoDialog');if(!dlg||!dlg.open||document.getElementById('nicoTmdbConfig')?.hidden===false)return;
- const k=ev.key==='ArrowDown'||ev.keyCode===20?'down':ev.key==='ArrowUp'||ev.keyCode===19?'up':null;
- if(!k)return;
- const content=document.getElementById('infoContent');const active=document.activeElement;
- if(active&&active.closest('.info-actions')){
-  if(k==='up') {const btn=content.querySelector('[data-tmdb-trailer]');if(btn){ev.preventDefault();ev.stopImmediatePropagation();btn.focus();btn.scrollIntoView({block:'center'});}else{ev.preventDefault();content.scrollTop=Math.max(0,content.scrollTop-Math.round(content.clientHeight*.7));} }
- }else if(active&&active.closest('#infoContent')){
-  if(k==='down'){ev.preventDefault();content.scrollTop+=Math.round(content.clientHeight*.55);}
-  else if(k==='up'){ev.preventDefault();content.scrollTop-=Math.round(content.clientHeight*.55);}
+/* Nico TV 2.7.2 — controle explícito do foco D-pad no modal de detalhes.
+   Não interfere no player, na lista Xtream, nem nos controles fora do modal. */
+function nicoInfoFocusableActions(){
+ return [...document.querySelectorAll('#infoDialog .info-actions button')]
+  .filter(el=>!el.hidden&&!el.disabled&&el.getClientRects().length);
+}
+function nicoInfoFocus(el){
+ if(!el)return;
+ try{el.focus({preventScroll:true});}catch(_){el.focus();}
+}
+function nicoInfoDefaultFocus(){
+ const targets=nicoInfoFocusableActions();
+ nicoInfoFocus(document.getElementById('infoWatch')?.hidden?(targets[0]||null):document.getElementById('infoWatch'));
+}
+function nicoInfoKeyDirection(e){
+ const code=e.keyCode;
+ if(e.key==='ArrowLeft'||code===21)return 'left';
+ if(e.key==='ArrowRight'||code===22)return 'right';
+ if(e.key==='ArrowUp'||code===19)return 'up';
+ if(e.key==='ArrowDown'||code===20)return 'down';
+ return '';
+}
+/* A captura evita que o WebView desvie o foco para o catálogo por trás do dialog. */
+document.addEventListener('keydown',function(e){
+ const dlg=document.getElementById('infoDialog');
+ if(!dlg?.open||document.getElementById('nicoTmdbConfig')?.hidden===false)return;
+ const direction=nicoInfoKeyDirection(e);
+ const ok=e.key==='Enter'||e.key===' '||e.key==='NumpadEnter'||e.keyCode===23||e.keyCode===66;
+ if(!direction&&!ok)return;
+ const actions=nicoInfoFocusableActions();
+ const active=document.activeElement;
+ const content=document.getElementById('infoContent');
+ const trailer=content?.querySelector('[data-tmdb-trailer]');
+ const inFooter=actions.includes(active);
+ if(ok){
+   if(inFooter||active===trailer){
+     e.preventDefault();e.stopImmediatePropagation();
+     if(!e.repeat)active.click();
+   }else{
+     e.preventDefault();e.stopImmediatePropagation();
+     nicoInfoDefaultFocus();
+   }
+   return;
+ }
+ e.preventDefault();e.stopImmediatePropagation();
+ if(inFooter){
+   const index=actions.indexOf(active);
+   if(direction==='left')nicoInfoFocus(actions[Math.max(0,index-1)]);
+   if(direction==='right')nicoInfoFocus(actions[Math.min(actions.length-1,index+1)]);
+   if(direction==='up'){
+     if(trailer){nicoInfoFocus(trailer);trailer.scrollIntoView({block:'center'});}
+     else if(content){content.scrollTop=Math.max(0,content.scrollTop-Math.max(180,Math.round(content.clientHeight*.65)));}
+   }
+   return;
+ }
+ if(direction==='down'){
+   if(active===trailer){nicoInfoDefaultFocus();return;}
+   if(content){
+     const maxScroll=Math.max(0,content.scrollHeight-content.clientHeight);
+     if(content.scrollTop>=maxScroll-12){nicoInfoDefaultFocus();}
+     else content.scrollTop=Math.min(maxScroll,content.scrollTop+Math.max(140,Math.round(content.clientHeight*.7)));
+   }else nicoInfoDefaultFocus();
+ }else if(direction==='up'){
+   if(content)content.scrollTop=Math.max(0,content.scrollTop-Math.max(140,Math.round(content.clientHeight*.7)));
+ }else if(direction==='left'||direction==='right'){
+   /* Conteúdo informativo não rouba foco: a seta leva aos botões. */
+   nicoInfoDefaultFocus();
  }
 },true);
-
 $('#infoClose').onclick=()=>$('#infoDialog').close();
 $('#nicoTmdbSettings').onclick=nicoTmdbSetEndpoint;
 $('#nicoTmdbSave').onclick=nicoTmdbSaveEndpoint;
