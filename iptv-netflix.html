@@ -880,6 +880,16 @@ html,body{background:#030a12!important;color:#f7f9fc!important;font-family:Manro
  outline:3px solid #ffda70!important;outline-offset:3px!important;
  box-shadow:0 0 0 2px #1b1305,0 0 19px rgba(255,191,62,.48)!important;
 }
+
+/* Nico TV TMDB - configuracao nativa compatível com WebView / D-pad */
+#nicoTmdbConfig[hidden]{display:none!important}
+#nicoTmdbConfig{margin-top:14px;padding:16px;border:1px solid #a67e33;border-radius:14px;background:#17171d;display:grid;gap:12px}
+#nicoTmdbConfig label{color:#f4c765;font-weight:700}
+#nicoTmdbUrl{box-sizing:border-box;width:100%;min-height:48px;background:#090e18;border:1px solid #b28d42;border-radius:10px;color:#fff;padding:12px 14px;font-size:16px}
+#nicoTmdbUrl:focus-visible,#nicoTmdbConfig button:focus-visible{outline:3px solid #ffd25e;outline-offset:3px}
+.nico-tmdb-config-actions{display:flex;gap:12px;flex-wrap:wrap}
+#nicoTmdbConfigMessage{color:#c7b69a}
+
 </style>
 <style id="nicoGoldVisualLayer">
 
@@ -1689,7 +1699,7 @@ html body.nico-expanded .sidebar .logo img {
 </div>
 
 <dialog id="guideDialog" class="guide-modal" aria-label="Guia de programação"><div class="guide-header"><h2>▦ Guia de programação</h2><button class="btn" id="guideClose">Fechar</button></div><div id="guideContent" class="guide-content"></div></dialog>
-<dialog id="infoDialog" class="info-dialog" aria-label="Informações do conteúdo"><div id="infoContent"></div><div class="info-actions"><button class="btn main" id="infoWatch">▶ Assistir</button><button class="btn" id="nicoTmdbSettings">⚙ TMDB</button><button class="btn" id="infoClose">Fechar</button></div></dialog>
+<dialog id="infoDialog" class="info-dialog" aria-label="Informações do conteúdo"><div id="infoContent"></div><section id="nicoTmdbConfig" class="nico-tmdb-config" hidden><label for="nicoTmdbUrl">Endereço do serviço TMDB</label><input id="nicoTmdbUrl" type="url" autocomplete="off" spellcheck="false" inputmode="url" placeholder="https://seu-worker.workers.dev"><div class="nico-tmdb-config-actions"><button type="button" class="btn" id="nicoTmdbSave">Salvar e atualizar</button><button type="button" class="btn" id="nicoTmdbCancel">Cancelar</button></div><small id="nicoTmdbConfigMessage" role="status">O token fica protegido no Cloudflare; informe somente a URL.</small></section><div class="info-actions"><button class="btn main" id="infoWatch">▶ Assistir</button><button class="btn" id="nicoTmdbSettings">⚙ TMDB</button><button class="btn" id="infoClose">Fechar</button></div></dialog>
 
 <div id="player">
   <video id="video" autoplay playsinline></video>
@@ -1991,17 +2001,32 @@ function openGuide(){
 const NICO_TMDB_ENDPOINT_KEY='nico_tmdb_proxy_endpoint';
 const nicoTmdbCache=new Map();
 let nicoTmdbDialogRequest=0;
-function nicoTmdbEndpoint(){return (store.get(NICO_TMDB_ENDPOINT_KEY)||'').trim().replace(/\/+$/,'');}
+const NICO_TMDB_DEFAULT_ENDPOINT='https://nico-tv-tmdb.dropemarkt.workers.dev';
+function nicoTmdbEndpoint(){const saved=store.get(NICO_TMDB_ENDPOINT_KEY);return (saved===null?NICO_TMDB_DEFAULT_ENDPOINT:saved).trim().replace(/\/+$/,'');}
 function nicoTmdbYear(value){const m=String(value||'').match(/(?:19|20)\d{2}/);return m?m[0]:'';}
 function nicoTmdbSafeUrl(value){try{const u=new URL(value);return u.protocol==='https:'?u.href:'';}catch(_){return '';}}
+let nicoTmdbCurrentMovie=null;
 function nicoTmdbSetEndpoint(){
- const current=nicoTmdbEndpoint();
- const answer=prompt('URL HTTPS do Worker Nico TV TMDB (sem token). Deixe vazio para desativar:',current);
- if(answer===null)return;
- const value=answer.trim().replace(/\/+$/,'');
- if(value&&!nicoTmdbSafeUrl(value)){toast('Informe uma URL HTTPS válida.');return;}
- store.set(NICO_TMDB_ENDPOINT_KEY,value);nicoTmdbCache.clear();toast(value?'Serviço TMDB configurado':'Integração TMDB desativada');
- if($('#infoDialog').open) {const b=$('#nicoTmdbStatus');if(b)b.textContent=value?'Abra o título novamente para buscar dados TMDB.':'TMDB desativado.';}
+ const panel=$('#nicoTmdbConfig');
+ if(!panel)return;
+ panel.hidden=false;
+ $('#nicoTmdbUrl').value=nicoTmdbEndpoint();
+ $('#nicoTmdbConfigMessage').textContent='O token fica protegido no Cloudflare; informe somente a URL.';
+ panel.scrollIntoView({block:'nearest',behavior:'smooth'});
+ $('#nicoTmdbUrl').focus();
+}
+function nicoTmdbSaveEndpoint(){
+ const field=$('#nicoTmdbUrl'),value=field.value.trim().replace(/\/+$/,'');
+ if(value&&!nicoTmdbSafeUrl(value)){
+  $('#nicoTmdbConfigMessage').textContent='Informe uma URL HTTPS válida.';field.focus();return;
+ }
+ store.set(NICO_TMDB_ENDPOINT_KEY,value);
+ nicoTmdbCache.clear();$('#nicoTmdbConfig').hidden=true;
+ toast(value?'Serviço TMDB configurado':'Integração TMDB desativada');
+ if($('#infoDialog').open&&nicoTmdbCurrentMovie){
+  $('#nicoTmdbStatus')?.remove();
+  nicoTmdbEnhanceMovie(nicoTmdbCurrentMovie);
+ }
 }
 function nicoTmdbFmtMoney(n){return Number(n)>0?'US$ '+Number(n).toLocaleString('pt-BR'):'';}
 function nicoTmdbHtml(d){
@@ -2037,6 +2062,8 @@ let infoPlayAction=null;
 function showInfo(c,playAction){
  ++nicoTmdbDialogRequest;
  infoPlayAction=playAction;
+ nicoTmdbCurrentMovie=c.kind==='movie'?c:null;
+ $('#nicoTmdbConfig').hidden=true;
  const description=c.description||c.plot||c.info?.plot||'';
  const tags=[c.group||c.category,c.year||c.releaseDate,c.genre,c.rating?`★ ${c.rating}`:'',c.duration].filter(Boolean);
  $('#infoContent').innerHTML=`<h2>${escapeHtml(c.name||'Informações')}</h2><div class="info-tags">${tags.map(t=>`<span class="info-chip">${escapeHtml(String(t))}</span>`).join('')}</div><p>${escapeHtml(String(description||'Sinopse não disponível na fonte IPTV.'))}</p>`;
@@ -2713,6 +2740,9 @@ $('#guidePlayerBtn').onclick=openGuide;
 $('#guideClose').onclick=()=>$('#guideDialog').close();
 $('#infoClose').onclick=()=>$('#infoDialog').close();
 $('#nicoTmdbSettings').onclick=nicoTmdbSetEndpoint;
+$('#nicoTmdbSave').onclick=nicoTmdbSaveEndpoint;
+$('#nicoTmdbCancel').onclick=()=>{$('#nicoTmdbConfig').hidden=true;$('#nicoTmdbSettings').focus();};
+$('#nicoTmdbUrl').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nicoTmdbSaveEndpoint();}else if(e.key==='Escape'){$('#nicoTmdbConfig').hidden=true;e.stopPropagation();}});
 $('#infoWatch').onclick=()=>{const fn=infoPlayAction;$('#infoDialog').close(); if(fn)fn();};
 $('#audioBtn').onclick=()=>showTracks('audio');
 $('#subtitleBtn').onclick=()=>showTracks('subtitle');
