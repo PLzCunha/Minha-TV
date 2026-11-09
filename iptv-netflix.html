@@ -1641,6 +1641,9 @@ html body.nico-expanded .sidebar .logo img {
 @media(max-width:760px){#app .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;}}
 @media(max-width:520px){#app .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;}}
 </style>
+<style id="nicoTmdbStyle">
+.nico-tmdb-section{margin-top:22px;padding:18px;border:1px solid #66502b;border-radius:18px;background:#11131c;color:#eee;max-width:100%;overflow:hidden}.nico-tmdb-section h3{font-size:clamp(22px,2.3vw,34px);margin:6px 0 12px}.nico-tmdb-section h4{margin:24px 0 12px;color:#f1be59}.nico-tmdb-section p{line-height:1.55;white-space:normal}.nico-tmdb-brand{color:#e7b550;font-weight:750;letter-spacing:.09em;font-size:12px}.nico-tmdb-hero{height:clamp(140px,23vw,260px);background-position:center;background-size:cover;border-radius:13px;margin-bottom:12px}.nico-tmdb-cast{display:flex;gap:15px;overflow-x:auto;padding:5px 0 15px;scroll-snap-type:x proximity}.nico-tmdb-actor{width:100px;flex:0 0 100px;text-align:center;scroll-snap-align:start}.nico-tmdb-actor img,.nico-tmdb-avatar{width:82px;height:82px;object-fit:cover;display:flex;align-items:center;justify-content:center;border-radius:50%;margin:auto auto 7px;background:#34313b}.nico-tmdb-actor strong,.nico-tmdb-actor small{display:block;font-size:12px;overflow-wrap:anywhere}.nico-tmdb-actor small{color:#aaa}.nico-tmdb-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.nico-tmdb-facts div{display:grid;gap:5px}.nico-tmdb-facts strong{color:#d8ba80}.nico-tmdb-facts span{overflow-wrap:anywhere}.nico-tmdb-trailer{margin-top:24px!important;border:1px solid #d5a745!important}.nico-tmdb-series{grid-column:1/-1;margin-top:14px}.nico-tmdb-status,.nico-tmdb-series:empty{color:#c9b68d;padding:12px}#infoDialog.info-dialog{max-height:88vh;overflow-y:auto;max-width:min(910px,94vw)!important}#infoDialog .info-actions{position:sticky;bottom:-2px;padding:12px 0;background:#141216;z-index:2}@media(max-width:600px){.nico-tmdb-facts{grid-template-columns:1fr}.nico-tmdb-section{padding:12px}.nico-tmdb-actor{flex-basis:85px;width:85px}}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -1686,7 +1689,7 @@ html body.nico-expanded .sidebar .logo img {
 </div>
 
 <dialog id="guideDialog" class="guide-modal" aria-label="Guia de programação"><div class="guide-header"><h2>▦ Guia de programação</h2><button class="btn" id="guideClose">Fechar</button></div><div id="guideContent" class="guide-content"></div></dialog>
-<dialog id="infoDialog" class="info-dialog" aria-label="Informações do conteúdo"><div id="infoContent"></div><div class="info-actions"><button class="btn main" id="infoWatch">▶ Assistir</button><button class="btn" id="infoClose">Fechar</button></div></dialog>
+<dialog id="infoDialog" class="info-dialog" aria-label="Informações do conteúdo"><div id="infoContent"></div><div class="info-actions"><button class="btn main" id="infoWatch">▶ Assistir</button><button class="btn" id="nicoTmdbSettings">⚙ TMDB</button><button class="btn" id="infoClose">Fechar</button></div></dialog>
 
 <div id="player">
   <video id="video" autoplay playsinline></video>
@@ -1984,14 +1987,62 @@ function openGuide(){
   }
   $('#guideDialog').showModal();
 }
+/* Nico TV + TMDB: somente metadados, nunca modifica URLs da playlist nem player. */
+const NICO_TMDB_ENDPOINT_KEY='nico_tmdb_proxy_endpoint';
+const nicoTmdbCache=new Map();
+let nicoTmdbDialogRequest=0;
+function nicoTmdbEndpoint(){return (store.get(NICO_TMDB_ENDPOINT_KEY)||'').trim().replace(/\/+$/,'');}
+function nicoTmdbYear(value){const m=String(value||'').match(/(?:19|20)\d{2}/);return m?m[0]:'';}
+function nicoTmdbSafeUrl(value){try{const u=new URL(value);return u.protocol==='https:'?u.href:'';}catch(_){return '';}}
+function nicoTmdbSetEndpoint(){
+ const current=nicoTmdbEndpoint();
+ const answer=prompt('URL HTTPS do Worker Nico TV TMDB (sem token). Deixe vazio para desativar:',current);
+ if(answer===null)return;
+ const value=answer.trim().replace(/\/+$/,'');
+ if(value&&!nicoTmdbSafeUrl(value)){toast('Informe uma URL HTTPS válida.');return;}
+ store.set(NICO_TMDB_ENDPOINT_KEY,value);nicoTmdbCache.clear();toast(value?'Serviço TMDB configurado':'Integração TMDB desativada');
+ if($('#infoDialog').open) {const b=$('#nicoTmdbStatus');if(b)b.textContent=value?'Abra o título novamente para buscar dados TMDB.':'TMDB desativado.';}
+}
+function nicoTmdbFmtMoney(n){return Number(n)>0?'US$ '+Number(n).toLocaleString('pt-BR'):'';}
+function nicoTmdbHtml(d){
+ const h=escapeHtml, tags=[d.year,d.runtime?d.runtime+' min':'',...(d.genres||[]),d.voteAverage?'★ TMDB '+Number(d.voteAverage).toFixed(1):''].filter(Boolean);
+ const cast=(d.cast||[]).slice(0,12).map(a=>`<div class="nico-tmdb-actor">${nicoTmdbSafeUrl(a.photo)?`<img loading="lazy" src="${h(a.photo)}" alt="">`:'<span class="nico-tmdb-avatar">★</span>'}<strong>${h(a.name)}</strong><small>${h(a.character||'')}</small></div>`).join('');
+ const fields=[['Lançamento',d.releaseDate],['Direção',(d.directors||[]).join(', ')],['Orçamento',nicoTmdbFmtMoney(d.budget)],['Gêneros',(d.genres||[]).join(', ')]].filter(x=>x[1]);
+ const poster=nicoTmdbSafeUrl(d.backdrop);
+ return `<section class="nico-tmdb-section">${poster?`<div class="nico-tmdb-hero" style="background-image:linear-gradient(0deg,#100f12,transparent),url('${h(poster)}')"></div>`:''}<div class="nico-tmdb-heading"><span class="nico-tmdb-brand">TMDB · METADADOS</span><h3>${h(d.title)}</h3><div class="info-tags">${tags.map(t=>`<span class="info-chip">${h(t)}</span>`).join('')}</div></div>${d.overview?`<p>${h(d.overview)}</p>`:''}${cast?`<h4>Elenco</h4><div class="nico-tmdb-cast">${cast}</div>`:''}${fields.length?`<h4>Informações</h4><div class="nico-tmdb-facts">${fields.map(f=>`<div><strong>${h(f[0])}</strong><span>${h(f[1])}</span></div>`).join('')}</div>`:''}${nicoTmdbSafeUrl(d.trailerUrl)&&new URL(d.trailerUrl).hostname==='www.youtube.com'?`<button type="button" class="btn nico-tmdb-trailer" data-tmdb-trailer="${h(d.trailerUrl)}">▶ Assistir trailer no YouTube</button>`:''}</section>`;
+}
+function nicoTmdbAttachTrailers(root){root.querySelectorAll('[data-tmdb-trailer]').forEach(b=>{b.onclick=()=>{const url=nicoTmdbSafeUrl(b.dataset.tmdbTrailer);if(url&&new URL(url).hostname==='www.youtube.com')window.open(url,'_blank','noopener,noreferrer');};});}
+async function nicoTmdbGet(c,type){
+ const endpoint=nicoTmdbEndpoint();if(!endpoint)return null;
+ const title=String(c.name||'').trim();if(!title)return null;
+ const url=new URL(endpoint+'/metadata');url.searchParams.set('title',title);url.searchParams.set('type',type);const year=nicoTmdbYear(c.year);if(year)url.searchParams.set('year',year);
+ const key=url.toString();if(nicoTmdbCache.has(key))return nicoTmdbCache.get(key);
+ const data=await getJSON(key);if(data&&data.matched===true){nicoTmdbCache.set(key,data);if(nicoTmdbCache.size>90)nicoTmdbCache.delete(nicoTmdbCache.keys().next().value);return data;}return null;
+}
+async function nicoTmdbEnhanceMovie(c){
+ const stamp=++nicoTmdbDialogRequest,root=$('#infoContent');if(!root)return;
+ const panel=document.createElement('div');panel.id='nicoTmdbStatus';panel.className='nico-tmdb-status';panel.textContent=nicoTmdbEndpoint()?'Buscando informações cinematográficas…':'TMDB não configurado. Selecione ⚙ TMDB para informar a URL do serviço.';root.append(panel);
+ if(!nicoTmdbEndpoint())return;
+ try{const d=await nicoTmdbGet(c,'movie');if(stamp!==nicoTmdbDialogRequest||!$('#infoDialog').open||!panel.isConnected)return;if(!d){panel.textContent='Título não localizado com segurança no TMDB. Informações IPTV preservadas.';return;}panel.outerHTML=nicoTmdbHtml(d);nicoTmdbAttachTrailers(root);}
+ catch(e){if(stamp===nicoTmdbDialogRequest&&panel.isConnected)panel.textContent='TMDB indisponível. Informações IPTV preservadas.';}
+}
+async function nicoTmdbEnhanceSeries(c,detail){
+ const host=$('#nicoTmdbSeries');if(!host)return;
+ if(!nicoTmdbEndpoint()){host.textContent='TMDB não configurado. Abra um filme e selecione ⚙ TMDB.';return;}
+ host.textContent='Buscando elenco, avaliações e ficha técnica…';
+ try{const d=await nicoTmdbGet(c,'tv');if(state.detail!==detail||!host.isConnected)return;if(!d){host.textContent='Título não localizado no TMDB.';return;}host.innerHTML=nicoTmdbHtml(d);nicoTmdbAttachTrailers(host);}
+ catch(e){if(host.isConnected)host.textContent='Não foi possível consultar o TMDB.';}
+}
 let infoPlayAction=null;
 function showInfo(c,playAction){
-  infoPlayAction=playAction;
-  const description=c.description||c.plot||c.info?.plot||'';
-  const tags=[c.group||c.category,c.year||c.releaseDate,c.genre,c.rating?`★ ${c.rating}`:'',c.duration].filter(Boolean);
-  $('#infoContent').innerHTML=`<h2>${escapeHtml(c.name||'Informações')}</h2><div class="info-tags">${tags.map(t=>`<span class="info-chip">${escapeHtml(String(t))}</span>`).join('')}</div><p>${escapeHtml(String(description||'Sinopse não disponível na fonte IPTV.'))}</p>`;
-  $('#infoWatch').hidden=!playAction;
-  $('#infoDialog').showModal();
+ ++nicoTmdbDialogRequest;
+ infoPlayAction=playAction;
+ const description=c.description||c.plot||c.info?.plot||'';
+ const tags=[c.group||c.category,c.year||c.releaseDate,c.genre,c.rating?`★ ${c.rating}`:'',c.duration].filter(Boolean);
+ $('#infoContent').innerHTML=`<h2>${escapeHtml(c.name||'Informações')}</h2><div class="info-tags">${tags.map(t=>`<span class="info-chip">${escapeHtml(String(t))}</span>`).join('')}</div><p>${escapeHtml(String(description||'Sinopse não disponível na fonte IPTV.'))}</p>`;
+ $('#infoWatch').hidden=!playAction;
+ $('#infoDialog').showModal();
+ if(c.kind==='movie')nicoTmdbEnhanceMovie(c);
 }
 function currentProgramText(c){
   const epg=epgFor(c); if(!epg) return '';
@@ -2375,6 +2426,8 @@ function renderDetail(app){
       } else episodeThumb.classList.add('nico-ep-no-image');
     }
     item.onclick=()=>openItem(ep,[].concat(...d.seasons.map(s=>s.eps))); item.onkeydown=e=>{ if(e.target!==item)return; if(e.key==='Enter'||e.key===' '){ e.preventDefault(); item.click(); } }; item.querySelector('button').onclick=e=>{ e.stopPropagation(); item.click(); }; list.append(item); });
+  const tmdbSeries=document.createElement('section');tmdbSeries.id='nicoTmdbSeries';tmdbSeries.className='nico-tmdb-series';tmdbSeries.setAttribute('aria-label','Ficha técnica TMDB');app.append(tmdbSeries);
+  if(d.nicoOriginal)nicoTmdbEnhanceSeries(d.nicoOriginal,d);
   focusFirst();
 }
 function openItem(c,list){ markRecent(c); if(c.kind==='series'){ openSeries(c); } else if(c.kind==='movie'){ openMovieInfo(c); } else if(c.kind==='ep'){ play(list,list.indexOf(c),true); } else { play(list,list.indexOf(c),false); } }
@@ -2383,7 +2436,7 @@ function openItem(c,list){ markRecent(c); if(c.kind==='series'){ openSeries(c); 
 async function fetchCats(action){ const cs=await getJSON(state.xt.api+'&action='+action), out={}; (Array.isArray(cs)?cs:[]).forEach(c=>out[c.category_id]=c.category_name); return out; }
 async function loadVod({silent=false}={}){ if(!silent){state.loading=true;render();} try{ const [n,st]=await Promise.all([fetchCats('get_vod_categories'),getJSON(state.xt.api+'&action=get_vod_streams')]); state.movies=(Array.isArray(st)?st:[]).map(s=>({kind:'movie',name:s.name||'Sem nome',logo:s.stream_icon||'',group:n[s.category_id]||'Outros',id:s.stream_id,description:s.plot||'',year:s.year||'',rating:s.rating||'',genre:s.genre||'',url:`${state.xt.base}/movie/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${s.stream_id}.${s.container_extension||'mp4'}`})); } catch(e){ state.movies=[]; } if(!silent)state.loading=false; }
 async function loadSeries({silent=false}={}){ if(!silent){state.loading=true;render();} try{ const [n,st]=await Promise.all([fetchCats('get_series_categories'),getJSON(state.xt.api+'&action=get_series')]); state.series=(Array.isArray(st)?st:[]).map(s=>({kind:'series',id:s.series_id,name:s.name||'Sem nome',logo:s.cover||'',group:n[s.category_id]||'Outros',description:s.plot||'',year:s.releaseDate||'',rating:s.rating||'',genre:s.genre||''})); } catch(e){ state.series=[]; } if(!silent)state.loading=false; }
-async function openSeries(c){ state.loading=true; render(); try{ const d=await getJSON(`${state.xt.api}&action=get_series_info&series_id=${c.id}`); const seasons=Object.keys(d.episodes||{}).sort((a,b)=>a-b).map(n=>({n,eps:d.episodes[n].map(e=>({kind:'ep',name:(`E${e.episode_num}. ${e.title||''}`).trim(),logo:(e.info&&e.info.movie_image)||c.logo,seriesId:c.id,seriesName:c.name,season:n,episode:e.episode_num,url:`${state.xt.base}/series/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${e.id}.${e.container_extension||'mp4'}`}))})); state.detail=seasons.length?{name:c.name,logo:c.logo,seasons,description:d.info?.plot||c.description||'',genre:d.info?.genre||c.genre||'',year:d.info?.releaseDate||c.year||'',rating:d.info?.rating||c.rating||''}:null; state.detailSeason=0; } catch(e){ state.detail=null; } state.loading=false; render(); }
+async function openSeries(c){ state.loading=true; render(); try{ const d=await getJSON(`${state.xt.api}&action=get_series_info&series_id=${c.id}`); const seasons=Object.keys(d.episodes||{}).sort((a,b)=>a-b).map(n=>({n,eps:d.episodes[n].map(e=>({kind:'ep',name:(`E${e.episode_num}. ${e.title||''}`).trim(),logo:(e.info&&e.info.movie_image)||c.logo,seriesId:c.id,seriesName:c.name,season:n,episode:e.episode_num,url:`${state.xt.base}/series/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${e.id}.${e.container_extension||'mp4'}`}))})); state.detail=seasons.length?{name:c.name,logo:c.logo,seasons,description:d.info?.plot||c.description||'',genre:d.info?.genre||c.genre||'',year:d.info?.releaseDate||c.year||'',rating:d.info?.rating||c.rating||'',nicoOriginal:c}:null; state.detailSeason=0; } catch(e){ state.detail=null; } state.loading=false; render(); }
 
 async function openMovieInfo(c){
   let metadata={...c};
@@ -2659,6 +2712,7 @@ $('#fullscreenBtn').onclick=()=>setFullscreen();
 $('#guidePlayerBtn').onclick=openGuide;
 $('#guideClose').onclick=()=>$('#guideDialog').close();
 $('#infoClose').onclick=()=>$('#infoDialog').close();
+$('#nicoTmdbSettings').onclick=nicoTmdbSetEndpoint;
 $('#infoWatch').onclick=()=>{const fn=infoPlayAction;$('#infoDialog').close(); if(fn)fn();};
 $('#audioBtn').onclick=()=>showTracks('audio');
 $('#subtitleBtn').onclick=()=>showTracks('subtitle');
