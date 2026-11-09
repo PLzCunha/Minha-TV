@@ -891,6 +891,7 @@ html,body{background:#030a12!important;color:#f7f9fc!important;font-family:Manro
 #nicoTmdbConfigMessage{color:#c7b69a}
 
 </style>
+
 <style id="nicoGoldVisualLayer">
 
 /* NICO TV 2.0 | VISUAL CINEMA GRAFITE / DOURADO
@@ -1654,6 +1655,33 @@ html body.nico-expanded .sidebar .logo img {
 <style id="nicoTmdbStyle">
 .nico-tmdb-section{margin-top:22px;padding:18px;border:1px solid #66502b;border-radius:18px;background:#11131c;color:#eee;max-width:100%;overflow:hidden}.nico-tmdb-section h3{font-size:clamp(22px,2.3vw,34px);margin:6px 0 12px}.nico-tmdb-section h4{margin:24px 0 12px;color:#f1be59}.nico-tmdb-section p{line-height:1.55;white-space:normal}.nico-tmdb-brand{color:#e7b550;font-weight:750;letter-spacing:.09em;font-size:12px}.nico-tmdb-hero{height:clamp(140px,23vw,260px);background-position:center;background-size:cover;border-radius:13px;margin-bottom:12px}.nico-tmdb-cast{display:flex;gap:15px;overflow-x:auto;padding:5px 0 15px;scroll-snap-type:x proximity}.nico-tmdb-actor{width:100px;flex:0 0 100px;text-align:center;scroll-snap-align:start}.nico-tmdb-actor img,.nico-tmdb-avatar{width:82px;height:82px;object-fit:cover;display:flex;align-items:center;justify-content:center;border-radius:50%;margin:auto auto 7px;background:#34313b}.nico-tmdb-actor strong,.nico-tmdb-actor small{display:block;font-size:12px;overflow-wrap:anywhere}.nico-tmdb-actor small{color:#aaa}.nico-tmdb-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.nico-tmdb-facts div{display:grid;gap:5px}.nico-tmdb-facts strong{color:#d8ba80}.nico-tmdb-facts span{overflow-wrap:anywhere}.nico-tmdb-trailer{margin-top:24px!important;border:1px solid #d5a745!important}.nico-tmdb-series{grid-column:1/-1;margin-top:14px}.nico-tmdb-status,.nico-tmdb-series:empty{color:#c9b68d;padding:12px}#infoDialog.info-dialog{max-height:88vh;overflow-y:auto;max-width:min(910px,94vw)!important}#infoDialog .info-actions{position:sticky;bottom:-2px;padding:12px 0;background:#141216;z-index:2}@media(max-width:600px){.nico-tmdb-facts{grid-template-columns:1fr}.nico-tmdb-section{padding:12px}.nico-tmdb-actor{flex-basis:85px;width:85px}}
 </style>
+<style id="nico27FireTv">
+/* Nico TV 2.7 Fire Stick: detalhe estável, scroll exclusivo, foco evidente e imagens econômicas */
+#infoDialog.info-dialog{width:min(1100px,94vw)!important;max-width:1100px!important;height:88vh!important;max-height:88vh!important;padding:0!important;display:none!important;flex-direction:column!important;overflow:hidden!important;border-radius:22px!important;background:#100e0e!important}
+#infoDialog.info-dialog[open]{display:flex!important}
+#infoDialog #infoContent{flex:1 1 auto;min-height:0;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain;padding:22px 26px 35px;scroll-behavior:auto}
+#infoDialog #nicoTmdbConfig:not([hidden]){flex:0 0 auto;margin:0 24px 12px}
+#infoDialog .info-actions{position:static!important;flex:0 0 auto!important;margin:0!important;padding:14px 24px!important;background:#16120d!important;border-top:1px solid #6a512d!important;z-index:4;box-shadow:0 -10px 30px #0006}
+#infoDialog .info-actions .btn{min-height:56px!important;font-size:19px!important}
+.nico27-details{padding:0!important;margin-top:20px!important;border-radius:18px!important;overflow:hidden!important;background:#121118!important}
+.nico27-details .nico-tmdb-hero{height:clamp(160px,28vw,340px)!important;border-radius:0!important;margin:0!important;background-color:#222;background-position:center center;background-size:cover}
+.nico27-body{padding:22px 26px 30px}
+.nico27-details h3{font-size:clamp(27px,3vw,40px)!important;margin:8px 0 13px!important}
+.nico27-details h4{font-size:22px!important;margin:25px 0 13px!important}
+.nico27-details .nico27-tags{display:flex;gap:9px;flex-wrap:wrap}
+.nico27-synopsis{font-size:18px;line-height:1.5!important;max-width:900px}
+.nico27-details .nico-tmdb-cast,.nico27-recs{display:flex;gap:16px;overflow-x:auto;overflow-y:hidden;padding:8px 4px 17px;scroll-snap-type:x proximity}
+.nico27-details .nico-tmdb-actor{width:116px;flex:0 0 116px}
+.nico27-details .nico-tmdb-actor img,.nico27-details .nico-tmdb-avatar{width:94px;height:94px}
+.nico27-recommendation{width:130px;flex:0 0 130px;display:flex;flex-direction:column;gap:5px}
+.nico27-recommendation img{display:block;object-fit:cover;width:130px;height:184px;border-radius:10px;background:#26222b}
+.nico27-recommendation span{font-weight:650;font-size:14px;line-height:1.25}
+.nico27-recommendation small,.nico27-caption{color:#a9a29b;font-size:12px}
+.nico27-credit{font-size:11px!important;color:#c1b8a6!important;margin-top:26px}
+.nico-tmdb-trailer{min-height:55px!important;padding:13px 22px!important;color:#fff7e8!important}
+#infoDialog button:focus,#infoDialog button:focus-visible,#nicoTmdbUrl:focus{outline:4px solid #ffca4e!important;outline-offset:3px!important;box-shadow:0 0 0 6px #ffcd4e35!important}
+@media(max-width:750px){#infoDialog #infoContent{padding:14px 16px 25px}.nico27-body{padding:18px}.nico27-details .nico-tmdb-hero{height:170px!important}#infoDialog .info-actions{padding:10px 14px!important}#infoDialog .info-actions .btn{min-height:48px!important}}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -2002,7 +2030,8 @@ const NICO_TMDB_ENDPOINT_KEY='nico_tmdb_proxy_endpoint';
 const nicoTmdbCache=new Map();
 let nicoTmdbDialogRequest=0;
 const NICO_TMDB_DEFAULT_ENDPOINT='https://nico-tv-tmdb.dropemarkt.workers.dev';
-function nicoTmdbEndpoint(){const saved=store.get(NICO_TMDB_ENDPOINT_KEY);return (saved===null?NICO_TMDB_DEFAULT_ENDPOINT:saved).trim().replace(/\/+$/,'');}
+function nicoTmdbEndpoint(){const saved=store.get(NICO_TMDB_ENDPOINT_KEY);return (saved&&String(saved).trim()?saved:NICO_TMDB_DEFAULT_ENDPOINT).trim().replace(/\/+$/,'');}
+function nicoTmdbCleanTitle(value){return String(value||'').replace(/\[(?:L|D|LEG|DUB|FHD|4K|HD|SD|DUAL)\]/gi,' ').replace(/\b(?:dublado|legendado|dual audio|1080p|720p|2160p|4k|hdr|bluray|web-dl)\b/gi,' ').replace(/\s+/g,' ').trim();}
 function nicoTmdbYear(value){const m=String(value||'').match(/(?:19|20)\d{2}/);return m?m[0]:'';}
 function nicoTmdbSafeUrl(value){try{const u=new URL(value);return u.protocol==='https:'?u.href:'';}catch(_){return '';}}
 let nicoTmdbCurrentMovie=null;
@@ -2030,33 +2059,35 @@ function nicoTmdbSaveEndpoint(){
 }
 function nicoTmdbFmtMoney(n){return Number(n)>0?'US$ '+Number(n).toLocaleString('pt-BR'):'';}
 function nicoTmdbHtml(d){
- const h=escapeHtml, tags=[d.year,d.runtime?d.runtime+' min':'',...(d.genres||[]),d.voteAverage?'★ TMDB '+Number(d.voteAverage).toFixed(1):''].filter(Boolean);
- const cast=(d.cast||[]).slice(0,12).map(a=>`<div class="nico-tmdb-actor">${nicoTmdbSafeUrl(a.photo)?`<img loading="lazy" src="${h(a.photo)}" alt="">`:'<span class="nico-tmdb-avatar">★</span>'}<strong>${h(a.name)}</strong><small>${h(a.character||'')}</small></div>`).join('');
- const fields=[['Lançamento',d.releaseDate],['Direção',(d.directors||[]).join(', ')],['Orçamento',nicoTmdbFmtMoney(d.budget)],['Gêneros',(d.genres||[]).join(', ')]].filter(x=>x[1]);
- const poster=nicoTmdbSafeUrl(d.backdrop);
- return `<section class="nico-tmdb-section">${poster?`<div class="nico-tmdb-hero" style="background-image:linear-gradient(0deg,#100f12,transparent),url('${h(poster)}')"></div>`:''}<div class="nico-tmdb-heading"><span class="nico-tmdb-brand">TMDB · METADADOS</span><h3>${h(d.title)}</h3><div class="info-tags">${tags.map(t=>`<span class="info-chip">${h(t)}</span>`).join('')}</div></div>${d.overview?`<p>${h(d.overview)}</p>`:''}${cast?`<h4>Elenco</h4><div class="nico-tmdb-cast">${cast}</div>`:''}${fields.length?`<h4>Informações</h4><div class="nico-tmdb-facts">${fields.map(f=>`<div><strong>${h(f[0])}</strong><span>${h(f[1])}</span></div>`).join('')}</div>`:''}${nicoTmdbSafeUrl(d.trailerUrl)&&new URL(d.trailerUrl).hostname==='www.youtube.com'?`<button type="button" class="btn nico-tmdb-trailer" data-tmdb-trailer="${h(d.trailerUrl)}">▶ Assistir trailer no YouTube</button>`:''}</section>`;
+ const h=escapeHtml;
+ const tags=[d.year,d.runtime?d.runtime+' min':'',...(d.genres||[]).slice(0,3),d.voteAverage?'★ '+Number(d.voteAverage).toFixed(1):''].filter(Boolean);
+ const cast=(d.cast||[]).slice(0,10).map(a=>`<div class="nico-tmdb-actor">${nicoTmdbSafeUrl(a.photo)?`<img loading="lazy" decoding="async" src="${h(a.photo)}" alt="">`:'<span class="nico-tmdb-avatar">★</span>'}<strong>${h(a.name)}</strong><small>${h(a.character||'')}</small></div>`).join('');
+ const facts=[['Lançamento',d.releaseDate],['Direção',(d.directors||[]).join(', ')],['Orçamento',nicoTmdbFmtMoney(d.budget)],['Gêneros',(d.genres||[]).join(', ')]].filter(x=>x[1]);
+ const trailer=nicoTmdbSafeUrl(d.trailerUrl);
+ const recs=(d.recommendations||[]).filter(x=>nicoTmdbSafeUrl(x.poster)).slice(0,8).map(x=>`<div class="nico27-recommendation"><img loading="lazy" decoding="async" src="${h(x.poster)}" alt=""><span>${h(x.title)}${x.year?' · '+h(x.year):''}</span><small>${x.rating?'★ '+Number(x.rating).toFixed(1):''}</small></div>`).join('');
+ const backdrop=nicoTmdbSafeUrl(d.backdrop);
+ return `<section class="nico-tmdb-section nico27-details" aria-label="Informações do TMDB">${backdrop?`<div class="nico-tmdb-hero" style="background-image:linear-gradient(0deg,#101018 1%,rgba(12,12,17,.08) 90%),url('${h(backdrop)}')"></div>`:''}<div class="nico27-body"><span class="nico-tmdb-brand">NICO TV · TMDB</span><h3>${h(d.title)}</h3><div class="nico27-tags">${tags.map(t=>`<span class="info-chip">${h(t)}</span>`).join('')}</div>${d.overview?`<p class="nico27-synopsis">${h(d.overview)}</p>`:''}${trailer&&/^https:\/\/(?:www\.)?youtube\.com\/watch\?/.test(trailer)?`<button type="button" class="btn nico-tmdb-trailer" data-tmdb-trailer="${h(trailer)}">▶ Assistir trailer no YouTube</button>`:''}${cast?`<h4>Elenco</h4><div class="nico-tmdb-cast">${cast}</div>`:''}${recs?`<h4>Semelhantes no TMDB</h4><div class="nico27-recs">${recs}</div><p class="nico27-caption">As sugestões não indicam disponibilidade na sua lista IPTV.</p>`:''}${facts.length?`<h4>Ficha técnica</h4><div class="nico-tmdb-facts">${facts.map(f=>`<div><strong>${h(f[0])}</strong><span>${h(f[1])}</span></div>`).join('')}</div>`:''}<p class="nico27-credit">Informações de The Movie Database (TMDB). Este aplicativo não é endossado ou certificado pelo TMDB.</p></div></section>`;
 }
-function nicoTmdbAttachTrailers(root){root.querySelectorAll('[data-tmdb-trailer]').forEach(b=>{b.onclick=()=>{const url=nicoTmdbSafeUrl(b.dataset.tmdbTrailer);if(url&&new URL(url).hostname==='www.youtube.com')window.open(url,'_blank','noopener,noreferrer');};});}
+function nicoTmdbAttachTrailers(root){root.querySelectorAll('[data-tmdb-trailer]').forEach(b=>{b.onclick=()=>{const url=nicoTmdbSafeUrl(b.dataset.tmdbTrailer);if(!url||!/^https:\/\/(?:www\.)?youtube\.com\/watch\?/.test(url))return;if(NATIVE&&typeof Android.openExternal==='function'){Android.openExternal(url);}else{window.open(url,'_blank','noopener,noreferrer');}};});}
 async function nicoTmdbGet(c,type){
  const endpoint=nicoTmdbEndpoint();if(!endpoint)return null;
- const title=String(c.name||'').trim();if(!title)return null;
- const url=new URL(endpoint+'/metadata');url.searchParams.set('title',title);url.searchParams.set('type',type);const year=nicoTmdbYear(c.year);if(year)url.searchParams.set('year',year);
- const key=url.toString();if(nicoTmdbCache.has(key))return nicoTmdbCache.get(key);
+ const title=nicoTmdbCleanTitle(c.name||'');if(!title)return null;
+ const year=nicoTmdbYear(c.year);const key=endpoint+'/metadata?title='+encodeURIComponent(title)+'&type='+encodeURIComponent(type)+(year?'&year='+encodeURIComponent(year):'');if(nicoTmdbCache.has(key))return nicoTmdbCache.get(key);
  const data=await getJSON(key);if(data&&data.matched===true){nicoTmdbCache.set(key,data);if(nicoTmdbCache.size>90)nicoTmdbCache.delete(nicoTmdbCache.keys().next().value);return data;}return null;
 }
 async function nicoTmdbEnhanceMovie(c){
  const stamp=++nicoTmdbDialogRequest,root=$('#infoContent');if(!root)return;
  const panel=document.createElement('div');panel.id='nicoTmdbStatus';panel.className='nico-tmdb-status';panel.textContent=nicoTmdbEndpoint()?'Buscando informações cinematográficas…':'TMDB não configurado. Selecione ⚙ TMDB para informar a URL do serviço.';root.append(panel);
  if(!nicoTmdbEndpoint())return;
- try{const d=await nicoTmdbGet(c,'movie');if(stamp!==nicoTmdbDialogRequest||!$('#infoDialog').open||!panel.isConnected)return;if(!d){panel.textContent='Título não localizado com segurança no TMDB. Informações IPTV preservadas.';return;}panel.outerHTML=nicoTmdbHtml(d);nicoTmdbAttachTrailers(root);}
- catch(e){if(stamp===nicoTmdbDialogRequest&&panel.isConnected)panel.textContent='TMDB indisponível. Informações IPTV preservadas.';}
+ try{const d=await nicoTmdbGet(c,'movie');if(stamp!==nicoTmdbDialogRequest||!$('#infoDialog').open||!panel.isConnected)return;if(!d){panel.textContent='Título não localizado no TMDB: '+nicoTmdbCleanTitle(c.name||'')+'. Informações IPTV preservadas.';return;}panel.outerHTML=nicoTmdbHtml(d);nicoTmdbAttachTrailers(root);}
+ catch(e){if(stamp===nicoTmdbDialogRequest&&panel.isConnected)panel.textContent='Não foi possível carregar TMDB neste aparelho ('+String(e&&e.message||e).slice(0,115)+'). Informações IPTV preservadas.';}
 }
 async function nicoTmdbEnhanceSeries(c,detail){
  const host=$('#nicoTmdbSeries');if(!host)return;
  if(!nicoTmdbEndpoint()){host.textContent='TMDB não configurado. Abra um filme e selecione ⚙ TMDB.';return;}
  host.textContent='Buscando elenco, avaliações e ficha técnica…';
  try{const d=await nicoTmdbGet(c,'tv');if(state.detail!==detail||!host.isConnected)return;if(!d){host.textContent='Título não localizado no TMDB.';return;}host.innerHTML=nicoTmdbHtml(d);nicoTmdbAttachTrailers(host);}
- catch(e){if(host.isConnected)host.textContent='Não foi possível consultar o TMDB.';}
+ catch(e){if(host.isConnected)host.textContent='Falha na consulta TMDB: '+String(e&&e.message||e).slice(0,115);}
 }
 let infoPlayAction=null;
 function showInfo(c,playAction){
@@ -2738,6 +2769,21 @@ $('#playerFavBtn').onclick=()=>{ const c=state.queue[state.qi];if(c)toggleFav(c)
 $('#fullscreenBtn').onclick=()=>setFullscreen();
 $('#guidePlayerBtn').onclick=openGuide;
 $('#guideClose').onclick=()=>$('#guideDialog').close();
+
+/* Nico TV 2.7: navegação D-pad apenas na tela de detalhes (não interfere no player) */
+document.addEventListener('keydown',function(ev){
+ const dlg=document.getElementById('infoDialog');if(!dlg||!dlg.open||document.getElementById('nicoTmdbConfig')?.hidden===false)return;
+ const k=ev.key==='ArrowDown'||ev.keyCode===20?'down':ev.key==='ArrowUp'||ev.keyCode===19?'up':null;
+ if(!k)return;
+ const content=document.getElementById('infoContent');const active=document.activeElement;
+ if(active&&active.closest('.info-actions')){
+  if(k==='up') {const btn=content.querySelector('[data-tmdb-trailer]');if(btn){ev.preventDefault();ev.stopImmediatePropagation();btn.focus();btn.scrollIntoView({block:'center'});}else{ev.preventDefault();content.scrollTop=Math.max(0,content.scrollTop-Math.round(content.clientHeight*.7));} }
+ }else if(active&&active.closest('#infoContent')){
+  if(k==='down'){ev.preventDefault();content.scrollTop+=Math.round(content.clientHeight*.55);}
+  else if(k==='up'){ev.preventDefault();content.scrollTop-=Math.round(content.clientHeight*.55);}
+ }
+},true);
+
 $('#infoClose').onclick=()=>$('#infoDialog').close();
 $('#nicoTmdbSettings').onclick=nicoTmdbSetEndpoint;
 $('#nicoTmdbSave').onclick=nicoTmdbSaveEndpoint;
