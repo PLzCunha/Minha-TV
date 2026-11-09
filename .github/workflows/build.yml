@@ -280,7 +280,7 @@ jobs:
                   if (installed < 0) throw new IOException("Nao foi possivel identificar a versao instalada.");
                   int newestValid = -1;
                   String apkUrl = null;
-                  final String expectedPrefix = "https://github.com/PlzCunha/Minha-TV/releases/download/";
+                  final String expectedPrefix = "https://github.com/PLzCunha/Minha-TV/releases/download/";
                   for (int i=0;i<releases.length();i++) {
                     JSONObject release = releases.optJSONObject(i);
                     if (release == null || release.optBoolean("draft") || release.optBoolean("prerelease")) continue;
