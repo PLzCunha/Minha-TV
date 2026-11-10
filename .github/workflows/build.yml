@@ -652,10 +652,32 @@ jobs:
                   // Informa a mídia recebida e o dispositivo, sem expor URLs nem credenciais Xtream.
                   if(e.errorCode==PlaybackException.ERROR_CODE_DECODING_FAILED || e.errorCode==PlaybackException.ERROR_CODE_DECODER_INIT_FAILED){
                     Format vf=p.getVideoFormat();
+                    String renderer="não identificado";
+                    if(e instanceof androidx.media3.exoplayer.ExoPlaybackException){
+                      androidx.media3.exoplayer.ExoPlaybackException ex=(androidx.media3.exoplayer.ExoPlaybackException)e;
+                      if(ex.rendererFormat!=null)vf=ex.rendererFormat;
+                      if(ex.rendererName!=null)renderer=ex.rendererName;
+                    }
                     String codec=vf==null?"não identificado":(vf.codecs!=null?vf.codecs:(vf.sampleMimeType!=null?vf.sampleMimeType:"não identificado"));
                     String res=vf!=null && vf.width>0 && vf.height>0?vf.width+"x"+vf.height:"não identificada";
-                    detail += "\nCodec: "+codec+" | Resolução: "+res+"\nModelo: "+android.os.Build.MODEL+" | Código: "+e.errorCode;
-                    android.util.Log.e("NicoTV-Codec", "Falha de decodificação codec="+codec+" resolução="+res+" dispositivo="+android.os.Build.MODEL+" código="+e.errorCode);
+                    String decoder="não informado",diag="não informado",mime="não identificado";
+                    Throwable nested=e;
+                    for(int depth=0;nested!=null&&depth<10;depth++,nested=nested.getCause()){
+                      if(nested instanceof androidx.media3.exoplayer.mediacodec.MediaCodecRenderer.DecoderInitializationException){
+                        androidx.media3.exoplayer.mediacodec.MediaCodecRenderer.DecoderInitializationException dx=
+                            (androidx.media3.exoplayer.mediacodec.MediaCodecRenderer.DecoderInitializationException)nested;
+                        if(dx.mimeType!=null)mime=dx.mimeType;
+                        if(dx.codecInfo!=null)decoder=dx.codecInfo.name;
+                        if(dx.diagnosticInfo!=null)diag=dx.diagnosticInfo;
+                        break;
+                      }
+                    }
+                    detail += "\nCodec: "+codec+" | MIME: "+mime+" | "+res+
+                      "\nDecoder: "+decoder+" | Diagnóstico: "+diag+
+                      "\nModelo: "+android.os.Build.MODEL+" | Código: "+e.errorCode;
+                    android.util.Log.e("NicoTV-Codec", "Renderer="+renderer+" codec="+codec+" mime="+mime+
+                      " resolução="+res+" decoder="+decoder+" diagnóstico="+diag+
+                      " dispositivo="+android.os.Build.MODEL+" código="+e.errorCode);
                   }
                   status.setText("Não foi possível reproduzir.\n"+detail+"\nOK: tentar novamente  •  ↑ ↓: trocar");
                   status.setVisibility(android.view.View.VISIBLE);
