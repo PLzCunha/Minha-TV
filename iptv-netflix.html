@@ -4768,42 +4768,71 @@ function updatePlaybackControls(){
  $('#playPauseBtn').textContent=v.paused?'▶ Play':'Ⅱ Pausar';
  $('#nextEpisodeBtn').hidden=!canNextEpisode();updatePlaybackTimeline();
 }
-// A interface nunca deve depender de hover/foco ou pointermove artificial do emulador.
+// Nico TV 3.0.7 — auto-hide determinístico, independente de eventos do vídeo/WebView.
 const PLAYER_IDLE_MS=3000;
 let lastRealPlayerInteraction=0;
+let playerIdleTimer=null;
 let playerIdleWatchdog=null;
 let nico306SeekDragStarted=0;
+const PLAYER_UI_PARTS=['playerBar','playbackTimeline','webcontrols'];
+function nico307SetPlayerUiHidden(hidden){
+ const player=$('#player');
+ player.classList.toggle('controls-hidden',hidden);
+ const bar=$('#playerBar');bar.classList.toggle('hide',hidden);
+ // Proteção também contra regras CSS antigas da WebView no Fire Stick.
+ for(const id of PLAYER_UI_PARTS){
+   const part=document.getElementById(id);if(!part)continue;
+   if(hidden){
+     part.style.setProperty('opacity','0','important');
+     part.style.setProperty('visibility','hidden','important');
+     part.style.setProperty('pointer-events','none','important');
+   }else{
+     part.style.removeProperty('opacity');
+     part.style.removeProperty('visibility');
+     part.style.removeProperty('pointer-events');
+   }
+ }
+ if(hidden && player.contains(document.activeElement)){
+   const a=document.activeElement;
+   if(a?.closest?.('#playerBar,#playbackTimeline,#webcontrols')){
+     player.tabIndex=-1;try{player.focus({preventScroll:true});}catch(_){}
+   }
+ }
+}
 function playerMenuActive(){
- const drawer=$('#drawer'),tracks=$('#trackPanel'),next=$('#nextEpisodeCard');
  const seek=$('#playbackSeek');
  if(seek.dataset.dragging==='1' && Date.now()-nico306SeekDragStarted>5000){delete seek.dataset.dragging;nico306SeekDragStarted=0;}
- return drawer.classList.contains('on') || !tracks.hidden || !next.hidden || seek.dataset.dragging==='1';
+ return !!state.drawer || !$('#trackPanel').hidden || !$('#nextEpisodeCard').hidden || seek.dataset.dragging==='1';
+}
+function nico307ScheduleHide(){
+ if(playerIdleTimer)clearTimeout(playerIdleTimer);
+ playerIdleTimer=setTimeout(()=>{playerIdleTimer=null;hideIdlePlayerControls();},PLAYER_IDLE_MS+80);
+ if(!playerIdleWatchdog)playerIdleWatchdog=setInterval(hideIdlePlayerControls,500);
 }
 function showPlayerBar(){
- const player=$('#player');
- if(!player.classList.contains('on'))return;
+ const player=$('#player');if(!player.classList.contains('on'))return;
  lastRealPlayerInteraction=Date.now();
- player.classList.remove('controls-hidden');
- $('#playerBar').classList.remove('hide');
- // Um relógio fixo evita loops de timeout disparados por eventos sintéticos.
- if(!playerIdleWatchdog) playerIdleWatchdog=setInterval(hideIdlePlayerControls,250);
+ nico307SetPlayerUiHidden(false);
+ nico307ScheduleHide();
 }
 function hideIdlePlayerControls(){
  const player=$('#player');
  if(!player.classList.contains('on')){
-   clearInterval(playerIdleWatchdog);playerIdleWatchdog=null;return;
+   clearInterval(playerIdleWatchdog);playerIdleWatchdog=null;
+   clearTimeout(playerIdleTimer);playerIdleTimer=null;return;
  }
  if(Date.now()-lastRealPlayerInteraction<PLAYER_IDLE_MS)return;
  if(playerMenuActive())return;
- player.classList.add('controls-hidden');
- $('#playerBar').classList.add('hide');
+ // A ocultação depende do tempo sem interação — não de eventos repetidos
+ // 'playing', 'timeupdate', 'focus' ou mensagens sintéticas da WebView.
+ nico307SetPlayerUiHidden(true);
 }
 function startPlayback(){
   if(!state.vod && state.queue[state.qi])markLiveRecent(state.queue[state.qi]);
   const c=state.queue[state.qi];if(!c)return;
   markRecent(c);updatePlayerFav();
   const player=$('#player'),v=$('#video'), msg=$('#playerMsg');
-  clearNextEpisode();lastPointerPosition=null;delete $('#playbackSeek').dataset.dragging;nico306SeekDragStarted=0;player.classList.add('on');state.drawer=false;$('#drawer').classList.remove('on');closeTrackPanel();
+  clearNextEpisode();lastPointerPosition=null;delete $('#playbackSeek').dataset.dragging;nico306SeekDragStarted=0;player.classList.add('on');nico307SetPlayerUiHidden(false);state.drawer=false;$('#drawer').classList.remove('on');closeTrackPanel();
   $('#playerTitle').textContent=c.name;
   $('#playerSub').textContent=playerSubtitle(c,state.vod);
   msg.style.display='grid';msg.textContent='Carregando transmissão…';
@@ -4811,7 +4840,7 @@ function startPlayback(){
   if(state.hls){state.hls.destroy();state.hls=null;}
   $('#playbackTimeline').hidden=true;
   const fail=()=>{msg.style.display='grid';msg.textContent='Não foi possível reproduzir.\nTente novamente ou selecione outro canal.';showPlayerBar();};
-  v.onplaying=()=>{msg.style.display='none';showPlayerBar();updatePlaybackControls();};
+  v.onplaying=()=>{msg.style.display='none';updatePlaybackControls();};
   v.onended=()=>{saveHistory(c,v.duration,v.duration,true);clearPlaybackProgress(c);updatePlaybackControls();offerNextEpisode();};
   v.onloadedmetadata=()=>{restorePlaybackProgress(c,v);updatePlaybackTimeline();};
   v.ontimeupdate=()=>{updatePlaybackTimeline();savePlaybackProgress();};
@@ -4843,7 +4872,7 @@ function stopPlayback(){
   savePlaybackProgress(true);clearNextEpisode(); const v=$('#video');if(state.hls){state.hls.destroy();state.hls=null;}
   v.pause();v.removeAttribute('src');v.load();$('#playbackTimeline').hidden=true;
   if(document.fullscreenElement===$('#player'))document.exitFullscreen?.().catch(()=>{});
-  $('#player').classList.remove('on');clearInterval(playerIdleWatchdog);playerIdleWatchdog=null;$('#drawer').classList.remove('on');state.drawer=false;closeTrackPanel();
+  $('#player').classList.remove('on');clearInterval(playerIdleWatchdog);playerIdleWatchdog=null;clearTimeout(playerIdleTimer);playerIdleTimer=null;nico307SetPlayerUiHidden(false);$('#drawer').classList.remove('on');state.drawer=false;closeTrackPanel();
   render();focusFirst();
 }
 function renderDrawer(){
@@ -4894,7 +4923,7 @@ $('#fullscreenBottomBtn').onclick=()=>setFullscreen();
 $('#nextEpisodeBtn').onclick=goNextEpisode;
 $('#watchNextEpisode').onclick=goNextEpisode;
 $('#cancelNextEpisode').onclick=clearNextEpisode;
-$('#video').addEventListener('pause',()=>{savePlaybackProgress(true);updatePlaybackControls();updatePlaybackTimeline();showPlayerBar();});
+$('#video').addEventListener('pause',()=>{savePlaybackProgress(true);updatePlaybackControls();updatePlaybackTimeline();});
 $('#playbackSeek').addEventListener('input',e=>{const v=$('#video');if(state.vod&&Number.isFinite(v.duration)&&v.duration>0&&v.seekable?.length){v.currentTime=v.duration*Number(e.target.value)/1000;updatePlaybackTimeline();showPlayerBar();}});
 $('#playbackSeek').addEventListener('change',()=>savePlaybackProgress(true));
 $('#video').addEventListener('play',updatePlaybackControls);
