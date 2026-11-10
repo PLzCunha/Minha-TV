@@ -2961,6 +2961,38 @@ body.nico-collapsed .shell .sidebar #nicoInstalledVersion span{font-size:9px!imp
 }
 </style>
 
+
+<style id="nico305-football-modal-firetv">
+/* Layout mais compacto e adequado à área visível do Fire TV Stick. */
+.nico294-games-overlay{padding:clamp(12px,2vh,24px)!important;align-items:center!important;}
+.nico294-games-panel.nico299-games-panel{
+  box-sizing:border-box!important;width:min(760px,90vw)!important;
+  max-height:min(640px,80vh)!important;
+  padding:clamp(13px,1.8vw,21px)!important;
+  overflow:auto!important;overscroll-behavior:contain!important;
+}
+.nico294-games-panel .nico294-games-head h2{font-size:clamp(21px,2.4vw,29px)!important;}
+.nico294-games-panel .nico299-filters{gap:7px!important;flex-wrap:wrap!important;}
+.nico294-games-panel .nico299-game{padding:10px!important;}
+.nico294-games-panel .nico303-league{padding:10px!important;margin-bottom:11px!important;}
+.nico294-games-panel .nico303-game-detail{min-height:36px!important;}
+#app.nico283-catalog > .nico293-live-topics{gap:8px!important;padding:11px 14px!important;}
+#app.nico283-catalog > .nico293-live-topics .nico293-topic{
+ padding:8px 14px!important;min-height:38px!important;border-radius:20px!important;
+}
+#app.nico283-catalog > .nico293-live-topics .nico296-category-trigger{
+ margin-left:auto!important;min-height:38px!important;padding:8px 14px!important;
+}
+.nico294-games-panel :is(button):focus-visible,
+.nico303-detail-panel :is(button):focus-visible{
+ outline:3px solid #ffd268!important;outline-offset:3px!important;
+ box-shadow:0 0 0 5px rgba(234,181,69,.22)!important;
+}
+@media(max-height:720px){
+ .nico294-games-panel.nico299-games-panel{max-height:82vh!important;width:min(730px,90vw)!important;padding:12px!important;}
+ .nico294-games-panel .nico294-games-head{margin-bottom:8px!important;}
+}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -3078,6 +3110,76 @@ body.nico-collapsed .shell .sidebar #nicoInstalledVersion span{font-size:9px!imp
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js"></script>
 <script>
+// Nico TV 3.0.5 — A janela de futebol tem prioridade sobre a navegação global do Fire TV.
+// Registrado antes dos manipuladores globais e na fase de captura para impedir que
+// a navegação espacial mova o foco para a tela que permanece atrás do modal.
+function nico305TopFootballDialog(){
+ return document.getElementById('nico303MatchOverlay') || document.getElementById('nico294GamesOverlay');
+}
+function nico305DialogFocus(dialog, target){
+ if(!target)return;
+ try{target.focus({preventScroll:true});}catch(_){target.focus();}
+ try{target.scrollIntoView({block:'nearest',inline:'nearest',behavior:'auto'});}catch(_){}
+}
+function nico305CloseFootballDialog(){
+ const top=nico305TopFootballDialog();
+ if(!top)return false;
+ const button=top.querySelector('.nico303-detail-close, .nico294-games-close');
+ if(button){button.click();return true;}
+ return false;
+}
+function nico305FootballModalKey(event){
+ const dialog=nico305TopFootballDialog();
+ if(!dialog)return;
+ const k=event.keyCode;
+ const key=({19:'ArrowUp',20:'ArrowDown',21:'ArrowLeft',22:'ArrowRight',4:'Backspace',66:'Enter',23:'Enter'})[k]||event.key;
+ const arrow=['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key);
+ const back=['Escape','Backspace','BrowserBack','GoBack'].includes(key);
+ const activate=key==='Enter'||key===' ';
+ if(!arrow&&!back&&!activate&&key!=='Tab')return;
+ event.stopImmediatePropagation();
+ if(event.type==='keyup'){
+   if(arrow||back||activate)event.preventDefault();
+   return;
+ }
+ if(back){event.preventDefault();nico305CloseFootballDialog();return;}
+ if(key==='Tab'){
+   const buttons=[...dialog.querySelectorAll('button:not([disabled])')].filter(b=>b.getClientRects().length);
+   if(!buttons.length)return;
+   const ix=buttons.indexOf(document.activeElement);
+   const next=buttons[(ix+(event.shiftKey?-1:1)+buttons.length)%buttons.length]||buttons[0];
+   event.preventDefault();nico305DialogFocus(dialog,next);return;
+ }
+ if(arrow){
+   event.preventDefault();
+   const buttons=[...dialog.querySelectorAll('button:not([disabled])')].filter(b=>b.getClientRects().length);
+   if(!buttons.length)return;
+   const ix=buttons.indexOf(document.activeElement);
+   const delta=(key==='ArrowRight'||key==='ArrowDown')?1:-1;
+   const next=ix<0?buttons[0]:buttons[(ix+delta+buttons.length)%buttons.length];
+   nico305DialogFocus(dialog,next);
+   return;
+ }
+ if(activate){
+   const current=document.activeElement;
+   if(current&&dialog.contains(current)&&current.matches('button:not([disabled])')){
+     event.preventDefault();
+     current.click();
+   }else{
+     event.preventDefault();
+     nico305DialogFocus(dialog,dialog.querySelector('button:not([disabled])'));
+   }
+ }
+}
+document.addEventListener('keydown',nico305FootballModalKey,true);
+document.addEventListener('keyup',nico305FootballModalKey,true);
+document.addEventListener('focusin',()=>{
+ const dialog=nico305TopFootballDialog();
+ if(dialog&&!dialog.contains(document.activeElement)){
+   nico305DialogFocus(dialog,dialog.querySelector('.nico294-games-close, .nico303-detail-close') || dialog.querySelector('button'));
+ }
+},true);
+
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 // Usa a mesma imagem incorporada da barra lateral, antes de qualquer interação.
@@ -4063,10 +4165,6 @@ function nico293LiveShowSection(app,hero,item){
  const previousTopics=app.querySelector(':scope > .nico293-live-topics');
  if(previousTopics)previousTopics.remove();
  if(nav.childElementCount){
-   const caption=document.createElement('span');
-   caption.className='nico295-topics-caption';
-   caption.textContent='EXPLORAR AO VIVO';
-   nav.prepend(caption);
    const picker=document.createElement('button'); picker.type='button'; picker.className='nico296-category-trigger';
    const current = nico296LiveCategoryEntries().find(([key])=>key===state.liveGroup);
    picker.textContent=(current&&state.liveGroup!=='all'?'▦ '+nicoFilterLabel(current[1]):'▦ Escolher categoria');
@@ -5087,6 +5185,7 @@ function nico21Back(){
 // Native Android back callback: the WebView's Java bridge calls __back.
 const nico21PriorBack=window.__back;
 window.__back=function(){
+ if(nico305CloseFootballDialog())return true;
  if(nico21Back())return true;
  return typeof nico21PriorBack==='function'?nico21PriorBack():false;
 };
