@@ -1690,6 +1690,13 @@ html body.nico-expanded .sidebar .logo img {
 #infoDialog .info-actions button:focus{outline:4px solid #ffdb66!important;outline-offset:2px!important;box-shadow:0 0 0 6px #000b,0 0 0 9px #f5af36!important;z-index:5!important}
 @media(max-width:700px){#infoDialog .info-actions{gap:6px!important;padding:12px!important}#infoDialog .info-actions button{font-size:15px!important;padding:8px!important}}
 </style>
+<style id="nico273FireStickDetails">
+#infoDialog #infoContent:focus{outline:3px solid #e4b94f!important;outline-offset:-5px!important;box-shadow:inset 0 0 0 2px #e4b94f40!important}
+#infoDialog #infoContent{scrollbar-width:thin;scrollbar-color:#bf9445 #171820}
+#infoDialog #nico273Hint{font-size:13px;color:#dbbe7d;padding:4px 0 14px}
+#nicoTmdbSeries:focus{outline:3px solid #f2c95e;outline-offset:3px}
+#nicoSeriesTmdbJump{margin-top:12px;display:block;padding:12px 16px}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -2105,7 +2112,7 @@ function showInfo(c,playAction){
  $('#nicoTmdbConfig').hidden=true;
  const description=c.description||c.plot||c.info?.plot||'';
  const tags=[c.group||c.category,c.year||c.releaseDate,c.genre,c.rating?`★ ${c.rating}`:'',c.duration].filter(Boolean);
- $('#infoContent').innerHTML=`<h2>${escapeHtml(c.name||'Informações')}</h2><div class="info-tags">${tags.map(t=>`<span class="info-chip">${escapeHtml(String(t))}</span>`).join('')}</div><p>${escapeHtml(String(description||'Sinopse não disponível na fonte IPTV.'))}</p>`;
+ $('#infoContent').innerHTML=`<div id="nico273Hint">↑ Informações  ·  ↓ Rolagem  ·  ← → Elenco/semelhantes  ·  OK Trailer/Assistir</div><h2>${escapeHtml(c.name||'Informações')}</h2><div class="info-tags">${tags.map(t=>`<span class="info-chip">${escapeHtml(String(t))}</span>`).join('')}</div><p>${escapeHtml(String(description||'Sinopse não disponível na fonte IPTV.'))}</p>`;
  $('#infoWatch').hidden=!playAction;
  $('#infoDialog').showModal();
  requestAnimationFrame(nicoInfoDefaultFocus);
@@ -2470,14 +2477,18 @@ function renderDetail(app){
       <div class="detail-title">${escapeHtml(d.name)}</div>
       <div class="detail-sub">${d.seasons.length} temporada(s) · ${d.seasons.reduce((a,s)=>a+s.eps.length,0)} episódios · ${completeEpisodeCount(d)} concluídos</div><p style="color:#c8d6e8;line-height:1.5">${escapeHtml(d.description||'Sinopse não fornecida pelo serviço.')}</p><div class="info-tags">${[d.genre,d.year,d.rating?'★ '+d.rating:''].filter(Boolean).map(x=>`<span class="info-chip">${escapeHtml(x)}</span>`).join('')}</div>
       <div class="badges"><span class="chip accent">Continuar TV</span><span class="chip">Experiência premium</span><span class="chip">Foco para controle remoto</span></div>
-      <button class="btn main" id="playFirstEpisode">▶ Continuar série</button>
+      <button class="btn main" id="playFirstEpisode">▶ Continuar série</button><button class="btn" id="nicoSeriesTmdbJump">Elenco e ficha técnica ↓</button>
     </aside>
     <section class="detail-main">
       <div class="season-row" id="seasonRow"></div>
       <div class="ep-list" id="episodeList"></div>
     </section>`;
   app.append(wrap);
-  $('#playFirstEpisode').onclick=()=>{ const flat=[].concat(...d.seasons.map(s=>s.eps));const next=flat.find(e=>!entryFor(e)?.completed)||flat[0];if(next)openItem(next,flat); };
+  $('#nicoSeriesTmdbJump').onclick=()=>{
+  const section=document.getElementById('nicoTmdbSeries');
+  if(section){section.tabIndex=0;section.scrollIntoView({block:'start',behavior:'auto'});nicoInfoFocus(section);}
+ };
+ $('#playFirstEpisode').onclick=()=>{ const flat=[].concat(...d.seasons.map(s=>s.eps));const next=flat.find(e=>!entryFor(e)?.completed)||flat[0];if(next)openItem(next,flat); };
   const row=$('#seasonRow'); d.seasons.forEach((s,idx)=>{ const b=document.createElement('button'); b.className='season-btn'+(idx===state.detailSeason?' active':''); b.textContent=`Temporada ${s.n}`; b.onclick=()=>{ state.detailSeason=idx; render(); requestAnimationFrame(()=>{ const tabs=document.querySelectorAll('#seasonRow .season-btn'); const selected=tabs[idx]; if(selected)nico21Focus(selected); }); }; row.append(b); });
   const list=$('#episodeList'); season.eps.forEach((ep,idx)=>{ const item=document.createElement('div'); item.className='ep-item'; item.tabIndex=0; const history=entryFor(ep),pct=watchPercent(history);item.classList.toggle('completed',!!history?.completed);item.innerHTML=`<div class="ep-thumb"></div><div><div class="ep-name">${escapeHtml(ep.name)}</div><div class="ep-meta">Temporada ${season.n} · Episódio ${idx+1}</div><div class="ep-watch">${history?.completed?'✓ Concluído':pct>0?`▶ Em andamento · ${pct}%`:'Não assistido'}</div>${pct>0?`<div class="ep-track"><span style="width:${pct}%"></span></div>`:''}</div><button class="btn main">${history?.completed?'Rever':pct>0?'Continuar':'Assistir'}</button>`;
     // APRESENTACAO APENAS: usa o frame do episodio do Xtream; quando ausente, a capa da serie.
@@ -2493,7 +2504,7 @@ function renderDetail(app){
       } else episodeThumb.classList.add('nico-ep-no-image');
     }
     item.onclick=()=>openItem(ep,[].concat(...d.seasons.map(s=>s.eps))); item.onkeydown=e=>{ if(e.target!==item)return; if(e.key==='Enter'||e.key===' '){ e.preventDefault(); item.click(); } }; item.querySelector('button').onclick=e=>{ e.stopPropagation(); item.click(); }; list.append(item); });
-  const tmdbSeries=document.createElement('section');tmdbSeries.id='nicoTmdbSeries';tmdbSeries.className='nico-tmdb-series';tmdbSeries.setAttribute('aria-label','Ficha técnica TMDB');app.append(tmdbSeries);
+  const tmdbSeries=document.createElement('section');tmdbSeries.id='nicoTmdbSeries';tmdbSeries.tabIndex=0;tmdbSeries.className='nico-tmdb-series';tmdbSeries.setAttribute('aria-label','Ficha técnica TMDB');app.append(tmdbSeries);
   if(d.nicoOriginal)nicoTmdbEnhanceSeries(d.nicoOriginal,d);
   focusFirst();
 }
@@ -2779,8 +2790,8 @@ $('#fullscreenBtn').onclick=()=>setFullscreen();
 $('#guidePlayerBtn').onclick=openGuide;
 $('#guideClose').onclick=()=>$('#guideDialog').close();
 
-/* Nico TV 2.7.2 — controle explícito do foco D-pad no modal de detalhes.
-   Não interfere no player, na lista Xtream, nem nos controles fora do modal. */
+/* Nico TV 2.7.3 — D-pad: área de leitura independente do rodapé.
+   Não altera URLs IPTV, player, Xtream, TMDB Worker nem atualizador. */
 function nicoInfoFocusableActions(){
  return [...document.querySelectorAll('#infoDialog .info-actions button')]
   .filter(el=>!el.hidden&&!el.disabled&&el.getClientRects().length);
@@ -2791,7 +2802,8 @@ function nicoInfoFocus(el){
 }
 function nicoInfoDefaultFocus(){
  const targets=nicoInfoFocusableActions();
- nicoInfoFocus(document.getElementById('infoWatch')?.hidden?(targets[0]||null):document.getElementById('infoWatch'));
+ const watch=document.getElementById('infoWatch');
+ nicoInfoFocus(watch&&!watch.hidden?watch:(targets[0]||null));
 }
 function nicoInfoKeyDirection(e){
  const code=e.keyCode;
@@ -2801,51 +2813,64 @@ function nicoInfoKeyDirection(e){
  if(e.key==='ArrowDown'||code===20)return 'down';
  return '';
 }
-/* A captura evita que o WebView desvie o foco para o catálogo por trás do dialog. */
+function nicoInfoScrollSize(el){return Math.max(110,Math.round(el.clientHeight*.62));}
+function nicoInfoScrollableRow(content){
+ const rows=[...content.querySelectorAll('.nico-tmdb-cast,.nico27-recs')];
+ const rect=content.getBoundingClientRect();
+ return rows.find(el=>{const r=el.getBoundingClientRect();return r.bottom>rect.top+35&&r.top<rect.bottom-35;});
+}
+function nicoInfoReadMode(content,step){
+ if(!content)return;
+ content.setAttribute('tabindex','0');
+ nicoInfoFocus(content);
+ if(step)content.scrollTop=Math.max(0,Math.min(content.scrollHeight-content.clientHeight,content.scrollTop+step));
+}
 document.addEventListener('keydown',function(e){
  const dlg=document.getElementById('infoDialog');
- if(!dlg?.open||document.getElementById('nicoTmdbConfig')?.hidden===false)return;
+ const config=document.getElementById('nicoTmdbConfig');
+ if(!dlg?.open||config?.hidden===false)return;
  const direction=nicoInfoKeyDirection(e);
  const ok=e.key==='Enter'||e.key===' '||e.key==='NumpadEnter'||e.keyCode===23||e.keyCode===66;
  if(!direction&&!ok)return;
- const actions=nicoInfoFocusableActions();
- const active=document.activeElement;
+ const actions=nicoInfoFocusableActions(),active=document.activeElement;
  const content=document.getElementById('infoContent');
- const trailer=content?.querySelector('[data-tmdb-trailer]');
  const inFooter=actions.includes(active);
+ const trailer=content?.querySelector('[data-tmdb-trailer]');
+ const inContent=!!content&&(active===content||content.contains(active));
+ e.preventDefault();e.stopImmediatePropagation();
  if(ok){
-   if(inFooter||active===trailer){
-     e.preventDefault();e.stopImmediatePropagation();
-     if(!e.repeat)active.click();
-   }else{
-     e.preventDefault();e.stopImmediatePropagation();
-     nicoInfoDefaultFocus();
-   }
+   if(inFooter||active===trailer){if(!e.repeat)active.click();}
+   else if(inContent&&trailer){
+     nicoInfoFocus(trailer);
+     trailer.scrollIntoView({block:'nearest'});
+   }else nicoInfoDefaultFocus();
    return;
  }
- e.preventDefault();e.stopImmediatePropagation();
  if(inFooter){
    const index=actions.indexOf(active);
    if(direction==='left')nicoInfoFocus(actions[Math.max(0,index-1)]);
    if(direction==='right')nicoInfoFocus(actions[Math.min(actions.length-1,index+1)]);
-   if(direction==='up'){
-     if(trailer){nicoInfoFocus(trailer);trailer.scrollIntoView({block:'center'});}
-     else if(content){content.scrollTop=Math.max(0,content.scrollTop-Math.max(180,Math.round(content.clientHeight*.65)));}
-   }
+   if(direction==='up')nicoInfoReadMode(content,-nicoInfoScrollSize(content));
+   if(direction==='down')nicoInfoReadMode(content,nicoInfoScrollSize(content));
    return;
  }
- if(direction==='down'){
-   if(active===trailer){nicoInfoDefaultFocus();return;}
-   if(content){
-     const maxScroll=Math.max(0,content.scrollHeight-content.clientHeight);
-     if(content.scrollTop>=maxScroll-12){nicoInfoDefaultFocus();}
-     else content.scrollTop=Math.min(maxScroll,content.scrollTop+Math.max(140,Math.round(content.clientHeight*.7)));
-   }else nicoInfoDefaultFocus();
- }else if(direction==='up'){
-   if(content)content.scrollTop=Math.max(0,content.scrollTop-Math.max(140,Math.round(content.clientHeight*.7)));
+ if(!inContent){nicoInfoDefaultFocus();return;}
+ if(direction==='up'){
+   if(active===trailer){nicoInfoReadMode(content,-nicoInfoScrollSize(content));return;}
+   nicoInfoReadMode(content,-nicoInfoScrollSize(content));
+ }else if(direction==='down'){
+   if(active===trailer){nicoInfoReadMode(content,nicoInfoScrollSize(content));return;}
+   const max=Math.max(0,content.scrollHeight-content.clientHeight);
+   if(content.scrollTop>=max-10)nicoInfoDefaultFocus();
+   else nicoInfoReadMode(content,nicoInfoScrollSize(content));
  }else if(direction==='left'||direction==='right'){
-   /* Conteúdo informativo não rouba foco: a seta leva aos botões. */
-   nicoInfoDefaultFocus();
+   const row=nicoInfoScrollableRow(content);
+   if(row){
+     row.scrollLeft+=direction==='right'?185:-185;
+   }else if(trailer){
+     nicoInfoFocus(trailer);
+     trailer.scrollIntoView({block:'nearest'});
+   }else nicoInfoDefaultFocus();
  }
 },true);
 $('#infoClose').onclick=()=>$('#infoDialog').close();
@@ -3094,6 +3119,24 @@ document.addEventListener('focusin',event=>{
  const sidebar=document.getElementById('nico2Sidebar');
  if(sidebar)sidebar.classList.toggle('nico2-open',!!target.closest('.sidebar'));
 });
+/* Nico TV 2.7.3: navegação de ficha técnica das séries no Fire TV */
+document.addEventListener('keydown',function(e){
+ const section=document.getElementById('nicoTmdbSeries');
+ if(!section||!state.detail||document.getElementById('infoDialog')?.open)return;
+ if(document.activeElement!==section)return;
+ const direction=nicoInfoKeyDirection(e);
+ if(!direction)return;
+ e.preventDefault();e.stopImmediatePropagation();
+ if(direction==='up'||direction==='down'){
+   const by=direction==='down'?260:-260;
+   window.scrollBy({top:by,behavior:'auto'});
+ }else {
+   const rect=section.getBoundingClientRect();
+   const rows=[...section.querySelectorAll('.nico-tmdb-cast,.nico27-recs')];
+   const row=rows.find(el=>{let r=el.getBoundingClientRect();return r.bottom>0&&r.top<window.innerHeight;})||rows[0];
+   if(row)row.scrollLeft+=direction==='right'?180:-180;
+ }
+},true);
 // Fire Stick D-pad: temporada e episodios pertencem ao mesmo painel de navegacao.
 // Mantem intactos os eventos de clique e os dados de cada temporada.
 document.addEventListener('keydown',e=>{
