@@ -2993,6 +2993,12 @@ body.nico-collapsed .shell .sidebar #nicoInstalledVersion span{font-size:9px!imp
  .nico294-games-panel .nico294-games-head{margin-bottom:8px!important;}
 }
 </style>
+
+<style id="nico306-firetv-modals-and-player">
+#nico297EpgOverlay .nico297-epg-panel{max-height:82vh!important;overflow-y:auto!important;overscroll-behavior:contain!important;}
+#nico297EpgOverlay :is(button,input):focus,#nico294GamesOverlay button:focus,#nico303MatchOverlay button:focus{outline:3px solid #ffcf63!important;outline-offset:3px!important;box-shadow:0 0 0 5px #d9a63355!important;}
+#player.controls-hidden :is(#webcontrols,#playbackTimeline,#playerBar){opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -3114,7 +3120,7 @@ body.nico-collapsed .shell .sidebar #nicoInstalledVersion span{font-size:9px!imp
 // Registrado antes dos manipuladores globais e na fase de captura para impedir que
 // a navegação espacial mova o foco para a tela que permanece atrás do modal.
 function nico305TopFootballDialog(){
- return document.getElementById('nico303MatchOverlay') || document.getElementById('nico294GamesOverlay');
+ return document.getElementById('nico303MatchOverlay') || document.getElementById('nico294GamesOverlay') || document.getElementById('nico297EpgOverlay') || document.getElementById('nico296CategoriesOverlay');
 }
 function nico305DialogFocus(dialog, target){
  if(!target)return;
@@ -3124,7 +3130,7 @@ function nico305DialogFocus(dialog, target){
 function nico305CloseFootballDialog(){
  const top=nico305TopFootballDialog();
  if(!top)return false;
- const button=top.querySelector('.nico303-detail-close, .nico294-games-close');
+ const button=top.querySelector('.nico303-detail-close, .nico294-games-close, .nico297-epg-close, .nico296-categories-close');
  if(button){button.click();return true;}
  return false;
 }
@@ -3137,6 +3143,9 @@ function nico305FootballModalKey(event){
  const back=['Escape','Backspace','BrowserBack','GoBack'].includes(key);
  const activate=key==='Enter'||key===' ';
  if(!arrow&&!back&&!activate&&key!=='Tab')return;
+ // Não sequestra as teclas de edição do campo EPG nem o seletor de arquivos.
+ const editing=dialog.id==='nico297EpgOverlay' && /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName||'');
+ if(editing && ((key==='ArrowLeft'||key==='ArrowRight') || (activate && document.activeElement?.tagName==='INPUT')))return;
  event.stopImmediatePropagation();
  if(event.type==='keyup'){
    if(arrow||back||activate)event.preventDefault();
@@ -3144,7 +3153,7 @@ function nico305FootballModalKey(event){
  }
  if(back){event.preventDefault();nico305CloseFootballDialog();return;}
  if(key==='Tab'){
-   const buttons=[...dialog.querySelectorAll('button:not([disabled])')].filter(b=>b.getClientRects().length);
+   const buttons=[...dialog.querySelectorAll('button:not([disabled]),input:not([disabled])')].filter(b=>b.getClientRects().length);
    if(!buttons.length)return;
    const ix=buttons.indexOf(document.activeElement);
    const next=buttons[(ix+(event.shiftKey?-1:1)+buttons.length)%buttons.length]||buttons[0];
@@ -3152,7 +3161,7 @@ function nico305FootballModalKey(event){
  }
  if(arrow){
    event.preventDefault();
-   const buttons=[...dialog.querySelectorAll('button:not([disabled])')].filter(b=>b.getClientRects().length);
+   const buttons=[...dialog.querySelectorAll('button:not([disabled]),input:not([disabled])')].filter(b=>b.getClientRects().length);
    if(!buttons.length)return;
    const ix=buttons.indexOf(document.activeElement);
    const delta=(key==='ArrowRight'||key==='ArrowDown')?1:-1;
@@ -3167,7 +3176,7 @@ function nico305FootballModalKey(event){
      current.click();
    }else{
      event.preventDefault();
-     nico305DialogFocus(dialog,dialog.querySelector('button:not([disabled])'));
+     nico305DialogFocus(dialog,dialog.querySelector('button:not([disabled]),input:not([disabled])'));
    }
  }
 }
@@ -3823,7 +3832,7 @@ function nico297OpenEpgSettings(){
  const actions=document.createElement('div');actions.className='nico297-epg-actions';
  const apply=document.createElement('button');apply.type='button';apply.className='nico297-epg-primary';apply.textContent='Carregar e testar';
  const importFile=document.createElement('button');importFile.type='button';importFile.className='nico297-epg-secondary';importFile.textContent='Importar arquivo';
- const close=document.createElement('button');close.type='button';close.textContent='Fechar';close.className='nico297-epg-secondary';
+ const close=document.createElement('button');close.type='button';close.textContent='Fechar';close.className='nico297-epg-secondary nico297-epg-close';
  const prev=document.activeElement;
  function finish(){overlay.remove();try{prev?.focus({preventScroll:true})}catch(_){}}
  close.onclick=finish;
@@ -3894,7 +3903,7 @@ function nico294SoccerFixtures(){
 }
 /* Nico TV 2.9.9 — agenda de futebol via Worker seguro, com EPG como alternativa. */
 const NICO_FOOTBALL_ENDPOINT='https://nico-tv-football.dropemarkt.workers.dev/games';
-const nicoFootballState={games:[],date:null,loadedAt:0};
+const nicoFootballState={games:[],date:null,loadedAt:0,stale:false};
 function nicoFootballDate(){
  const fmt=new Intl.DateTimeFormat('en-GB',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'});
  const parts=Object.fromEntries(fmt.formatToParts(new Date()).filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
@@ -3927,18 +3936,27 @@ function nicoFootballEsc(s){return escapeHtml(String(s==null?'':s));}
 async function nicoFootballLoad(force=false){
  const day=nicoFootballDate();
  if(!force&&nicoFootballState.date===day&&Date.now()-nicoFootballState.loadedAt<15*60*1000)return nicoFootballState.games;
- const ctl=new AbortController();const timeout=setTimeout(()=>ctl.abort(),15000);
- try{
-  const response=await fetch(NICO_FOOTBALL_ENDPOINT,{signal:ctl.signal,cache:force?'no-store':'default'});
-  if(!response.ok)throw new Error('Servidor de futebol: HTTP '+response.status);
-  const data=await response.json();
-  if(!Array.isArray(data.games))throw new Error('Resposta inválida da API de futebol');
-  const games=data.games.filter(g=>g&&g.id&&g.home&&g.away&&g.date);
-  nicoFootballState.games=games;
-  nicoFootballState.date=day;
-  nicoFootballState.loadedAt=Date.now();
-  return games;
- }finally{clearTimeout(timeout);}
+ let lastError=null;
+ for(let attempt=0;attempt<2;attempt++){
+  const ctl=new AbortController();const timeout=setTimeout(()=>ctl.abort(),attempt===0?12000:18000);
+  try{
+   const response=await fetch(NICO_FOOTBALL_ENDPOINT,{signal:ctl.signal,cache:force?'no-store':'default'});
+   if(!response.ok)throw new Error('Worker HTTP '+response.status);
+   const data=await response.json();
+   if(!Array.isArray(data.games))throw new Error(data.error||'O Worker retornou dados sem a lista de jogos');
+   const games=data.games.filter(g=>g&&g.id&&g.home&&g.away&&g.date);
+   nicoFootballState.games=games;nicoFootballState.date=day;nicoFootballState.loadedAt=Date.now();nicoFootballState.stale=false;
+   return games;
+  }catch(err){lastError=err;}
+  finally{clearTimeout(timeout);}
+ }
+ if(nicoFootballState.date===day&&nicoFootballState.games.length){
+   // Exibir resultado de cache se o Fire OS estiver temporariamente sem rede.
+   nicoFootballState.stale=true;
+   return nicoFootballState.games;
+ }
+ const why=lastError?.name==='AbortError'?'tempo de resposta excedido':String(lastError?.message||lastError||'conexão indisponível');
+ throw new Error(why);
 }
 function nico303Brazil(game){return ['brasil','brazil'].includes(String(game.country||'').toLocaleLowerCase('pt-BR'));}
 function nico303MatchPriority(game){
@@ -3992,7 +4010,7 @@ function nico294ShowGamesToday(){
    const pa=priority[nicoFootballStatus(a.status)[1]],pb=priority[nicoFootballStatus(b.status)[1]];
    return pa-pb || new Date(a.date)-new Date(b.date);
   });
-  summary.textContent=shown.length+' partida'+(shown.length===1?'':'s')+' encontrada'+(shown.length===1?'':'s')+' · '+games.length+' no total';
+  summary.textContent=shown.length+' partida'+(shown.length===1?'':'s')+' encontrada'+(shown.length===1?'':'s')+' · '+games.length+' no total'+(nicoFootballState.stale?' · Dados anteriores (sem conexão)':'');
   list.replaceChildren();
   if(!shown.length){const empty=document.createElement('div');empty.className='nico294-games-empty';empty.textContent='Nenhuma partida encontrada para este filtro.';list.append(empty);return;}
   // Agrupa por competição. A chave considera também o país para evitar homônimos.
@@ -4067,7 +4085,7 @@ function nico294ShowGamesToday(){
   try{games=await nicoFootballLoad(force);draw();}
   catch(err){if(!alive)return;summary.textContent='Não foi possível consultar a agenda.';
    const empty=document.createElement('div');empty.className='nico294-games-empty';
-   empty.textContent='Verifique a conexão e o Worker de futebol. '+(err?.message||'Erro desconhecido');list.append(empty);
+   empty.textContent='A agenda não carregou no dispositivo: '+(err?.message||'Erro desconhecido')+'. Confira https://nico-tv-football.dropemarkt.workers.dev/health e use Atualizar.';list.append(empty);
   }finally{refresh.disabled=false;}
  }
  refresh.onclick=()=>load(true);
@@ -4754,10 +4772,12 @@ function updatePlaybackControls(){
 const PLAYER_IDLE_MS=3000;
 let lastRealPlayerInteraction=0;
 let playerIdleWatchdog=null;
+let nico306SeekDragStarted=0;
 function playerMenuActive(){
  const drawer=$('#drawer'),tracks=$('#trackPanel'),next=$('#nextEpisodeCard');
- return drawer.classList.contains('on') || !tracks.hidden || !next.hidden ||
-        $('#playbackSeek').dataset.dragging==='1';
+ const seek=$('#playbackSeek');
+ if(seek.dataset.dragging==='1' && Date.now()-nico306SeekDragStarted>5000){delete seek.dataset.dragging;nico306SeekDragStarted=0;}
+ return drawer.classList.contains('on') || !tracks.hidden || !next.hidden || seek.dataset.dragging==='1';
 }
 function showPlayerBar(){
  const player=$('#player');
@@ -4783,7 +4803,7 @@ function startPlayback(){
   const c=state.queue[state.qi];if(!c)return;
   markRecent(c);updatePlayerFav();
   const player=$('#player'),v=$('#video'), msg=$('#playerMsg');
-  clearNextEpisode();lastPointerPosition=null;player.classList.add('on');state.drawer=false;$('#drawer').classList.remove('on');closeTrackPanel();
+  clearNextEpisode();lastPointerPosition=null;delete $('#playbackSeek').dataset.dragging;nico306SeekDragStarted=0;player.classList.add('on');state.drawer=false;$('#drawer').classList.remove('on');closeTrackPanel();
   $('#playerTitle').textContent=c.name;
   $('#playerSub').textContent=playerSubtitle(c,state.vod);
   msg.style.display='grid';msg.textContent='Carregando transmissão…';
@@ -4969,8 +4989,8 @@ $('#player').addEventListener('pointermove',e=>{
  showPlayerBar();
 });
 $('#player').addEventListener('pointerdown',()=>{delete $('#player').dataset.keyboardNav;showPlayerBar();});
-$('#playbackSeek').addEventListener('pointerdown',()=>{$('#playbackSeek').dataset.dragging='1';showPlayerBar();});
-window.addEventListener('pointerup',()=>{if($('#playbackSeek').dataset.dragging){delete $('#playbackSeek').dataset.dragging;showPlayerBar();}});
+$('#playbackSeek').addEventListener('pointerdown',()=>{nico306SeekDragStarted=Date.now();$('#playbackSeek').dataset.dragging='1';showPlayerBar();});
+window.addEventListener('pointerup',()=>{if($('#playbackSeek').dataset.dragging){delete $('#playbackSeek').dataset.dragging;nico306SeekDragStarted=0;showPlayerBar();}});
 document.addEventListener('fullscreenchange',syncFullscreenButton);
 document.addEventListener('webkitfullscreenchange',syncFullscreenButton);
 
