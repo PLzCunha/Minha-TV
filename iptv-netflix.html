@@ -4438,6 +4438,7 @@ function nicoF2ContinueRail(app){
     const remove=document.createElement('button');remove.type='button';remove.className='nico23-dismiss';
     remove.textContent='×';remove.title='Remover de Continuar Assistindo';
     remove.setAttribute('aria-label','Remover '+(entry.name||'conteúdo')+' de Continuar Assistindo');
+    remove.setAttribute('title','Seta para cima no card para selecionar Remover');
     remove.onclick=e=>{e.preventDefault();e.stopPropagation();nico23Dismiss(entry);};
     remove.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.stopPropagation();}};
     remove.onkeyup=e=>{if(e.key==='Enter'||e.key===' '){e.stopPropagation();}};
@@ -5290,6 +5291,22 @@ document.addEventListener('keydown',e=>{
  if($('#player').classList.contains('on'))return;
  if($('#dlg').open || $('#guideDialog').open || $('#infoDialog').open)return;
  const key={'19':'ArrowUp','20':'ArrowDown','21':'ArrowLeft','22':'ArrowRight'}[String(e.keyCode)]||e.key;
+ // Fire Stick 3.0.8: subir do card de Continuar Assistindo foca o X, descer retorna.
+ // O evento e consumido ANTES do navegador global de prateleiras.
+ const focused=document.activeElement;
+ const dismissCard=focused?.closest?.('.nico-f2-progress .nico-f2-tile');
+ if(dismissCard && key==='ArrowUp' && focused===dismissCard){
+   const remove=dismissCard.querySelector('.nico23-dismiss');
+   if(remove){e.preventDefault();e.stopImmediatePropagation();remove.focus({preventScroll:true});return;}
+ }
+ if(dismissCard && focused?.classList?.contains('nico23-dismiss')){
+   if(key==='ArrowDown'||key==='Escape'||key==='Backspace'){
+     e.preventDefault();e.stopImmediatePropagation();dismissCard.focus({preventScroll:true});return;
+   }
+   if(key==='Enter'||key===' '||e.keyCode===23||e.keyCode===66){
+     e.preventDefault();e.stopImmediatePropagation();focused.click();return;
+   }
+ }
  if(['Escape','Backspace','GoBack','BrowserBack'].includes(key)&&document.querySelector('#app .nico-category-panel:not([hidden])')){e.preventDefault();e.stopImmediatePropagation();nico21Back();return;}
  if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))return;
  if(e.target?.matches('input,textarea,[contenteditable=true]'))return;
