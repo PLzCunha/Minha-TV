@@ -1755,6 +1755,1212 @@ body.nico-collapsed .shell .sidebar #nicoInstalledVersion span{font-size:9px!imp
 @media(max-height:760px){.shell .sidebar #nicoInstalledVersion{margin-top:2px!important;padding:2px!important}#infoDialog.info-dialog{height:88vh!important;max-height:88vh!important}}
 @media(max-width:700px){#infoDialog.info-dialog{width:89vw!important;max-width:89vw!important}}
 </style>
+
+<style id="nico29TvRefinement">
+/* Nico TV — acabamento Fire TV 720p/1080p; sem alterações no player */
+:root{--nico29-gold:#efbd55}
+/* A versão é informação, não um alvo de navegação; segue o fluxo flex e nunca cobre botões. */
+.shell .sidebar{overflow-y:auto!important;overscroll-behavior:contain!important;box-sizing:border-box!important}
+.shell .sidebar .nav{flex-shrink:0!important}
+.shell .sidebar .spacer{min-height:0!important;flex:1 1 4px!important}
+.shell .sidebar #nicoInstalledVersion{
+ position:relative!important;inset:auto!important;display:flex!important;flex-direction:column!important;
+ align-items:center!important;justify-content:center!important;flex:0 0 auto!important;
+ width:100%!important;max-height:none!important;min-height:20px!important;
+ margin:3px auto 0!important;padding:4px 1px 1px!important;border:0!important;
+ background:transparent!important;box-shadow:none!important;letter-spacing:0!important;
+ color:#a9a095!important;font:500 9px/1.2 Arial,sans-serif!important;pointer-events:none!important;
+ white-space:nowrap!important;z-index:0!important
+}
+.shell .sidebar #nicoInstalledVersion span{display:block!important;margin:2px 0 0!important;font:700 10px/1.15 Arial,sans-serif!important;color:#e9bf64!important;letter-spacing:0!important;overflow:visible!important}
+body.nico-collapsed .shell .sidebar #nicoInstalledVersion{font-size:0!important;min-height:17px!important;padding:0!important;margin:2px auto 0!important}
+body.nico-collapsed .shell .sidebar #nicoInstalledVersion span{font-size:9px!important}
+/* Cinematografia: backdrop 16:9, contraste, sem áreas vazias e sem o poster ampliar a seção. */
+#app.nico2-home .nico2-hero{height:clamp(315px,44vh,480px)!important;min-height:315px!important;max-height:480px!important;padding-top:70px!important;padding-bottom:23px!important;contain:layout!important}
+#app.nico2-home .nico2-hero .hero-copy{width:min(65%,680px)!important;max-width:680px!important;max-height:100%!important;overflow:hidden!important}
+#app.nico2-home .nico2-hero h1{font-size:clamp(29px,4.1vw,59px)!important;line-height:1.03!important;max-width:100%!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;overflow-wrap:anywhere!important}
+#app.nico2-home .nico2-hero .hero-copy>p{display:-webkit-box!important;-webkit-line-clamp:3!important;-webkit-box-orient:vertical!important;overflow:hidden!important;max-height:4.65em!important;font-size:clamp(13px,1.35vw,18px)!important;line-height:1.55!important;max-width:620px!important}
+#app.nico2-home .nico2-hero-backdrop{background-position:72% 38%!important;filter:saturate(1.03) brightness(.87)!important;transform:scale(1.04)!important}
+#app.nico2-home .nico2-hero-shade{background:linear-gradient(90deg,#080605 0%,#080605f4 22%,#080605c9 46%,#08060532 85%),linear-gradient(0deg,#080605 0%,transparent 45%)!important}
+#app.nico2-home .nico2-hero.nico29-tmdb-backdrop .nico2-hero-poster{display:none!important}
+#app.nico2-home .nico2-hero .hero-actions{display:flex!important;flex-wrap:wrap!important;gap:9px!important;align-items:center!important;max-width:100%!important}
+#app.nico2-home .nico2-hero .hero-actions .btn{min-height:46px!important;font-size:clamp(13px,1.3vw,17px)!important;padding:9px 18px!important}
+#app.nico2-home #nico29HeroTrailer[hidden]{display:none!important}
+#app .card:focus-visible,#app .card:focus,#app button:focus-visible,#app button:focus,.sidebar .navbtn:focus-visible{outline:3px solid #ffd45e!important;outline-offset:2px!important;box-shadow:0 0 0 4px #080605,0 0 0 7px #e1a22c85!important;z-index:8!important}
+/* Detalhes verticais mais legíveis, imagem compacta e seções simples. */
+#infoDialog.info-dialog{box-sizing:border-box!important;width:min(660px,85vw)!important;max-width:660px!important;height:min(85vh,730px)!important;max-height:85vh!important;padding:0!important;border:1px solid #b18438!important;border-radius:20px!important;background:#100d0b!important;color:#f7f2e9!important;overflow:hidden!important}
+#infoDialog #infoContent{padding:18px 19px!important;max-height:calc(85vh - 89px)!important;overflow-y:auto!important;overflow-x:hidden!important}
+#infoDialog .nico29-info-header{display:grid;grid-template-columns:minmax(88px,125px) minmax(0,1fr);gap:18px;align-items:start;margin-bottom:8px}
+#infoDialog .nico29-info-poster{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:11px;border:1px solid #a075315b;background:#1f1a16}
+#infoDialog .nico29-info-poster[hidden]{display:none}
+#infoDialog .nico29-info-summary{min-width:0}
+#infoDialog .nico29-eyebrow{font-size:11px;letter-spacing:.11em;color:#e0b650;margin:1px 0 7px;font-weight:750}
+#infoDialog #infoContent .nico29-info-header h2{font-size:clamp(23px,2.4vw,30px)!important;line-height:1.14!important;margin:0 0 12px!important;overflow-wrap:anywhere}
+#infoDialog .nico29-info-overview{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;font-size:14px!important;line-height:1.48!important;color:#d6ccc0;margin:9px 0 0!important}
+#infoDialog #nico273Hint{font-size:11px!important;padding:7px 0 9px!important;color:#bbac8f!important}
+#infoDialog .nico28-details{margin-top:0!important}
+#infoDialog .nico28-body{padding:11px 12px!important}
+#infoDialog .nico28-synopsis{max-height:6.2em!important}
+#infoDialog .nico28-tab{min-height:46px!important;font-size:15px!important;padding:10px 13px!important}
+#infoDialog .nico28-panel{max-width:100%;overflow-x:hidden}
+#infoDialog .nico27-recs,#infoDialog .nico-tmdb-cast{display:flex;gap:11px;overflow-x:auto;max-width:100%;overscroll-behavior-x:contain;scroll-snap-type:x proximity;padding:8px 5px 14px}
+#infoDialog .nico28-rec{scroll-snap-align:start;flex:0 0 106px;min-width:106px;min-height:177px}
+#infoDialog .nico28-rec:focus,#infoDialog .nico28-tab:focus{outline:3px solid #ffd45e!important;outline-offset:2px!important}
+#infoDialog .info-actions{position:sticky!important;bottom:0!important;padding:10px 15px!important;background:#0d0a08!important;border-top:1px solid #6b512b88!important;gap:9px!important;min-height:66px!important}
+#infoDialog .info-actions .btn{min-height:46px!important;white-space:nowrap!important}
+@media(max-height:760px){
+ #app.nico2-home .nico2-hero{height:clamp(290px,42vh,370px)!important;min-height:290px!important;padding-top:58px!important}
+ #infoDialog.info-dialog{height:88vh!important;max-height:88vh!important}
+ #infoDialog #infoContent{max-height:calc(88vh - 82px)!important}
+ .shell .sidebar #nicoInstalledVersion{font-size:8px!important;padding:1px!important;margin:1px auto 0!important}
+ .shell .sidebar #nicoInstalledVersion span{font-size:9px!important;margin:0!important}
+}
+@media(max-width:800px){
+ #app.nico2-home .nico2-hero .hero-copy{width:94%!important}
+ #app.nico2-home .nico2-hero .hero-copy>p{-webkit-line-clamp:2!important}
+ #infoDialog.info-dialog{width:91vw!important;max-width:91vw!important}
+ #infoDialog .nico29-info-header{grid-template-columns:85px minmax(0,1fr);gap:10px}
+ #infoDialog .nico29-info-overview{-webkit-line-clamp:3}
+}
+</style>
+
+<style id="nico282HeroBackdropFix">
+/* 2.8.2: Correct stacked hero layers. Background is set only after the TMDB image has loaded.
+   IPTV poster is not stretched into a horizontal backdrop; IPTV media/player are untouched. */
+#app.nico2-home .nico2-hero{
+  position:relative!important; isolation:isolate!important; overflow:hidden!important;
+  background:radial-gradient(ellipse 65% 100% at 78% 28%,#352112 0%,#160f0a 56%,#090705 100%)!important;
+  min-height:370px!important; height:clamp(370px,46vh,505px)!important;
+}
+#app.nico2-home .nico2-hero .nico2-hero-backdrop{
+  display:block!important;position:absolute!important;inset:0!important;
+  z-index:0!important;opacity:0!important;pointer-events:none!important;
+  background-repeat:no-repeat!important;background-position:68% 35%!important;
+  background-size:cover!important;filter:none!important;transform:none!important;
+  transition:opacity .35s ease!important;
+}
+#app.nico2-home .nico2-hero.nico29-tmdb-backdrop .nico2-hero-backdrop{opacity:1!important}
+#app.nico2-home .nico2-hero .nico2-hero-shade{
+  position:absolute!important;inset:0!important;z-index:1!important;pointer-events:none!important;
+  background:linear-gradient(90deg,#080604 0%,#080604f5 25%,#080604bd 48%,#0806042b 84%),linear-gradient(0deg,#080604c4 0%,transparent 40%)!important;
+}
+#app.nico2-home .nico2-hero .hero-copy{
+  position:relative!important;z-index:3!important;
+  overflow:visible!important;max-height:none!important;
+  height:auto!important; min-height:0!important;
+  max-width:680px!important; width:min(63%,680px)!important;
+  display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+}
+#app.nico2-home .nico2-hero .hero-copy h1{
+  display:block!important;visibility:visible!important;opacity:1!important;
+  color:#fff8ec!important;margin:8px 0 12px!important;
+  font-size:clamp(30px,4vw,60px)!important;line-height:1.06!important;
+  max-width:100%!important;overflow:hidden!important;
+  white-space:normal!important;text-overflow:ellipsis!important;
+}
+#app.nico2-home .nico2-hero .hero-copy>p{display:-webkit-box!important;-webkit-line-clamp:3!important;-webkit-box-orient:vertical!important;overflow:hidden!important;max-width:600px!important}
+#app.nico2-home .nico2-hero .nico2-hero-poster{
+  display:flex!important;position:absolute!important;z-index:2!important;
+  top:13%!important;right:5%!important;width:clamp(160px,21vw,280px)!important;
+  height:74%!important;opacity:1!important;transform:none!important;
+  border-radius:13px!important;overflow:hidden!important;
+  background:#19120e!important;box-shadow:0 20px 50px #0008!important;
+}
+#app.nico2-home .nico2-hero .nico2-hero-poster img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important}
+#app.nico2-home .nico2-hero.nico29-tmdb-backdrop .nico2-hero-poster{display:none!important}
+@media(max-width:850px){
+  #app.nico2-home .nico2-hero .hero-copy{width:75%!important}
+  #app.nico2-home .nico2-hero .nico2-hero-poster{right:1%!important;width:26%!important;opacity:.75!important}
+}
+@media(max-height:720px){#app.nico2-home .nico2-hero{height:385px!important;min-height:385px!important}}
+</style>
+
+<style id="nico283EditorialHeroes">
+/* Nico TV 2.8.3: somente interface; fluxo IPTV/ExoPlayer intocado. */
+#app .nico2-hero{isolation:isolate!important}
+#app .nico2-hero .hero-copy{z-index:5!important}
+#app .nico2-hero .hero-actions{display:flex!important;flex-flow:row wrap!important;gap:9px!important;align-items:center!important;max-width:100%!important;overflow:visible!important}
+#app .nico2-hero .hero-actions .btn{width:auto!important;max-width:100%!important;min-height:41px!important;margin:0!important;white-space:nowrap!important;flex:0 0 auto!important;font-size:clamp(12px,1.14vw,16px)!important;padding:8px 14px!important}
+#app .nico2-hero .hero-actions #heroFavBtn{visibility:visible!important;display:inline-flex!important;position:relative!important;opacity:1!important}
+#app .nico2-hero .hero-copy>p{max-height:3.2em!important;-webkit-line-clamp:2!important}
+#app.nico2-home .nico2-hero{height:clamp(345px,44vh,465px)!important;min-height:345px!important;max-height:none!important;padding-bottom:24px!important;overflow:hidden!important}
+#app.nico2-home .nico2-hero .hero-copy{max-height:none!important;overflow:visible!important;padding-bottom:10px!important;justify-content:center!important}
+#app .nico283-feature-nav{display:flex;align-items:center;gap:8px;margin-top:13px;max-width:100%;position:relative;z-index:8}
+#app .nico283-feature-nav button{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-width:32px;min-height:30px;height:30px;border-radius:16px;background:#18130ecc;border:1px solid #a67b32;color:#efca75;padding:0 8px;font-weight:800;cursor:pointer}
+#app .nico283-feature-nav button.nico283-dot{min-width:16px;width:17px;height:17px;min-height:17px;border-radius:50%;padding:0;background:#9a8b6a66;border:1px solid #e7c46b77}
+#app .nico283-feature-nav button.nico283-dot[aria-current="true"]{width:34px;border-radius:15px;background:#ffd16b;border-color:#ffe4a2}
+#app .nico283-feature-nav button:focus-visible{outline:3px solid #ffda79!important;outline-offset:3px!important;box-shadow:0 0 18px #f2bd4eaa!important}
+#app .nico283-feature-nav .nico283-count{font-size:11px;letter-spacing:.04em;color:#d1b77d}
+#app.nico283-catalog .nico2-hero{margin:15px 0 18px!important;border-radius:20px!important;min-height:310px!important;height:clamp(310px,38vh,420px)!important;padding:36px 30px 22px!important;overflow:hidden!important}
+#app.nico283-catalog .nico2-hero .hero-copy{position:relative!important;z-index:5!important;width:min(65%,680px)!important;max-height:none!important;overflow:visible!important}
+#app.nico283-catalog .nico2-hero .hero-copy h1{font-size:clamp(29px,3.5vw,56px)!important;line-height:1.06!important;display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;overflow:hidden!important}
+#app.nico283-catalog .nico2-hero .hero-copy>p{font-size:clamp(12px,1.15vw,16px)!important;color:#e9dbcd!important;line-height:1.4!important;margin:6px 0 10px!important}
+#app.nico283-catalog .nico2-hero .nico2-hero-backdrop{position:absolute!important;inset:0!important;z-index:0!important;background-size:cover!important;background-position:72% 35%!important;opacity:1!important}
+#app.nico283-catalog .nico2-hero .nico2-hero-shade{position:absolute!important;inset:0!important;z-index:1!important;background:linear-gradient(90deg,#0b0705 0%,#0b0705ec 30%,#09070599 61%,#09070530 100%),linear-gradient(0deg,#080605 0%,transparent 45%)!important}
+#app.nico283-catalog .nico2-hero .nico2-hero-poster{position:absolute!important;display:flex!important;right:5%!important;top:11%!important;width:min(24%,230px)!important;height:78%!important;z-index:2!important;justify-content:center;align-items:center;overflow:hidden;border-radius:13px}
+#app.nico283-catalog .nico2-hero .nico2-hero-poster img{height:100%!important;width:100%!important;object-fit:contain!important}
+#app.nico283-catalog .nico2-hero.nico29-tmdb-backdrop .nico2-hero-poster{display:none!important}
+#app.nico283-catalog .nico2-page-heading{margin-bottom:2px!important}
+@media(max-height:760px){
+ #app.nico2-home .nico2-hero{height:350px!important;min-height:350px!important;padding-top:48px!important;padding-bottom:16px!important}
+ #app.nico2-home .nico2-hero .hero-copy{gap:0!important;padding-bottom:8px!important}
+ #app.nico2-home .nico2-hero .hero-copy h1{font-size:clamp(29px,3.2vw,48px)!important;margin-bottom:5px!important}
+ #app.nico2-home .nico2-hero .hero-copy>p{font-size:clamp(12px,1.05vw,15px)!important;margin-bottom:7px!important}
+ #app.nico2-home .nico2-hero .hero-meta{margin-bottom:8px!important}
+ #app.nico283-catalog .nico2-hero{height:320px!important;min-height:320px!important}
+}
+@media(max-width:980px){
+ #app .nico2-hero .hero-actions .btn{padding:7px 10px!important;min-height:38px!important}
+ #app.nico283-catalog .nico2-hero{padding:25px 18px!important}
+ #app.nico283-catalog .nico2-hero .hero-copy{width:76%!important}
+}
+@media(max-width:700px){
+ #app.nico283-catalog .nico2-hero .hero-copy{width:95%!important}
+ #app.nico283-catalog .nico2-hero .nico2-hero-poster{opacity:.35!important}
+ #app .nico283-feature-nav{margin-top:8px}
+}
+</style>
+
+<style id="nico284BannerPosterPolish">
+/* Nico TV 2.8.4 — banner nítido, hero compacto e pôster de contingência. */
+#app.nico283-catalog .nico2-page-heading{
+  padding-top:12px!important;padding-bottom:4px!important;margin-top:0!important;margin-bottom:0!important;
+}
+#app.nico283-catalog .nico2-hero{
+  margin:8px 0 18px!important;min-height:292px!important;height:clamp(292px,37vh,380px)!important;
+  padding:22px 28px!important;display:flex!important;align-items:center!important;
+}
+#app.nico283-catalog .nico2-hero .hero-copy{justify-content:center!important;min-height:0!important;padding:0!important;gap:0!important}
+#app.nico283-catalog .nico2-hero .nico2-hero-backdrop,
+#app.nico2-home .nico2-hero .nico2-hero-backdrop{
+  filter:none!important;-webkit-filter:none!important;backdrop-filter:none!important;
+  transform:none!important;background-size:cover!important;background-repeat:no-repeat!important;
+  background-position:65% 42%!important;
+}
+#app.nico283-catalog .nico2-hero .nico2-hero-backdrop{opacity:1!important}
+#app.nico283-catalog .nico2-hero .nico2-hero-shade{
+  background:linear-gradient(90deg,rgba(5,4,3,.92) 0%,rgba(5,4,3,.72) 29%,rgba(5,4,3,.18) 65%,transparent 95%),
+             linear-gradient(0deg,rgba(5,4,3,.35),transparent 25%)!important;
+}
+#app.nico2-home .nico2-hero .nico2-hero-shade{
+  background:linear-gradient(90deg,rgba(5,4,3,.94) 0%,rgba(5,4,3,.76) 26%,rgba(5,4,3,.19) 64%,transparent 95%),
+             linear-gradient(0deg,rgba(5,4,3,.31),transparent 26%)!important;
+}
+#app.nico2-home .nico2-hero.nico2-portrait .nico2-hero-backdrop{
+  filter:none!important;transform:none!important;
+}
+#app .nico284-art-fallback{position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:11px;padding:15px 12px;text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse at 68% 15%,#433018 0%,#1a1714 52%,#100f0e 100%);color:#f0c26a}
+#app .nico284-art-fallback .nico284-art-icon{font-size:clamp(25px,3vw,40px);line-height:1}
+#app .nico284-art-fallback .nico284-art-title{font-size:clamp(11px,1.18vw,15px);font-weight:750;
+  line-height:1.25;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;
+  overflow-wrap:anywhere;max-width:100%}
+#app .nico284-art-fallback .nico284-art-mark{font-size:9px;font-weight:850;letter-spacing:.2em;opacity:.77}
+#app .nico2-card .thumb,#app .nico-f2-art{position:relative!important;overflow:hidden!important}
+#app .nico2-card .thumb>img,#app .nico-f2-art>img{position:relative;z-index:1}
+#app .nico2-card .thumb>.nico2-type,#app .nico2-card .thumb>.favstar{z-index:3;position:relative}
+@media(max-height:720px){
+ #app.nico283-catalog .nico2-page-heading{padding-top:10px!important}
+ #app.nico283-catalog .nico2-hero{height:292px!important;min-height:292px!important}
+}
+@media(max-width:780px){
+ #app.nico283-catalog .nico2-page-heading{padding-top:10px!important}
+ #app.nico283-catalog .nico2-hero{min-height:270px!important;height:270px!important;padding:15px 18px!important}
+ #app.nico283-catalog .nico2-hero .hero-copy{width:77%!important}
+}
+</style>
+
+<style id="nico285CatalogHeroLayout">
+/* 2.8.5 — Layout estrutural Filmes/Séries: remove o cabeçalho inflado,
+   ajusta a composição do banner e mantém botões/controles dentro da arte.
+   Não altera a home, URLs, controles do player nem TMDB. */
+#app.nico283-catalog{padding-top:0!important}
+#app.nico283-catalog .nico2-page-heading{
+  box-sizing:border-box!important;
+  padding:12px 6px 7px!important;
+  margin:0 0 4px!important;
+  min-height:0!important;
+  gap:0!important;
+}
+#app.nico283-catalog .nico2-page-heading span{font-size:10px!important;letter-spacing:.17em!important;line-height:1.25!important}
+#app.nico283-catalog .nico2-page-heading h2{font-size:clamp(24px,2.6vw,34px)!important;line-height:1.08!important;margin:5px 0 3px!important}
+#app.nico283-catalog .nico2-page-heading p{font-size:clamp(12px,1vw,15px)!important;line-height:1.3!important;margin:0!important}
+#app.nico283-catalog .nico2-hero{
+  box-sizing:border-box!important;
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  min-height:345px!important;
+  height:clamp(345px,45vh,430px)!important;
+  padding:22px clamp(18px,2.5vw,36px)!important;
+  margin:0 0 18px!important;
+  overflow:hidden!important;
+  border-radius:19px!important;
+  isolation:isolate!important;
+}
+#app.nico283-catalog .nico2-hero .nico2-hero-backdrop{
+  position:absolute!important;inset:0!important;
+  width:100%!important;height:100%!important;
+  background-size:cover!important;background-position:60% 45%!important;
+  background-repeat:no-repeat!important;
+  filter:none!important;-webkit-filter:none!important;
+  transform:none!important;opacity:1!important;z-index:0!important;
+}
+#app.nico283-catalog .nico2-hero .nico2-hero-shade{
+  position:absolute!important;inset:0!important;z-index:1!important;
+  background:linear-gradient(90deg,rgba(5,4,3,.90) 0%,rgba(5,4,3,.77) 28%,rgba(5,4,3,.32) 58%,rgba(5,4,3,.03) 100%),linear-gradient(0deg,rgba(5,4,3,.18),transparent 30%)!important;
+}
+#app.nico283-catalog .nico2-hero .hero-copy{
+  position:relative!important;
+  z-index:5!important;
+  box-sizing:border-box!important;
+  width:min(64%,670px)!important;
+  max-width:670px!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:auto!important;
+  max-height:100%!important;
+  display:flex!important;
+  flex:0 1 auto!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  gap:6px!important;
+  padding:0!important;
+  margin:0!important;
+  overflow:visible!important;
+}
+#app.nico283-catalog .nico2-hero .hero-copy .kicker{
+  font-size:clamp(10px,.85vw,12px)!important;
+  line-height:1.3!important;letter-spacing:.16em!important;
+  margin:0!important;
+}
+#app.nico283-catalog .nico2-hero .nico2-feature{
+  font-size:clamp(10px,.9vw,12px)!important;
+  line-height:1.25!important;
+  margin:0!important;
+}
+#app.nico283-catalog .nico2-hero .hero-copy h1{
+  font-size:clamp(28px,3.25vw,46px)!important;
+  line-height:1.07!important;
+  margin:0!important;
+  max-width:100%!important;
+  -webkit-line-clamp:2!important;
+}
+#app.nico283-catalog .nico2-hero .hero-copy>p{
+  font-size:clamp(12px,1.02vw,15px)!important;
+  line-height:1.35!important;
+  margin:0!important;
+  max-width:100%!important;
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:2!important;
+  overflow:hidden!important;
+}
+#app.nico283-catalog .nico2-hero .hero-meta{
+  display:flex!important;flex-wrap:wrap!important;gap:6px!important;
+  margin:3px 0 2px!important;max-width:100%!important;
+}
+#app.nico283-catalog .nico2-hero .hero-meta .chip{
+  font-size:clamp(10px,.8vw,12px)!important;
+  padding:5px 9px!important;
+  line-height:1.2!important;
+}
+#app.nico283-catalog .nico2-hero .hero-actions{
+  display:flex!important;flex-flow:row wrap!important;
+  gap:8px!important;margin:1px 0!important;max-width:100%!important;
+}
+#app.nico283-catalog .nico2-hero .hero-actions .btn{
+  flex:0 0 auto!important;display:inline-flex!important;
+  min-height:39px!important;height:auto!important;
+  padding:8px 12px!important;line-height:1.2!important;
+  font-size:clamp(12px,1vw,14px)!important;
+  margin:0!important;
+}
+#app.nico283-catalog .nico2-hero .nico283-feature-nav{
+  display:flex!important;flex-wrap:wrap!important;
+  align-items:center!important;gap:6px!important;
+  margin:4px 0 0!important;max-width:100%!important;
+}
+#app.nico283-catalog .nico2-hero .nico283-feature-nav button{
+  min-height:25px!important;height:25px!important;
+  min-width:27px!important;
+}
+#app.nico283-catalog .nico2-hero .nico283-feature-nav button.nico283-dot{
+  width:13px!important;min-width:13px!important;height:13px!important;
+  min-height:13px!important;padding:0!important;
+}
+#app.nico283-catalog .nico2-hero .nico283-feature-nav button.nico283-dot[aria-current="true"]{
+  width:26px!important;min-width:26px!important;
+}
+@media(max-height:720px){
+  #app.nico283-catalog .nico2-page-heading{padding:7px 6px 5px!important}
+  #app.nico283-catalog .nico2-hero{height:335px!important;min-height:335px!important;padding:17px 21px!important}
+  #app.nico283-catalog .nico2-hero .hero-copy{gap:4px!important}
+  #app.nico283-catalog .nico2-hero .hero-copy h1{font-size:clamp(26px,3vw,38px)!important}
+  #app.nico283-catalog .nico2-hero .hero-actions .btn{min-height:36px!important;padding:7px 10px!important}
+}
+@media(max-width:780px){
+  #app.nico283-catalog .nico2-hero{height:auto!important;min-height:330px!important;padding:16px!important}
+  #app.nico283-catalog .nico2-hero .hero-copy{width:85%!important}
+  #app.nico283-catalog .nico2-hero .hero-copy h1{font-size:clamp(24px,4vw,33px)!important}
+}
+@media(max-width:540px){
+  #app.nico283-catalog .nico2-hero .hero-copy{width:96%!important}
+  #app.nico283-catalog .nico2-hero .nico2-hero-shade{background:linear-gradient(90deg,rgba(5,4,3,.93),rgba(5,4,3,.37))!important}
+}
+</style>
+<style id="nico286IntegratedCatalogHero">
+/* Nico TV 2.8.6 — Filmes e Séries: busca/cabeçalho integrados ao backdrop.
+   Não move o campo de busca no DOM e não altera eventos, player ou TMDB. */
+.main.nico286-integrated{position:relative!important}
+.main.nico286-integrated > .topbar{
+  position:absolute!important;
+  top:clamp(12px,2.4vh,26px)!important;
+  right:clamp(34px,4.8vw,82px)!important;
+  left:auto!important;
+  bottom:auto!important;
+  z-index:35!important;
+  width:auto!important;
+  max-width:min(44%,520px)!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  pointer-events:none!important;
+}
+.main.nico286-integrated > .topbar .searchwrap{
+  display:flex!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:0!important;
+  pointer-events:auto!important;
+}
+.main.nico286-integrated > .topbar .search{
+  background:rgba(5,5,7,.79)!important;
+  border:1px solid #d2a341!important;
+  border-radius:999px!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:clamp(45px,5.5vh,58px)!important;
+  box-shadow:0 6px 20px rgba(0,0,0,.28)!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+.main.nico286-integrated > .topbar .search input{min-width:0!important}
+.main.nico286-integrated > .topbar .page-actions{display:none!important}
+#app.nico283-catalog{position:relative!important;padding-top:0!important}
+#app.nico283-catalog > .nico2-page-heading{
+  position:absolute!important;
+  top:clamp(17px,2.7vh,30px)!important;
+  left:clamp(23px,3.4vw,52px)!important;
+  z-index:18!important;
+  width:min(48%,550px)!important;
+  padding:0!important;
+  margin:0!important;
+  min-height:0!important;
+  background:none!important;
+  pointer-events:none!important;
+  text-shadow:0 2px 15px rgba(0,0,0,.85);
+}
+#app.nico283-catalog > .nico2-page-heading span{font-size:clamp(10px,.84vw,13px)!important;color:#f0c96d!important}
+#app.nico283-catalog > .nico2-page-heading h2{font-size:clamp(25px,2.7vw,42px)!important;margin:3px 0 2px!important;line-height:1.08!important}
+#app.nico283-catalog > .nico2-page-heading p{font-size:clamp(11px,1vw,15px)!important;color:#e7e0d4!important}
+#app.nico283-catalog > .nico2-hero{
+  display:flex!important;
+  position:relative!important;
+  box-sizing:border-box!important;
+  align-items:flex-end!important;
+  justify-content:flex-start!important;
+  height:60vh!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0 0 12px!important;
+  padding:clamp(102px,13vh,155px) clamp(22px,3.2vw,50px) clamp(15px,2.5vh,26px)!important;
+  border-radius:18px!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
+}
+#app.nico283-catalog > .nico2-hero .nico2-hero-backdrop{
+  position:absolute!important;inset:0!important;
+  width:100%!important;height:100%!important;
+  background-size:cover!important;
+  background-position:center 42%!important;
+  filter:none!important;-webkit-filter:none!important;
+  opacity:1!important;
+  transform:none!important;
+  z-index:0!important;
+}
+#app.nico283-catalog > .nico2-hero .nico2-hero-shade{
+  position:absolute!important;inset:0!important;z-index:1!important;
+  background:linear-gradient(90deg,rgba(4,4,5,.78) 0%,rgba(4,4,5,.55) 29%,rgba(4,4,5,.16) 58%,transparent 88%),linear-gradient(0deg,rgba(0,0,0,.42),transparent 49%)!important;
+}
+#app.nico283-catalog > .nico2-hero .hero-copy{
+  display:flex!important;
+  position:relative!important;
+  z-index:6!important;
+  flex:0 1 auto!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:flex-end!important;
+  width:min(65%,720px)!important;
+  max-width:720px!important;
+  min-height:0!important;
+  max-height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  gap:5px!important;
+}
+#app.nico283-catalog > .nico2-hero .hero-copy h1{font-size:clamp(25px,3.2vw,47px)!important;line-height:1.07!important;margin:0!important}
+#app.nico283-catalog > .nico2-hero .hero-copy > p{display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;overflow:hidden!important;font-size:clamp(12px,1vw,15px)!important;line-height:1.34!important;margin:0!important}
+#app.nico283-catalog > .nico2-hero .hero-meta{margin:2px 0!important;gap:5px!important}
+#app.nico283-catalog > .nico2-hero .hero-actions{margin:2px 0!important;gap:7px!important}
+#app.nico283-catalog > .nico2-hero .hero-actions .btn{min-height:38px!important;padding:7px 12px!important}
+#app.nico283-catalog > .nico2-hero .nico283-feature-nav{margin:3px 0 0!important;gap:6px!important}
+/* Reduzir conteúdo secundário em alturas baixas sem sobrepor controles. */
+@media(max-height:760px){
+ #app.nico283-catalog > .nico2-hero{height:64vh!important;padding-top:104px!important;padding-bottom:13px!important}
+ #app.nico283-catalog > .nico2-hero .hero-copy{gap:3px!important}
+ #app.nico283-catalog > .nico2-hero .hero-copy h1{font-size:clamp(23px,2.9vw,37px)!important}
+ #app.nico283-catalog > .nico2-hero .hero-copy .kicker{font-size:10px!important}
+ #app.nico283-catalog > .nico2-hero .hero-actions .btn{min-height:35px!important;padding:6px 10px!important}
+}
+@media(max-width:900px){
+ .main.nico286-integrated > .topbar{right:27px!important;max-width:48%!important}
+ #app.nico283-catalog > .nico2-page-heading{left:22px!important;width:45%!important}
+ #app.nico283-catalog > .nico2-hero .hero-copy{width:78%!important}
+}
+@media(max-width:620px){
+ .main.nico286-integrated > .topbar{top:12px!important;right:16px!important;max-width:48%!important}
+ #app.nico283-catalog > .nico2-page-heading{top:18px!important;left:18px!important;width:46%!important}
+ #app.nico283-catalog > .nico2-hero{height:65vh!important;padding:120px 15px 14px!important}
+ #app.nico283-catalog > .nico2-hero .hero-copy{width:100%!important}
+ #app.nico283-catalog > .nico2-hero .hero-copy .nico2-feature{display:none!important}
+ #app.nico283-catalog > .nico2-hero .hero-copy > p{-webkit-line-clamp:2!important}
+}
+</style>
+
+<style id="nico289SearchAnchoredToBanner">
+/* 2.8.9 — busca integrada ao próprio hero, sem coordenadas da topbar */
+.main.nico286-integrated > .topbar{visibility:hidden!important;pointer-events:none!important}
+#app.nico283-catalog > .nico2-hero{position:relative!important}
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner{
+  position:absolute!important;
+  top:clamp(12px,2.2vh,23px)!important;
+  right:clamp(16px,2.5vw,38px)!important;
+  left:auto!important;bottom:auto!important;
+  display:flex!important;flex:none!important;justify-content:flex-end!important;
+  width:auto!important;max-width:none!important;min-width:0!important;
+  height:auto!important;padding:0!important;margin:0!important;
+  z-index:60!important;pointer-events:auto!important;
+}
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner > .search{
+  width:clamp(210px,20vw,305px)!important;
+  min-width:0!important;max-width:305px!important;
+  flex:0 0 auto!important;height:39px!important;min-height:39px!important;
+  border-radius:22px!important;padding:0 12px!important;
+  background:rgba(5,10,17,.78)!important;
+  border:1px solid rgba(237,188,76,.84)!important;
+  box-shadow:0 6px 16px #0005!important;
+  display:flex!important;align-items:center!important;gap:9px!important;
+}
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner > .search input{
+  width:100%!important;min-width:0!important;font-size:12px!important;
+}
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner .nico-search-icon svg{
+  width:17px!important;height:17px!important;
+}
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner > .metric-pill,
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner > .page-actions{display:none!important}
+@media(max-width:800px){
+  #app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner{right:12px!important;top:10px!important}
+  #app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner > .search{
+    width:clamp(175px,30vw,235px)!important;height:36px!important;min-height:36px!important;
+  }
+}
+</style>
+
+<style id="nico290CatalogHeroAlignment">
+/* NICO TV 2.9.0: cabeçalho + busca ancorados no mesmo banner.
+   Sem ajustes ao player, TMDB, listas ou ao fluxo de reprodução. */
+#app.nico283-catalog > .nico2-hero{
+  position:relative!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:flex-start!important;
+  box-sizing:border-box!important;
+  height:clamp(410px,60vh,620px)!important;
+  min-height:410px!important;
+  max-height:none!important;
+  padding:112px clamp(20px,3.1vw,46px) 23px!important;
+  margin:0 0 12px!important;
+  overflow:hidden!important;
+}
+#app.nico283-catalog > .nico2-hero > .nico2-page-heading{
+  position:absolute!important;
+  top:clamp(15px,2.4vh,26px)!important;
+  left:clamp(21px,3.1vw,46px)!important;
+  width:min(48%,520px)!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  z-index:35!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:3px!important;
+  background:transparent!important;
+  pointer-events:none!important;
+}
+#app.nico283-catalog > .nico2-hero > .nico2-page-heading span{
+  font-size:clamp(10px,.85vw,13px)!important;
+  line-height:1.25!important;
+}
+#app.nico283-catalog > .nico2-hero > .nico2-page-heading h2{
+  font-size:clamp(28px,2.8vw,42px)!important;
+  line-height:1.05!important;
+  margin:0!important;
+}
+#app.nico283-catalog > .nico2-hero > .nico2-page-heading p{
+  font-size:clamp(11px,.95vw,15px)!important;
+  line-height:1.25!important;
+  margin:0!important;
+}
+#app.nico283-catalog > .nico2-hero > .hero-copy{
+  position:relative!important;
+  z-index:6!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-end!important;
+  align-items:flex-start!important;
+  gap:5px!important;
+  margin:0!important;
+  padding:0!important;
+  min-height:0!important;
+  max-height:none!important;
+  width:min(62%,730px)!important;
+}
+#app.nico283-catalog > .nico2-hero > .hero-copy .kicker{
+  font-size:clamp(10px,.85vw,13px)!important;
+  line-height:1.2!important;
+  margin:0!important;
+}
+#app.nico283-catalog > .nico2-hero > .hero-copy .nico2-feature{
+  margin:0 0 3px!important;
+  font-size:clamp(10px,.82vw,12px)!important;
+  line-height:1.2!important;
+}
+#app.nico283-catalog > .nico2-hero > .hero-copy h1{
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:2!important;
+  overflow:hidden!important;
+  font-size:clamp(25px,3.05vw,46px)!important;
+  line-height:1.08!important;
+  margin:0!important;
+}
+#app.nico283-catalog > .nico2-hero > .hero-copy > p{
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:2!important;
+  overflow:hidden!important;
+  line-height:1.38!important;
+  margin:0!important;
+  max-height:none!important;
+}
+#app.nico283-catalog > .nico2-hero > .hero-copy .hero-meta{margin:5px 0 3px!important}
+#app.nico283-catalog > .nico2-hero > .hero-copy .hero-actions{margin:2px 0!important;flex-wrap:wrap!important}
+#app.nico283-catalog > .nico2-hero > .hero-copy .nico283-feature-nav{margin:4px 0 0!important}
+/* Apenas o container original recebe o fundo; evita o campo azul em duplicidade. */
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner{
+  position:absolute!important;
+  inset:clamp(15px,2.4vh,26px) clamp(18px,2.5vw,38px) auto auto!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:40px!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  z-index:45!important;
+}
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner > label.search{
+  display:flex!important;
+  flex:0 0 auto!important;
+  align-items:center!important;
+  gap:9px!important;
+  box-sizing:border-box!important;
+  width:clamp(205px,20vw,280px)!important;
+  min-width:0!important;
+  max-width:280px!important;
+  height:40px!important;
+  min-height:40px!important;
+  margin:0!important;
+  padding:0 13px!important;
+  border:1px solid #D9A739!important;
+  border-radius:22px!important;
+  background:rgba(5,6,9,.78)!important;
+  background-image:none!important;
+  box-shadow:0 6px 18px rgba(0,0,0,.32)!important;
+  color:#F6F2E9!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner > label.search > input#search{
+  display:block!important;
+  flex:1 1 auto!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  background:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  color:#fff!important;
+  font-size:12px!important;
+  line-height:40px!important;
+}
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner > label.search > input#search::placeholder{
+  color:#d5cec1!important;
+  opacity:1!important;
+}
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner .nico-search-icon{
+  flex:0 0 18px!important;
+  width:18px!important;
+  height:18px!important;
+  color:#f5d18a!important;
+}
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner .nico-search-icon svg{
+  width:18px!important;
+  height:18px!important;
+}
+#app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner:focus-within > label.search{
+  border-color:#ffdb74!important;
+  box-shadow:0 0 0 3px rgba(255,213,100,.25)!important;
+}
+@media(max-height:640px){
+  #app.nico283-catalog > .nico2-hero{height:410px!important;padding-top:106px!important;padding-bottom:20px!important}
+  #app.nico283-catalog > .nico2-hero > .hero-copy{gap:3px!important}
+  #app.nico283-catalog > .nico2-hero > .hero-copy h1{font-size:clamp(24px,2.6vw,36px)!important}
+}
+@media(max-width:800px){
+  #app.nico283-catalog > .nico2-hero{min-height:435px!important;padding:118px 18px 18px!important}
+  #app.nico283-catalog > .nico2-hero > .nico2-page-heading{left:18px!important;top:17px!important;width:48%!important}
+  #app.nico283-catalog > .nico2-hero > .hero-copy{width:85%!important}
+  #app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner{right:14px!important;top:16px!important}
+  #app.nico283-catalog > .nico2-hero > .searchwrap.nico-search-on-banner > label.search{width:200px!important;height:38px!important}
+}
+</style>
+
+
+<style id="nico291CategoryBelowHero">
+/* Nico TV 2.9.1: seletor compacto abaixo do hero, sem atalhos redundantes. */
+#app.nico283-catalog > .nico-category-picker.nico-category-compact{
+  display:block!important;position:relative!important;inset:auto!important;
+  width:100%!important;min-height:0!important;height:auto!important;
+  margin:0 0 18px!important;padding:10px 15px!important;
+  border:1px solid rgba(204,155,57,.42)!important;
+  border-radius:14px!important;
+  background:rgba(20,17,13,.92)!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+#app.nico283-catalog > .nico-category-picker.nico-category-compact .nico-category-top{
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  gap:10px!important;min-height:40px!important;flex-wrap:nowrap!important;
+  margin:0!important;padding:0!important;
+}
+#app.nico283-catalog > .nico-category-picker.nico-category-compact .nico-category-title{
+  display:none!important;
+}
+#app.nico283-catalog > .nico-category-picker.nico-category-compact .nico-category-quick{
+  width:100%!important;display:flex!important;align-items:center!important;
+  justify-content:flex-end!important;margin:0!important;padding:0!important;
+}
+#app.nico283-catalog > .nico-category-picker.nico-category-compact .nico-category-trigger{
+  width:auto!important;min-width:190px!important;max-width:min(100%,340px)!important;
+  min-height:40px!important;height:40px!important;padding:0 15px!important;
+  background:#17130ded!important;color:#f3cd79!important;
+  border:1px solid #bd8d32!important;border-radius:10px!important;
+  box-shadow:none!important;font-size:13px!important;font-weight:700!important;
+}
+#app.nico283-catalog > .nico-category-picker.nico-category-compact .nico-category-trigger:focus-visible{
+  outline:3px solid #ffd56a!important;outline-offset:2px!important;
+}
+#app.nico283-catalog > .nico-category-picker.nico-category-compact .nico-category-panel{
+  margin-top:12px!important;
+}
+@media(max-width:700px){
+  #app.nico283-catalog > .nico-category-picker.nico-category-compact{padding:8px 10px!important}
+  #app.nico283-catalog > .nico-category-picker.nico-category-compact .nico-category-trigger{
+    min-width:0!important;width:100%!important;
+  }
+}
+</style>
+
+<style id="nico292-live-hero">
+/* Nico TV 2.9.2 — Ao Vivo com hero integrado, sem atalhos redundantes. */
+#app.nico283-catalog .nico2-hero.nico29-live-backdrop .nico2-hero-backdrop{
+  background-size:cover!important;
+  background-position:center center!important;
+  filter:blur(12px) saturate(1.12) brightness(.72)!important;
+  opacity:.9!important;
+  transform:scale(1.08)!important;
+}
+#app.nico283-catalog .nico2-hero.nico29-live-backdrop .nico2-hero-poster img{
+  object-fit:contain!important;
+  background:transparent!important;
+}
+#app.nico283-catalog .nico2-hero .nico2-page-heading{position:absolute!important;left:5%!important;top:20px!important;z-index:4!important;margin:0!important}
+#app.nico283-catalog .nico2-hero .nico2-page-heading p{margin:8px 0 0!important}
+#app.nico283-catalog .nico2-hero .searchwrap.nico-search-on-banner{
+  position:absolute!important;top:24px!important;right:5%!important;z-index:4!important;
+}
+#app.nico283-catalog .nico2-hero .searchwrap.nico-search-on-banner .search{
+  width:min(360px,32vw)!important;min-width:240px!important;
+}
+@media(max-width:900px){
+  #app.nico283-catalog .nico2-hero .searchwrap.nico-search-on-banner{position:relative!important;top:auto!important;right:auto!important;margin:14px 0 0!important}
+  #app.nico283-catalog .nico2-hero .nico2-page-heading{position:relative!important;left:auto!important;top:auto!important;margin:0 0 16px!important}
+}
+</style>
+
+<style id="nico293-live-editorial">
+/* Ao Vivo: identidade de TV, logos inteiras e categorias de verdade. */
+#app.nico283-catalog > .nico2-hero.nico293-live-hero{
+ background:radial-gradient(circle at 80% 42%,#58401b5c 0,transparent 32%),linear-gradient(125deg,#111b2a,#050912 68%,#1b1510)!important;
+ height:clamp(420px,58vh,570px)!important;
+ padding-top:155px!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico2-hero-backdrop{
+ inset:0!important;transform:none!important;filter:none!important;opacity:1!important;
+ background-image:radial-gradient(ellipse at 75% 50%,#5c401d33,transparent 52%)!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico2-hero-shade{
+ background:linear-gradient(90deg,#05090ff0 0%,#08101bbf 48%,#090d1680 72%,#070b12 100%)!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero > .hero-copy{
+ width:min(58%,660px)!important;max-width:660px!important;gap:7px!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico2-hero-poster.nico293-live-logo-panel{
+ display:flex!important;position:absolute!important;right:5%!important;top:31%!important;
+ width:30%!important;height:51%!important;min-width:0!important;max-width:350px!important;
+ z-index:3!important;align-items:center!important;justify-content:center!important;
+ background:linear-gradient(145deg,#1b2534df,#090f1bde)!important;
+ border:1px solid #c39a4a6a!important;border-radius:22px!important;
+ overflow:hidden!important;box-shadow:0 12px 45px #0007!important;
+ transform:none!important;opacity:1!important;mask-image:none!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico293-live-logo-panel img{
+ display:block!important;object-fit:contain!important;object-position:center!important;
+ width:82%!important;height:78%!important;background:transparent!important;filter:none!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico293-live-topics{
+ display:flex!important;gap:7px!important;flex-wrap:wrap!important;
+ margin:0 0 13px!important;max-width:660px!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico293-topic{
+ border-radius:20px!important;border:1px solid #ae873e!important;background:#111a29dc!important;
+ color:#f1dfb6!important;padding:7px 11px!important;min-height:34px!important;
+ font:700 12px/1.2 Arial,sans-serif!important;white-space:nowrap!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico293-topic[aria-pressed="true"]{
+ color:#211608!important;background:#f0c45e!important;border-color:#ffe08d!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico293-topic:focus-visible{
+ outline:3px solid #ffe083!important;outline-offset:3px!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .hero-copy>p{
+ max-width:560px!important;font-size:13px!important;
+}
+@media(max-height:760px){
+ #app.nico283-catalog > .nico2-hero.nico293-live-hero{height:410px!important;padding-top:110px!important;}
+ #app.nico283-catalog > .nico2-hero.nico293-live-hero .nico293-topic{padding:5px 9px!important;min-height:29px!important;font-size:11px!important}
+ #app.nico283-catalog > .nico2-hero.nico293-live-hero .nico293-live-topics{margin-bottom:3px!important}
+}
+@media(max-width:900px){
+ #app.nico283-catalog > .nico2-hero.nico293-live-hero .nico2-hero-poster.nico293-live-logo-panel{right:3%!important;width:25%!important;opacity:.65!important}
+ #app.nico283-catalog > .nico2-hero.nico293-live-hero > .hero-copy{width:75%!important}
+}
+</style>
+
+<style id="nico294-live-topics-fixtures">
+/* 2.9.4: separação real entre título/quantidade e os atalhos de temas */
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico293-live-topics{
+  position:absolute!important;
+  top:clamp(112px,15vh,132px)!important;
+  left:clamp(24px,3.4vw,52px)!important;
+  right:clamp(20px,3vw,50px)!important;
+  z-index:24!important;
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  gap:8px!important;
+  max-width:none!important;
+  width:auto!important;
+  margin:0!important;
+  padding:5px 4px 8px!important;
+  scrollbar-width:thin;
+  scrollbar-color:#9f752e transparent;
+  white-space:nowrap!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico293-topic{
+  flex:0 0 auto!important;
+  height:35px!important;
+  min-height:35px!important;
+  padding:6px 13px!important;
+  white-space:nowrap!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico294-games-button{
+  background:#241c12e8!important;
+  border-color:#e4b653!important;
+  color:#ffd77b!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero > .hero-copy{
+  gap:5px!important;
+}
+/* Reserva o cabeçalho e a linha temática sem deslocar o banner inteiro. */
+@media(max-height:760px){
+  #app.nico283-catalog > .nico2-hero.nico293-live-hero .nico293-live-topics{
+    top:108px!important;
+  }
+  #app.nico283-catalog > .nico2-hero.nico293-live-hero .nico293-topic{
+    height:32px!important;min-height:32px!important;
+  }
+}
+@media(max-width:760px){
+  #app.nico283-catalog > .nico2-hero.nico293-live-hero .nico293-live-topics{
+    left:18px!important;right:18px!important;top:115px!important;
+  }
+}
+.nico294-games-overlay{
+ position:fixed;inset:0;z-index:999999;
+ background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;
+ padding:24px;
+}
+.nico294-games-panel{
+ width:min(800px,96vw);max-height:min(680px,86vh);overflow:auto;
+ border:1px solid #c99b44;border-radius:20px;
+ padding:22px;background:linear-gradient(135deg,#16120e,#080d17);
+ color:#f6efe0;box-shadow:0 24px 65px #000c;
+}
+.nico294-games-head{display:flex;gap:20px;justify-content:space-between;align-items:flex-start;margin-bottom:15px}
+.nico294-games-head h2{margin:4px 0;font-size:clamp(22px,3vw,30px);color:#f3c661}
+.nico294-games-head p{margin:5px 0;color:#cfc4b2;font-size:13px}
+.nico294-games-close,.nico294-game-watch{cursor:pointer;border:1px solid #c49a49;border-radius:10px;background:#241e14;color:#f9db8e;padding:10px 16px;min-height:42px}
+.nico294-games-list{display:flex;flex-direction:column;gap:10px}
+.nico294-game{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px;border-radius:12px;background:#1b2029;border:1px solid #4b4140}
+.nico294-game strong{display:block;font-size:15px;margin:3px 0}
+.nico294-game small{display:block;color:#c4b8a9;margin-top:4px}
+.nico294-games-empty{padding:22px 12px;color:#d9cdbc;line-height:1.65}
+.nico294-games-overlay button:focus-visible{outline:3px solid #ffdf79!important;outline-offset:3px!important}
+@media(max-width:620px){.nico294-game{flex-direction:column;align-items:stretch}.nico294-games-panel{padding:15px}}
+</style>
+
+<style id="nico295-live-hero-layout">
+/* 2.9.5: A linha de temas é irmã do banner, nunca sobreposta ao conteúdo. */
+#app.nico283-catalog > .nico293-live-topics{
+  position:relative!important;
+  inset:auto!important;
+  top:auto!important;left:auto!important;right:auto!important;
+  z-index:2!important;
+  display:flex!important;align-items:center!important;
+  flex-wrap:nowrap!important;gap:9px!important;
+  width:100%!important;max-width:100%!important;
+  height:auto!important;min-height:58px!important;
+  padding:10px 12px!important;margin:8px 0!important;
+  overflow-x:auto!important;overflow-y:hidden!important;
+  scrollbar-width:thin!important;
+  scrollbar-color:#aa7f34 #14100c!important;
+  border-radius:14px!important;
+  border:1px solid rgba(207,160,69,.38)!important;
+  background:#110f0c!important;
+  box-sizing:border-box!important;
+}
+#app.nico283-catalog > .nico293-live-topics .nico295-topics-caption{
+  flex:0 0 auto!important;white-space:nowrap!important;
+  font-size:11px!important;font-weight:800!important;
+  color:#e7bd67!important;letter-spacing:.12em!important;
+  margin:0 8px 0 3px!important;
+}
+#app.nico283-catalog > .nico293-live-topics .nico293-topic{
+  flex:0 0 auto!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  min-height:38px!important;height:38px!important;padding:0 14px!important;
+  border:1px solid #a77f38!important;border-radius:22px!important;
+  background:#151923!important;color:#f3e5c7!important;
+  font-size:12px!important;font-weight:750!important;line-height:1.2!important;
+  white-space:nowrap!important;box-shadow:none!important;
+}
+#app.nico283-catalog > .nico293-live-topics .nico293-topic[aria-pressed="true"]{
+  background:#f0c462!important;color:#241809!important;border-color:#f7d98c!important;
+}
+#app.nico283-catalog > .nico293-live-topics .nico293-topic:focus-visible{
+  outline:3px solid #ffdb79!important;outline-offset:2px!important;
+  box-shadow:0 0 0 5px #d8a4443b!important;
+}
+#app.nico283-catalog > .nico293-live-topics .nico294-games-button{
+  background:#32210e!important;border-color:#d3a04b!important;color:#f7d58e!important;
+}
+/* Reduzir altura da área do canal agora que categorias não fazem parte do hero. */
+#app.nico283-catalog > .nico2-hero.nico293-live-hero{
+  height:clamp(380px,52vh,490px)!important;
+  min-height:380px!important;
+  padding-top:100px!important;
+  padding-bottom:20px!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero > .hero-copy{
+  position:relative!important;z-index:4!important;
+  display:flex!important;flex-direction:column!important;
+  justify-content:center!important;align-items:flex-start!important;
+  gap:7px!important;
+  width:min(59%,680px)!important;
+  max-width:680px!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:visible!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero > .hero-copy > h1{
+  margin:5px 0!important;
+  font-size:clamp(30px,3.3vw,57px)!important;
+  line-height:1.08!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero > .hero-copy > p{
+  line-height:1.45!important;
+  margin:0 0 3px!important;
+  max-width:540px!important;
+  max-height:58px!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero > .hero-copy > .hero-meta{
+  margin:3px 0 7px!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero > .hero-copy > .hero-actions{
+  margin:0 0 3px!important;
+}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico2-hero-poster.nico293-live-logo-panel{
+  top:28%!important;height:57%!important;
+}
+@media(max-height:760px){
+  #app.nico283-catalog > .nico2-hero.nico293-live-hero{
+    height:clamp(350px,55vh,420px)!important;min-height:350px!important;
+    padding-top:88px!important;
+  }
+}
+@media(max-width:900px){
+  #app.nico283-catalog > .nico293-live-topics{
+    padding:8px!important;min-height:52px!important;
+  }
+  #app.nico283-catalog > .nico293-live-topics .nico295-topics-caption{
+    display:none!important;
+  }
+  #app.nico283-catalog > .nico2-hero.nico293-live-hero > .hero-copy{
+    width:73%!important;
+  }
+}
+</style>
+
+<style id="nico296-live-layout-fixes">
+/* Nico TV 2.9.6 — Ao Vivo organizado: hero limpo + temas e categorias na mesma faixa */
+#app.nico283-catalog > .nico2-hero.nico293-live-hero{padding-top:178px!important;height:clamp(430px,60vh,590px)!important;}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero > .hero-copy{padding-top:18px!important;gap:10px!important;}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico2-page-heading{top:18px!important;}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico2-page-heading p{margin-top:10px!important;}
+#app.nico283-catalog > .nico2-hero.nico293-live-hero .nico2-feature{margin-top:6px!important;}
+#app.nico283-catalog > .nico293-live-topics{
+  position:relative!important;top:auto!important;left:auto!important;right:auto!important;z-index:8!important;
+  display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:nowrap!important;overflow-x:auto!important;
+  margin:14px clamp(18px,3vw,36px) 0!important;padding:14px 18px!important;
+  border:1px solid #8c692f!important;border-radius:18px!important;
+  background:linear-gradient(180deg,#17120ddd,#0d1117ee)!important;
+  box-shadow:0 8px 24px #00000044!important;white-space:nowrap!important;
+}
+#app.nico283-catalog > .nico293-live-topics .nico295-topics-caption{flex:0 0 auto!important;margin-right:6px!important;color:#d8ba77!important;font:800 12px/1 Arial,sans-serif!important;letter-spacing:.18em!important;}
+#app.nico283-catalog > .nico293-live-topics .nico293-topic{flex:0 0 auto!important;}
+#app.nico283-catalog > .nico293-live-topics .nico294-games-button{margin-left:2px!important;}
+#app.nico283-catalog > .nico293-live-topics .nico296-category-trigger{margin-left:auto!important;flex:0 0 auto!important;cursor:pointer;border-radius:16px!important;border:1px solid #c39a49!important;background:#241a10!important;color:#f3d48c!important;padding:10px 16px!important;font:700 14px/1 Arial,sans-serif!important;min-height:42px!important;}
+#app.nico283-catalog > .nico293-live-topics .nico296-category-trigger:focus-visible{outline:3px solid #ffe083!important;outline-offset:3px!important;}
+.nico296-categories-overlay{position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:24px;}
+.nico296-categories-panel{width:min(900px,96vw);max-height:min(700px,88vh);overflow:auto;border:1px solid #c99b44;border-radius:20px;padding:22px;background:linear-gradient(135deg,#16120e,#080d17);color:#f6efe0;box-shadow:0 24px 65px #000c;}
+.nico296-categories-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:16px;}
+.nico296-categories-head h2{margin:0;color:#f3c661;font-size:clamp(22px,3vw,30px)}
+.nico296-categories-head p{margin:6px 0 0;color:#cfc4b2;font-size:13px}
+.nico296-categories-close{cursor:pointer;border:1px solid #c49a49;border-radius:10px;background:#241e14;color:#f9db8e;padding:10px 16px;min-height:42px}
+.nico296-categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+.nico296-cat-btn{cursor:pointer;text-align:left;border:1px solid #835f2a;border-radius:14px;background:#111722;color:#f2e8d1;padding:14px 16px;min-height:72px;}
+.nico296-cat-btn strong,.nico296-cat-btn small{display:block} 
+.nico296-cat-btn small{margin-top:6px;color:#c1b399} 
+.nico296-cat-btn.active{background:#f0c45e;color:#201507;border-color:#ffe08d;}
+@media(max-width:760px){#app.nico283-catalog > .nico293-live-topics{padding:12px 14px!important;margin:12px 14px 0!important;} #app.nico283-catalog > .nico293-live-topics .nico296-category-trigger{margin-left:0!important;}}
+</style>
+
+
+<style id="nico297-epg-style">
+.nico297-epg-overlay{position:fixed;inset:0;z-index:999999;background:#000d;display:flex;justify-content:center;align-items:center;padding:22px}
+.nico297-epg-panel{background:linear-gradient(135deg,#18140e,#08111c);border:1px solid #c99b44;border-radius:19px;padding:26px;width:min(710px,95vw);max-height:85vh;overflow:auto;color:#f5e9d2;box-shadow:0 20px 60px #0009}
+.nico297-epg-panel h2{color:#f2c565;margin:0 0 12px;font-size:clamp(22px,2.5vw,30px)}
+.nico297-epg-panel p{line-height:1.5;color:#d6c7ac;margin:6px 0 16px}
+.nico297-epg-panel label{display:block;font-weight:700;margin:12px 0 6px}
+.nico297-epg-panel input{display:block;width:100%;box-sizing:border-box;height:50px;padding:0 13px;background:#091421;color:#fff;border:1px solid #b78a38;border-radius:11px;font-size:15px}
+.nico297-epg-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:19px}
+.nico297-epg-actions button{cursor:pointer;min-height:44px;padding:9px 17px;border-radius:11px;font-weight:700;border:1px solid #c99b44}
+.nico297-epg-primary{background:#f0c35c;color:#211707}.nico297-epg-secondary{background:#211a13;color:#f5d78c}
+.nico297-epg-panel .nico297-epg-status{min-height:35px;overflow-wrap:anywhere;color:#fff}
+.nico297-epg-actions button:focus-visible,.nico297-epg-panel input:focus-visible{outline:3px solid #ffd56a;outline-offset:2px}
+#app.nico283-catalog > .nico293-live-topics .nico297-epg-button{border-color:#d6ac58!important;background:#211b11!important;color:#f5d88c!important}
+</style>
+
+<style id="nico298-epg-local-file">
+.nico297-epg-panel #nico298EpgFile{height:auto;min-height:48px;padding:10px 12px;font-size:13px;color:#f4deb0;background:#121c29;border:1px dashed #ac8646}
+.nico297-epg-panel .nico298-epg-hint{font-size:12px;line-height:1.4;color:#b6b0aa;margin-top:7px}
+</style>
+
+<style id="nico299FootballSchedule">
+.nico299-games-panel{width:min(980px,96vw)!important;max-height:min(750px,88vh)!important;padding:22px!important}
+.nico299-filters{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:10px 0 14px}
+.nico299-filters button{border:1px solid #927036;border-radius:22px;background:#131b28;color:#f6e9d2;min-height:39px;padding:8px 14px;font-weight:700;cursor:pointer}
+.nico299-filters button[aria-pressed="true"]{background:#f2c662;color:#211608;border-color:#ffdf82}
+.nico299-filters .nico299-refresh{margin-left:auto}
+.nico299-summary{font-size:12px;color:#c9b893;margin-bottom:10px}
+.nico299-game{background:#111a26;border:1px solid #384459;border-radius:15px;padding:13px 15px;min-width:0}
+.nico299-competition{display:flex;align-items:center;gap:8px;color:#d7bf80;font-size:12px;margin-bottom:12px}
+.nico299-competition img{width:21px;height:21px;object-fit:contain}
+.nico299-match{display:grid;grid-template-columns:minmax(0,1fr) 105px minmax(0,1fr);gap:12px;align-items:center}
+.nico299-team{display:flex;align-items:center;gap:9px;min-width:0;color:#f3f3f4;font-weight:750;font-size:14px}
+.nico299-team:last-child{flex-direction:row-reverse;text-align:right}
+.nico299-team img{width:35px;height:35px;flex:0 0 35px;object-fit:contain}
+.nico299-team span{overflow-wrap:anywhere}
+.nico299-result{text-align:center}
+.nico299-result strong{display:block;font-size:20px;color:#f7d078;white-space:nowrap}
+.nico299-result small{display:block;font-size:11px;color:#aeb9c5;margin-top:4px}
+.nico299-result.nico299-live strong,.nico299-result.nico299-live small{color:#77e6a6}
+.nico299-disclaimer{font-size:11px;line-height:1.5;color:#a9a4a0;margin:16px 3px 0}
+.nico299-filters button:focus-visible{outline:3px solid #ffe083;outline-offset:2px}
+@media(max-width:650px){.nico299-match{grid-template-columns:minmax(0,1fr) 80px minmax(0,1fr);gap:5px}.nico299-team{font-size:11px;gap:5px}.nico299-team img{width:25px;height:25px;flex-basis:25px}.nico299-result strong{font-size:15px}.nico299-games-panel{padding:13px!important}}
+</style>
+
+<style id="nico300-football-logo-fallback">
+/* Fallback de emblemas: não deixar ícone de imagem quebrada em partidas. */
+.nico299-competition .nico300-league-emblem{width:21px;height:21px;flex:0 0 21px;}
+.nico299-team .nico300-team-emblem{width:35px;height:35px;flex:0 0 35px;}
+.nico300-emblem{display:inline-flex;align-items:center;justify-content:center;line-height:1;
+ color:#f0d08a;background:#2a2e38;border:1px solid #9b793d;border-radius:50%;
+ font-size:10px;font-weight:800;letter-spacing:-.01em;}
+.nico299-team img,.nico299-competition img{color:transparent;font-size:0;}
+.nico299-summary{padding:2px 0 5px;}
+@media(max-width:650px){.nico299-team .nico300-team-emblem{width:25px;height:25px;flex-basis:25px;font-size:8px}}
+</style>
+
+<style id="nico302PosterFix">
+#app .nico2-card .thumb.no-image>.nico284-art-fallback,
+#app .nico-f2-art.no-image>.nico284-art-fallback{z-index:1!important;}
+#app .nico2-card .thumb.no-image>.nico2-type,
+#app .nico2-card .thumb.no-image>.favstar{z-index:3!important;}
+</style>
+
+<style id="nico303-football-central">
+/* Central de Futebol: campeonatos agrupados e detalhes focáveis no Fire Stick */
+.nico303-league{border:1px solid #826632;border-radius:16px;margin:0 0 16px;padding:12px;background:#0c121b}
+.nico303-league-head{display:flex;align-items:center;gap:9px;margin:0 0 12px;color:#f2c968;font-weight:800;font-size:15px}
+.nico303-league-head img{width:27px;height:27px;object-fit:contain}
+.nico303-league-count{margin-left:auto;color:#b5a992;font-size:12px;font-weight:600}
+.nico303-league .nico299-game{margin-bottom:8px}
+.nico303-league .nico299-game:last-child{margin-bottom:0}
+.nico303-game-detail{width:100%;margin-top:9px;cursor:pointer;min-height:36px;background:#19212e;border:1px solid #735828;border-radius:9px;color:#f4d58d;font-weight:700}
+.nico303-game-detail:focus-visible,.nico303-detail-close:focus-visible{outline:3px solid #ffcf66;outline-offset:2px}
+.nico303-detail-overlay{position:fixed;inset:0;background:#000b;z-index:1000001;display:flex;justify-content:center;align-items:center;padding:20px}
+.nico303-detail-panel{background:linear-gradient(130deg,#161c28,#080b11);border:1px solid #cf9c44;border-radius:18px;padding:22px;width:min(650px,95vw);max-height:85vh;overflow:auto;color:#fff}
+.nico303-detail-panel h3{margin:0 0 16px;color:#f4cc72;font-size:22px}
+.nico303-detail-line{display:flex;justify-content:space-between;gap:16px;border-top:1px solid #2c3746;padding:12px 0;font-size:14px}
+.nico303-detail-line span:first-child{color:#b7c0d0}
+.nico303-detail-close{margin-top:14px;min-height:44px;padding:8px 18px;border-radius:10px;border:1px solid #e4b354;background:#20190d;color:#ffdd91;font-weight:700}
+.nico303-priority-note{color:#bdb3a2;font-size:12px;margin:3px 0 10px}
+</style>
+
+<style id="nico304-poster-home">
+/* Nico TV 3.0.4 — proporções por mídia somente nas prateleiras da Home. */
+#app.nico2-home .nico-f2-poster .nico-f2-rail{
+  display:flex!important;align-items:flex-start!important;gap:12px!important;
+  overflow-x:auto!important;overflow-y:hidden!important;
+  scroll-snap-type:x proximity!important;padding:5px 5px 13px!important;
+}
+#app.nico2-home .nico-f2-poster .nico-f2-tile,
+#app.nico2-home .nico-f2-poster .nico-f2-all{
+  flex:0 0 max(145px,calc((100% - 66px)/6))!important;
+  width:max(145px,calc((100% - 66px)/6))!important;
+  min-width:max(145px,calc((100% - 66px)/6))!important;
+  max-width:none!important;
+  height:auto!important;align-self:flex-start!important;
+  display:flex!important;flex-direction:column!important;
+  overflow:hidden!important;border-radius:13px!important;
+}
+#app.nico2-home .nico-f2-poster .nico-f2-tile .nico-f2-art{
+  position:relative!important;width:100%!important;height:auto!important;
+  aspect-ratio:2/3!important;min-height:0!important;max-height:none!important;
+  overflow:hidden!important;border-radius:12px 12px 0 0!important;
+  background:#10131c!important;border:0!important;
+}
+#app.nico2-home .nico-f2-poster .nico-f2-tile .nico-f2-art>img{
+  width:100%!important;height:100%!important;position:absolute!important;inset:0!important;
+  object-fit:contain!important;object-position:center!important;
+  display:block!important;max-width:none!important;
+}
+#app.nico2-home .nico-f2-poster .nico-f2-tile .nico-f2-info{
+  position:relative!important;display:block!important;flex:0 0 auto!important;
+  margin:0!important;padding:8px 9px 10px!important;
+  min-height:48px!important;background:#110d0a!important;
+}
+#app.nico2-home .nico-f2-poster .nico-f2-tile .nico-f2-info strong{
+  display:-webkit-box!important;-webkit-box-orient:vertical!important;
+  -webkit-line-clamp:2!important;white-space:normal!important;
+  overflow:hidden!important;text-overflow:ellipsis!important;
+  line-height:1.24!important;font-size:12px!important;
+}
+#app.nico2-home .nico-f2-poster .nico-f2-all{
+  aspect-ratio:auto!important;min-height:0!important;
+  justify-content:center!important;align-items:center!important;
+  padding:18px 8px!important;
+}
+/* Canais e Continuar Assistindo continuam 16:9; barra de progresso intacta. */
+#app.nico2-home .nico-f2-live .nico-f2-art,
+#app.nico2-home .nico-f2-progress .nico-f2-art{
+  aspect-ratio:16/9!important;
+}
+#app.nico2-home .nico-f2-live .nico-f2-art>img{
+  object-fit:contain!important;
+}
+@media(max-width:1000px){
+  #app.nico2-home .nico-f2-poster .nico-f2-tile,
+  #app.nico2-home .nico-f2-poster .nico-f2-all{
+    flex-basis:max(135px,calc((100% - 48px)/5))!important;
+    width:max(135px,calc((100% - 48px)/5))!important;
+    min-width:max(135px,calc((100% - 48px)/5))!important;
+  }
+}
+@media(max-width:680px){
+  #app.nico2-home .nico-f2-poster .nico-f2-tile,
+  #app.nico2-home .nico-f2-poster .nico-f2-all{
+    flex-basis:clamp(120px,34vw,170px)!important;
+    width:clamp(120px,34vw,170px)!important;
+    min-width:clamp(120px,34vw,170px)!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="shell">
@@ -1788,7 +2994,7 @@ body.nico-collapsed .shell .sidebar #nicoInstalledVersion span{font-size:9px!imp
         </div>
       </div>
       <div class="searchwrap">
-        <label class="search" for="search"><span class="nico-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span><input id="search" type="text" placeholder="Buscar canal, filme, série ou categoria" autocomplete="off"></label>
+        <label class="search" for="search"><span class="nico-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span><input id="search" type="text" placeholder="Buscar filmes ou séries" autocomplete="off"></label>
         <div class="metric-pill" id="counter">0 itens</div>
         <div class="page-actions">
           <button class="btn ghost" id="homeBtn">Início</button>
@@ -1908,7 +3114,7 @@ function nicoFilterLabel(group){
   return String(group||'Outros').replace(/^(?:canais|filmes|s[eé]ries)\s*[|:-]\s*/i,'').trim()||'Outros';
 }
 function nicoFilterPicker(app,{mode,chosen,entries,quick,onSelect,title}){
-  const host=document.createElement('section');host.className='nico-category-picker';
+  const host=document.createElement('section');host.className='nico-category-picker'+(!quick.length?' nico-category-compact':'');
   const bar=document.createElement('div');bar.className='nico-category-top';
   const info=document.createElement('div');info.className='nico-category-title';
   info.innerHTML=`<strong>${title}</strong><span>Escolha por categoria, sem percorrer dezenas de botões</span>`;
@@ -1922,7 +3128,7 @@ function nicoFilterPicker(app,{mode,chosen,entries,quick,onSelect,title}){
   const picker=document.createElement('button');picker.type='button';picker.className='nico-category-trigger';
   picker.dataset.categoryTrigger=mode;
   const selected=entries.find(([key])=>key===chosen);
-  picker.textContent=(selected?'▦ '+nicoFilterLabel(selected[1]):'▦ Escolher categoria')+'  ▾';
+  picker.textContent=(selected&&chosen!=='all'?'▦ '+nicoFilterLabel(selected[1]):'▦ Escolher categoria')+'  ▾';
   picker.setAttribute('aria-expanded',String(!!nicoFilterExpanded[mode]));
   picker.onclick=()=>{
     nicoFilterExpanded[mode]=!nicoFilterExpanded[mode];
@@ -1946,14 +3152,9 @@ function nicoFilterPicker(app,{mode,chosen,entries,quick,onSelect,title}){
   panel.append(grid);host.append(panel);app.append(host);
 }
 function liveFilterPanel(app,unfiltered){
+  // 2.9.6: categorias do Ao Vivo agora abrem em um seletor próprio na mesma faixa temática abaixo do hero.
   if(state.mode!=='live'||state.view||state.detail)return;
-  const groups=groupBy(unfiltered);
-  const quick=[['all','Todos',unfiltered.length],['fav','★ Favoritos',unfiltered.filter(isFav).length],['recent','↺ Recentes',state.liveRecent.length]];
-  const categories=[...groups].sort((a,b)=>a[0].localeCompare(b[0],'pt-BR')).map(([name,list])=>[name,name,list.length]);
-  nicoFilterPicker(app,{mode:'live',chosen:state.liveGroup,entries:categories,quick,title:'📺 Explorar canais',onSelect:key=>{
-    state.liveGroup=key;render();
-    document.querySelector(key==='all'||key==='fav'||key==='recent'?'.nico-category-option.active':'.nico-category-trigger')?.focus({preventScroll:true});
-  }});
+  return;
 }
 // Categorias Xtream e gêneros de metadados: cada catálogo tem seu filtro independente.
 function catalogTokens(c){
@@ -1980,11 +3181,12 @@ function catalogFilterPanel(app,unfiltered){
   });
   const categories=[...groups].sort((a,b)=>a[0].localeCompare(b[0],'pt-BR')).map(([g,n])=>['cat:'+g,g,n]);
   const genresList=[...genres].sort((a,b)=>a[1].name.localeCompare(b[1].name,'pt-BR')).map(([id,v])=>['genre:'+id,v.name,v.count]);
-  const entries=[...genresList,...categories];
-  const quick=[['all','Todos',unfiltered.length],['fav','★ Favoritos',unfiltered.filter(isFav).length],['recent','↺ Recentes',state.recent.length]];
+  const entries=[['all','Todas as categorias',unfiltered.length],...genresList,...categories];
+  // Filmes e séries: somente categorias; Favoritos e Recentes já têm atalhos próprios.
+  const quick=[];
   nicoFilterPicker(app,{mode,chosen,entries,quick,title:mode==='movies'?'🎬 Explorar filmes':'▣ Explorar séries',onSelect:key=>{
     state.catalogFilters[mode]=key;state.view=null;state.viewList=null;render();
-    document.querySelector(['all','fav','recent'].includes(key)?'.nico-category-option.active':'.nico-category-trigger')?.focus({preventScroll:true});
+    document.querySelector('.nico-category-trigger')?.focus({preventScroll:true});
   }});
 }
 function toggleFav(c){ const k=keyOf(c); const had=isFav(c); state.favorites = had ? state.favorites.filter(x=>x!==k) : [...state.favorites,k]; saveState(); toast(had?'Removido dos favoritos':'Adicionado aos favoritos'); render(); updatePlayerFav(); }
@@ -2051,7 +3253,7 @@ function parseEpg(xml){
   for(const p of items){
     const start=parseXmltvDate(p.getAttribute('start')); const stop=parseXmltvDate(p.getAttribute('stop'));
     if(!start||!stop) continue;
-    if(stop < new Date(now.getTime()-2*60*60*1000) || start > new Date(now.getTime()+18*60*60*1000)) continue;
+    if(stop < new Date(now.getFullYear(),now.getMonth(),now.getDate()) || start > new Date(now.getTime()+18*60*60*1000)) continue;
     const ch=(p.getAttribute('channel')||'').trim(); if(!ch) continue;
     const title=(p.querySelector('title')?.textContent||'Sem título').trim();
     const entry={start,stop,title,desc:(p.querySelector('desc')?.textContent||'').trim(),category:(p.querySelector('category')?.textContent||'').trim()};
@@ -2197,7 +3399,8 @@ function showInfo(c,playAction){
  $('#nicoTmdbConfig').hidden=true;
  const description=c.description||c.plot||c.info?.plot||'';
  const tags=[c.group||c.category,c.year||c.releaseDate,c.genre,c.rating?`★ ${c.rating}`:'',c.duration].filter(Boolean);
- $('#infoContent').innerHTML=`<div id="nico273Hint">↑ ↓ Navegar  ·  OK Selecionar  ·  ← → Mudar opção</div><h2>${escapeHtml(c.name||'Informações')}</h2><div class="info-tags">${tags.map(t=>`<span class="info-chip">${escapeHtml(String(t))}</span>`).join('')}</div><p>${escapeHtml(String(description||'Sinopse não disponível na fonte IPTV.'))}</p>`;
+  const art=nicoTmdbSafeUrl(c.logo||'') || (/^https?:\/\//i.test(String(c.logo||''))?String(c.logo):'');
+  $('#infoContent').innerHTML=`<div class="nico29-info-header">${art?`<img class="nico29-info-poster" src="${escapeHtml(art)}" alt="" onerror="this.hidden=true">`:''}<div class="nico29-info-summary"><div class="nico29-eyebrow">NICO TV · ${c.kind==='movie'?'FILME':c.kind==='series'?'SÉRIE':'CONTEÚDO'}</div><h2>${escapeHtml(c.name||'Informações')}</h2><div class="info-tags">${tags.map(t=>`<span class="info-chip">${escapeHtml(String(t))}</span>`).join('')}</div><p class="nico29-info-overview">${escapeHtml(String(description||'Sinopse não disponível na fonte IPTV.'))}</p></div></div><div id="nico273Hint">↑ ↓ Navegar entre seções · OK Selecionar · Voltar para fechar</div>`;
  $('#infoWatch').hidden=!playAction;
  $('#infoDialog').showModal();
  requestAnimationFrame(nicoInfoDefaultFocus);
@@ -2241,7 +3444,7 @@ async function importFrom(src){
     if(!list.length) throw new Error('empty');
     state.channels=list; state.movies=null; state.series=null; state.mode='live'; state.homeView=true; state.view=null; state.detail=null; state.query=''; state.favoriteOnly=false; state.recentOnly=false; state.liveGroup='all';state.liveRecent=[];store.set('nico_live_recent','[]'); $('#search').value='';
     store.set('nico_source',JSON.stringify(src.type==='xt'||src.url||src.epgUrl?src:{type:'m3u',text:src.text}));
-    if(epgUrl) await loadEpg(epgUrl);
+    if(epgUrl || store.get('nico_external_epg_url')) await loadEpg(epgUrl || store.get('nico_external_epg_url'));
     render();
   } catch(e) {
     Object.assign(state,prior);
@@ -2336,13 +3539,119 @@ function updateNav(){
 }
 function groupBy(list){ const m=new Map(); list.forEach(c=>{ if(!m.has(c.group)) m.set(c.group,[]); m.get(c.group).push(c); }); return m; }
 function searchFiltered(list){ const base=catalogFiltered(liveFiltered(selectList(list))); if(!state.query) return base; const q=state.query.toLocaleLowerCase('pt-BR'); return base.filter(c=>`${c.name} ${c.group}`.toLocaleLowerCase('pt-BR').includes(q)); }
+
+/* Nico TV 3.0.2 — recuperação de capas com cache por título e atualização de cards duplicados.
+   Não altera dados do IPTV, as URLs de reprodução ou o catálogo. */
+const nico302PosterCache=new Map(); // key -> {status, url, hosts} ; evita buscas repetidas
+const nico302PosterQueue=[];
+const nico302PosterQueued=new Set();
+let nico302PosterActive=0;
+let nico302PosterRequests=0;
+const NICO302_POSTER_MAX_REQUESTS=120; // somente capas necessárias e visíveis nesta sessão
+function nico302PosterKey(c){
+ return (c.kind==='series'?'tv':'movie')+'|'+nicoTmdbCleanTitle(c.name).toLocaleLowerCase('pt-BR')+'|'+nicoTmdbYear(c.year);
+}
+function nico302PosterUrl(d){
+ if(!d)return '';
+ return nicoTmdbSafeUrl(d.poster||d.posterUrl||d.poster_url||d.posterImage||d.images?.poster||d.images?.posterUrl||'');
+}
+function nico302ShowPoster(host,url){
+ if(!host?.isConnected || !url)return;
+ if(host.querySelector(':scope > img'))return;
+ const image=document.createElement('img');
+ image.alt='';image.decoding='async';image.loading='lazy';
+ image.onload=()=>{
+   if(!image.naturalWidth||!image.naturalHeight){image.remove();return;}
+   host.querySelector('.nico284-art-fallback')?.remove();
+   host.querySelector('.placeholder')?.remove();
+   host.classList.remove('no-image','nico-f2-missing');
+ };
+ image.onerror=()=>{image.remove();};
+ image.src=url;host.prepend(image);
+}
+function nico302PosterPump(){
+ while(nico302PosterActive<2 && nico302PosterQueue.length && nico302PosterRequests<NICO302_POSTER_MAX_REQUESTS){
+   const key=nico302PosterQueue.shift();nico302PosterQueued.delete(key);
+   const entry=nico302PosterCache.get(key);
+   if(!entry || entry.status!=='pending')continue;
+   if(![...entry.hosts].some(host=>host.isConnected))continue;
+   entry.status='loading';nico302PosterActive++;nico302PosterRequests++;
+   nicoTmdbGet(entry.c,entry.c.kind==='series'?'tv':'movie').then(d=>{
+     const url=nico302PosterUrl(d);
+     if(!url){entry.status='missing';return;}
+     // Uma única verificação da imagem por título antes de aplicá-la em todos os cards.
+     return new Promise(resolve=>{
+       const test=new Image();test.onload=()=>{
+         if(test.naturalWidth>=90 && test.naturalHeight>=90){entry.status='ready';entry.url=url;
+           for(const host of entry.hosts)nico302ShowPoster(host,url);
+         }else entry.status='missing';
+         resolve();
+       };
+       test.onerror=()=>{entry.status='missing';resolve();};
+       test.src=url;
+     });
+   }).catch(()=>{entry.status='missing';}).finally(()=>{
+     // Evita reter elementos removidos quando o catálogo é recriado.
+     entry.hosts=new Set([...entry.hosts].filter(host=>host.isConnected));
+     nico302PosterActive--;nico302PosterPump();
+   });
+ }
+}
+function nico302PosterEnqueue(host,c){
+ if(!host || !['movie','series'].includes(c.kind) || !nicoTmdbEndpoint())return;
+ const key=nico302PosterKey(c);
+ let entry=nico302PosterCache.get(key);
+ if(!entry){entry={status:'pending',url:'',hosts:new Set(),c};nico302PosterCache.set(key,entry);}
+ entry.hosts.add(host);
+ if(entry.status==='ready'){nico302ShowPoster(host,entry.url);return;}
+ if(entry.status==='missing'||entry.status==='loading')return;
+ if(!nico302PosterQueued.has(key) && nico302PosterRequests<NICO302_POSTER_MAX_REQUESTS){
+   nico302PosterQueued.add(key);nico302PosterQueue.push(key);nico302PosterPump();
+ }
+}
+const nico302PosterObserver=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{
+ for(const entry of entries){if(!entry.isIntersecting)continue;
+  nico302PosterObserver.unobserve(entry.target);
+  const job=entry.target._nico302PosterJob;
+  if(job){delete entry.target._nico302PosterJob;nico302PosterEnqueue(entry.target,job);}
+ }
+},{rootMargin:'220px'}):null;
+function nico284MissingArt(host,c){
+ if(!host)return;
+ if(!host.querySelector('.nico284-art-fallback')){
+   host.classList.add('no-image');
+   host.querySelector('.placeholder')?.remove();
+   const fallback=document.createElement('div');fallback.className='nico284-art-fallback';
+   const symbol=document.createElement('span');symbol.className='nico284-art-icon';symbol.textContent=c.kind==='series'?'▣':'▤';
+   const title=document.createElement('span');title.className='nico284-art-title';title.textContent=c.name||'Capa não disponível';
+   const mark=document.createElement('span');mark.className='nico284-art-mark';mark.textContent='NICO TV';
+   fallback.append(symbol,title,mark);host.prepend(fallback);
+ }
+ if(!['movie','series'].includes(c.kind))return;
+ const cached=nico302PosterCache.get(nico302PosterKey(c));
+ if(cached?.status==='ready'){nico302ShowPoster(host,cached.url);return;}
+ host._nico302PosterJob=c;
+ if(nico302PosterObserver)nico302PosterObserver.observe(host);
+ else nico302PosterEnqueue(host,c);
+}
+function nico302WatchArtwork(img,host,c){
+ if(!img||!host)return;
+ const failed=()=>{if(!img.isConnected)return;img.remove();nico284MissingArt(host,c);};
+ img.addEventListener('error',failed,{once:true});
+ img.addEventListener('load',()=>{
+   // Alguns provedores devolvem imagens 1x1 / inválidas em vez de um erro HTTP.
+   if(img.naturalWidth<20||img.naturalHeight<20)failed();
+ },{once:true});
+ if(img.complete && img.currentSrc){if(!img.naturalWidth||img.naturalWidth<20||img.naturalHeight<20)failed();}
+}
+
 function placeholderFrom(c){ return c.kind==='movie'?'🎬':c.kind==='series'?'📺':'◈'; }
 function card(c,list){
  const div=document.createElement('div');div.className='card nico2-card nico2-'+(c.kind||'live')+((c.kind==='movie'||c.kind==='series')?' poster':'');div.tabIndex=0;div.setAttribute('role','button');div.setAttribute('aria-label',c.name+' — OK abre; segure OK para favoritar');div.dataset.nicoItemKey=keyOf(c);
  div.innerHTML=`<div class="thumb">${c.logo?`<img alt="" loading="lazy" src="${escapeHtml(c.logo)}">`:`<div class="placeholder">${placeholderFrom(c)}</div>`}<span class="nico2-type">${c.kind==='movie'?'FILME':c.kind==='series'?'SÉRIE':'AO VIVO'}</span><button class="favstar" aria-label="${isFav(c)?'Remover dos':'Adicionar aos'} favoritos">${isFav(c)?'★':'☆'}</button></div>
  <div class="card-body"><div class="card-title">${escapeHtml(c.name)}</div><div class="card-meta">${escapeHtml(c.group||'Catálogo')}</div></div>`;
  const progress=nico23ProgressOverlay(c);if(progress)div.querySelector('.thumb')?.append(progress);
- const img=div.querySelector('img');if(img)img.onerror=()=>{img.remove();div.querySelector('.thumb').classList.add('no-image');};
+ const img=div.querySelector('.thumb > img');if(img)nico302WatchArtwork(img,div.querySelector('.thumb'),c);else nico284MissingArt(div.querySelector('.thumb'),c);
  div.onclick=e=>{if(e.target.closest('.favstar'))return;openItem(c,list);};
  // Fire TV: OK curto abre o item; OK mantido (>= 700 ms) alterna favorito.
  // Nao abrir no keydown: a decisao acontece no keyup ou no temporizador.
@@ -2383,17 +3692,481 @@ function card(c,list){
 }
 function renderEpgBlock(c){ const epg=epgFor(c); if(!epg) return '<div class="next">Sem guia disponível</div>'; const cur=epg.current, next=epg.next; return `${cur?`<div>${timeFmt(cur.start)} · ${escapeHtml(cur.title)}</div>`:'<div>Sem programa atual</div>'}${next?`<div class="next">Próximo ${timeFmt(next.start)} · ${escapeHtml(next.title)}</div>`:''}`; }
 function empty(app,title,text){ app.innerHTML=`<div class="empty"><h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p></div>`; }
+/* Nico TV 2.8.3 — escolha editorial local, sem reordenar nem editar os dados IPTV. */
+const nico283HeroState={home:0,movies:0,series:0,live:0};
+const nico283HeroCache={home:null,movies:null,series:null,live:null};
+let nico283HeroChangeTimer=null;
+function nico283HeroKey(c){return String(c?.kind||'')+'|'+String(c?.id||c?.url||c?.name||'');}
+function nico283Year(c){const m=String(c.year||'').match(/(?:19|20)\d{2}/);return m?Number(m[0]):0;}
+function nico283Score(c){
+ const rating=Number(String(c.rating||'').replace(',','.'));
+ const year=nico283Year(c);
+ return (c.logo?25:0)+(rating>=1&&rating<=10?rating*5:0)+(year>=2020?Math.min(17,(year-2019)*2):0)+(c.description?6:0);
+}
+/* Nico TV 2.9.7 — guia EPG externo sem reimportar lista Xtream. */
+const NICO297_EPG_BR='https://iptv-epg.org/files/epg-br.xml';
+function nico297OpenEpgSettings(){
+ document.getElementById('nico297EpgOverlay')?.remove();
+ const overlay=document.createElement('div');overlay.id='nico297EpgOverlay';overlay.className='nico297-epg-overlay';
+ overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Configurar guia EPG');
+ const panel=document.createElement('section');panel.className='nico297-epg-panel';
+ const title=document.createElement('h2');title.textContent='▦ Guia de Programação (EPG)';
+ const help=document.createElement('p');help.textContent='Teste um guia XMLTV sem alterar seus canais ou credenciais. O guia precisa reconhecer os identificadores dos canais.';
+ const label=document.createElement('label');label.htmlFor='nico297EpgUrl';label.textContent='Endereço XMLTV';
+ const input=document.createElement('input');input.type='url';input.id='nico297EpgUrl';input.value=store.get('nico_external_epg_url')||NICO297_EPG_BR;input.placeholder='https://servidor/guia.xml';input.autocomplete='url';
+ const status=document.createElement('p');status.className='nico297-epg-status';status.setAttribute('role','status');
+ const fileLabel=document.createElement('label');fileLabel.htmlFor='nico298EpgFile';fileLabel.textContent='Ou importar arquivo XMLTV baixado';
+ const fileInput=document.createElement('input');fileInput.type='file';fileInput.id='nico298EpgFile';fileInput.accept='.xml,.xmltv,text/xml,application/xml';
+ const fileHelp=document.createElement('p');fileHelp.className='nico298-epg-hint';fileHelp.textContent='Se o link falhar no navegador, baixe o arquivo XMLTV e selecione-o aqui. Não precisa reimportar os canais.';
+ const actions=document.createElement('div');actions.className='nico297-epg-actions';
+ const apply=document.createElement('button');apply.type='button';apply.className='nico297-epg-primary';apply.textContent='Carregar e testar';
+ const importFile=document.createElement('button');importFile.type='button';importFile.className='nico297-epg-secondary';importFile.textContent='Importar arquivo';
+ const close=document.createElement('button');close.type='button';close.textContent='Fechar';close.className='nico297-epg-secondary';
+ const prev=document.activeElement;
+ function finish(){overlay.remove();try{prev?.focus({preventScroll:true})}catch(_){}}
+ close.onclick=finish;
+ async function ingestXml(xml,source){
+   if(!/<tv(?:\s|>)/i.test(xml)||!/<programme\b/i.test(xml))throw Error('O arquivo não contém programação XMLTV válida.');
+   const backupEpg=state.epg,backupEntries=state.epgEntries,backupSource=state.epgSource;
+   try{
+     parseEpg(xml);
+     if(state.epgEntries.size===0)throw Error('O guia não possui programas na janela de datas usada pela Nico TV.');
+     state.epgSource=source;
+     const linked=(state.channels||[]).filter(c=>getGuideList(c).length).length;
+     const total=(state.channels||[]).length;
+     const programmes=[...state.epgEntries.values()].reduce((n,arr)=>n+arr.length,0);
+     status.textContent='Guia carregado: '+state.epgEntries.size+' IDs de canais, '+programmes+' programas, '+linked+' de '+total+' canais IPTV vinculados. '+(linked===0?'O guia foi lido, mas nenhum tvg-id correspondeu à sua lista.':'Abra Jogos do Dia para conferir a programação encontrada.');
+   }catch(err){state.epg=backupEpg;state.epgEntries=backupEntries;state.epgSource=backupSource;throw err;}
+ }
+ apply.onclick=async()=>{
+   const url=input.value.trim();
+   if(!/^https:\/\//i.test(url)){status.textContent='Informe uma URL HTTPS válida.';return;}
+   apply.disabled=true;status.textContent='Baixando e validando o guia XMLTV...';
+   try{
+     const xml=await getText(url);
+     await ingestXml(xml,url);
+     store.set('nico_external_epg_url',url);
+   }catch(e){status.textContent='Falha ao acessar o link: '+String(e?.message||e)+'. Se for CORS, baixe o XML e use Importar arquivo.';}
+   finally{apply.disabled=false;}
+ };
+ importFile.onclick=async()=>{
+   const file=fileInput.files?.[0];
+   if(!file){status.textContent='Selecione primeiro um arquivo XMLTV (.xml).';fileInput.focus();return;}
+   if(file.size>80*1024*1024){status.textContent='Arquivo maior que 80 MB. Use um guia XMLTV menor.';return;}
+   importFile.disabled=true;status.textContent='Lendo arquivo local e associando canais...';
+   try{const xml=await file.text();await ingestXml(xml,'arquivo:'+file.name);}
+   catch(e){status.textContent='Não foi possível importar: '+String(e?.message||e);}
+   finally{importFile.disabled=false;}
+ };
+ actions.append(apply,importFile,close);panel.append(title,help,label,input,fileLabel,fileInput,fileHelp,actions,status);overlay.append(panel);document.body.append(overlay);
+ overlay.addEventListener('click',e=>{if(e.target===overlay)finish()});
+ overlay.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='Backspace'||e.keyCode===4){e.preventDefault();e.stopPropagation();finish();}},true);
+ requestAnimationFrame(()=>input.focus({preventScroll:true}));
+}
+
+/* Nico TV 2.9.4 — Jogos do Dia baseados exclusivamente no EPG/XMLTV conectado. */
+function nico294SoccerFixtures(){
+ const now=new Date();
+ const dayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
+ const dayEnd=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1).getTime();
+ const reSoccer=/\b(futebol|football|soccer|futbol|copa|campeonato|champions league|libertadores|brasileir[aã]o|premier league|la liga|serie a|liga dos campe[oõ]es)\b/i;
+ const reMatch=/\b(?:x|vs\.?|versus)\b/i;
+ const fixtures=[];const seen=new Set();
+ for(const channel of state.channels||[]){
+  const sportChannel=/esport|sport|futebol|futbol|soccer|premiere|espn/i.test((channel.group||'')+' '+(channel.name||''));
+  const programmes=getGuideList(channel)||[];
+  for(const program of programmes){
+   const start=+program.start;
+   if(!Number.isFinite(start)||start<dayStart||start>=dayEnd)continue;
+   const title=String(program.title||'').trim();
+   const category=String(program.category||'');
+   const desc=String(program.desc||'');
+   // Mostra apenas eventos associados ao futebol, sem tentar adivinhar placares ou times.
+   if(!(reSoccer.test(title+' '+category)|| (sportChannel&&reMatch.test(title)) || (sportChannel&&reSoccer.test(desc))))continue;
+   const key=(channel.tvgId||channel.name)+'|'+start+'|'+title;
+   if(seen.has(key))continue;seen.add(key);
+   fixtures.push({channel,program,title,start,stop:+program.stop});
+  }
+ }
+ return fixtures.sort((a,b)=>a.start-b.start).slice(0,80);
+}
+/* Nico TV 2.9.9 — agenda de futebol via Worker seguro, com EPG como alternativa. */
+const NICO_FOOTBALL_ENDPOINT='https://nico-tv-football.dropemarkt.workers.dev/games';
+const nicoFootballState={games:[],date:null,loadedAt:0};
+function nicoFootballDate(){
+ const fmt=new Intl.DateTimeFormat('en-GB',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'});
+ const parts=Object.fromEntries(fmt.formatToParts(new Date()).filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
+ return `${parts.year}-${parts.month}-${parts.day}`;
+}
+function nicoFootballTime(date){
+ const d=new Date(date);
+ return Number.isFinite(d.getTime())?new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit'}).format(d):'--:--';
+}
+function nicoFootballStatus(s){
+ const key=String(s||'').toUpperCase();
+ if(['FT','AET','PEN'].includes(key))return ['Encerrado','done'];
+ if(['1H','HT','2H','ET','BT','P','LIVE','INT'].includes(key))return ['Ao vivo','live'];
+ if(['PST','CANC','ABD','SUSP','AWD','WO'].includes(key))return ['Adiado ou cancelado','other'];
+ return ['Agendado','scheduled'];
+}
+// 3.0.1: imagens passam pelo Worker, sem mudar a resposta de /games.
+// Apenas links conhecidos da API-Sports podem gerar caminhos de imagem.
+const NICO_FOOTBALL_IMAGE_BASE='https://nico-tv-football.dropemarkt.workers.dev/image';
+function nicoFootballLogo(url){
+ try{
+  const u=new URL(url);
+  if(u.protocol!=='https:'||u.hostname!=='media.api-sports.io')return '';
+  const match=/^\/football\/(teams|leagues)\/([1-9]\d{0,9})\.png$/.exec(u.pathname);
+  if(!match)return '';
+  return NICO_FOOTBALL_IMAGE_BASE+'/'+(match[1]==='teams'?'team':'league')+'/'+match[2]+'.png';
+ }catch(_){return '';}
+}
+function nicoFootballEsc(s){return escapeHtml(String(s==null?'':s));}
+async function nicoFootballLoad(force=false){
+ const day=nicoFootballDate();
+ if(!force&&nicoFootballState.date===day&&Date.now()-nicoFootballState.loadedAt<15*60*1000)return nicoFootballState.games;
+ const ctl=new AbortController();const timeout=setTimeout(()=>ctl.abort(),15000);
+ try{
+  const response=await fetch(NICO_FOOTBALL_ENDPOINT,{signal:ctl.signal,cache:force?'no-store':'default'});
+  if(!response.ok)throw new Error('Servidor de futebol: HTTP '+response.status);
+  const data=await response.json();
+  if(!Array.isArray(data.games))throw new Error('Resposta inválida da API de futebol');
+  const games=data.games.filter(g=>g&&g.id&&g.home&&g.away&&g.date);
+  nicoFootballState.games=games;
+  nicoFootballState.date=day;
+  nicoFootballState.loadedAt=Date.now();
+  return games;
+ }finally{clearTimeout(timeout);}
+}
+function nico303Brazil(game){return ['brasil','brazil'].includes(String(game.country||'').toLocaleLowerCase('pt-BR'));}
+function nico303MatchPriority(game){
+ const order={live:0,scheduled:1,other:2,done:3};
+ return order[nicoFootballStatus(game.status)[1]] ?? 4;
+}
+function nico303MatchDetails(game){
+ document.getElementById('nico303MatchOverlay')?.remove();
+ const previous=document.activeElement;
+ const overlay=document.createElement('div');overlay.id='nico303MatchOverlay';overlay.className='nico303-detail-overlay';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');
+ const panel=document.createElement('div');panel.className='nico303-detail-panel';
+ const heading=document.createElement('h3');heading.textContent=game.home+' × '+game.away;panel.append(heading);
+ const [status]=nicoFootballStatus(game.status);
+ const fields=[['Competição',game.league||'Não informado'],['País',game.country||'Não informado'],['Data e horário',new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(game.date))],['Situação',status]];
+ if(game.homeGoals!=null&&game.awayGoals!=null)fields.push(['Placar',game.homeGoals+' × '+game.awayGoals]);
+ for(const [label,value] of fields){const row=document.createElement('div');row.className='nico303-detail-line';const l=document.createElement('span');l.textContent=label;const v=document.createElement('strong');v.textContent=value;row.append(l,v);panel.append(row);}
+ const note=document.createElement('p');note.className='nico299-disclaimer';note.textContent='Estádio, rodada e emissora não são fornecidos pelo Worker atual.';panel.append(note);
+ const close=document.createElement('button');close.type='button';close.className='nico303-detail-close';close.textContent='Voltar aos jogos';
+ const finish=()=>{overlay.remove();previous?.focus({preventScroll:true});};close.onclick=finish;panel.append(close);overlay.append(panel);document.body.append(overlay);
+ overlay.addEventListener('click',e=>{if(e.target===overlay)finish();});overlay.addEventListener('keydown',e=>{if(['Escape','Backspace'].includes(e.key)||e.keyCode===4){e.preventDefault();e.stopPropagation();finish();}},true);
+ close.focus({preventScroll:true});
+}
+function nico294ShowGamesToday(){
+ document.getElementById('nico294GamesOverlay')?.remove();
+ const overlay=document.createElement('div');overlay.id='nico294GamesOverlay';overlay.className='nico294-games-overlay';
+ overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Jogos do Dia');
+ const panel=document.createElement('section');panel.className='nico294-games-panel nico299-games-panel';
+ const head=document.createElement('div');head.className='nico294-games-head';
+ const info=document.createElement('div');
+ const date=new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'long',year:'numeric'}).format(new Date());
+ info.innerHTML='<h2>⚽ Jogos do Dia</h2><p>'+nicoFootballEsc(date)+' · Horário de Brasília · API-Football</p>';
+ const close=document.createElement('button');close.type='button';close.className='nico294-games-close';close.textContent='Fechar';
+ const prior=document.activeElement;
+ let alive=true,filter='all', games=[];
+ function finish(){alive=false;overlay.remove();try{prior?.focus({preventScroll:true})}catch(_){}}
+ close.onclick=finish;head.append(info,close);panel.append(head);
+ const toolbar=document.createElement('div');toolbar.className='nico299-filters';
+ const modes=[['all','Todos'],['br','Brasil'],['international','Internacionais'],['live','Ao vivo']];
+ const list=document.createElement('div');list.className='nico294-games-list';
+ const summary=document.createElement('div');summary.className='nico299-summary';
+ const foot=document.createElement('p');foot.className='nico299-disclaimer';foot.textContent='Agenda esportiva independente. A Nico TV não identifica automaticamente a emissora responsável pela transmissão.';
+ function draw(){
+  if(!alive)return;
+  toolbar.querySelectorAll('button[data-filter]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.filter===filter));});
+  let shown=games;
+  if(filter==='br')shown=shown.filter(g=>String(g.country||'').toLocaleLowerCase('pt-BR')==='brasil'||String(g.country||'').toLocaleLowerCase('pt-BR')==='brazil');
+  else if(filter==='international')shown=shown.filter(g=>!['brasil','brazil'].includes(String(g.country||'').toLocaleLowerCase('pt-BR')));
+  else if(filter==='live')shown=shown.filter(g=>nicoFootballStatus(g.status)[1]==='live');
+  shown=[...shown].sort((a,b)=>{
+   const priority={live:0,scheduled:1,other:2,done:3};
+   const pa=priority[nicoFootballStatus(a.status)[1]],pb=priority[nicoFootballStatus(b.status)[1]];
+   return pa-pb || new Date(a.date)-new Date(b.date);
+  });
+  summary.textContent=shown.length+' partida'+(shown.length===1?'':'s')+' encontrada'+(shown.length===1?'':'s')+' · '+games.length+' no total';
+  list.replaceChildren();
+  if(!shown.length){const empty=document.createElement('div');empty.className='nico294-games-empty';empty.textContent='Nenhuma partida encontrada para este filtro.';list.append(empty);return;}
+  // Agrupa por competição. A chave considera também o país para evitar homônimos.
+  const groups=new Map();
+  for(const game of shown){
+   const key=(game.country||'')+'|'+(game.league||'Competição não informada');
+   if(!groups.has(key))groups.set(key,[]);
+   groups.get(key).push(game);
+  }
+  const ordered=[...groups.entries()].sort((a,b)=>{
+   const ga=a[1],gb=b[1];
+   const ba=ga.some(nico303Brazil)?0:1,bb=gb.some(nico303Brazil)?0:1;
+   const pa=Math.min(...ga.map(nico303MatchPriority)),pb=Math.min(...gb.map(nico303MatchPriority));
+   return pa-pb||ba-bb||a[0].localeCompare(b[0],'pt-BR');
+  });
+  const note=document.createElement('div');note.className='nico303-priority-note';note.textContent='Ao vivo e próximos jogos primeiro; competições brasileiras priorizadas dentro de cada situação.';list.append(note);
+  for(const [,groupGames] of ordered){
+   const first=groupGames[0];const section=document.createElement('section');section.className='nico303-league';
+   const leagueHead=document.createElement('div');leagueHead.className='nico303-league-head';
+   const leagueSrc=nicoFootballLogo(first.leagueLogo);
+   if(leagueSrc){const im=document.createElement('img');im.src=leagueSrc;im.alt='';im.onerror=()=>{im.remove();};leagueHead.append(im);}
+   const title=document.createElement('span');title.textContent=(first.league||'Competição não informada')+' · '+(first.country||'');leagueHead.append(title);
+   const number=document.createElement('span');number.className='nico303-league-count';number.textContent=groupGames.length+' jogo'+(groupGames.length===1?'':'s');leagueHead.append(number);section.append(leagueHead);list.append(section);
+   for(const game of groupGames){
+   const line=document.createElement('article');line.className='nico299-game';
+   const competition=document.createElement('div');competition.className='nico299-competition';
+   const leagueLogo=nicoFootballLogo(game.leagueLogo);
+   const leagueFallback=document.createElement('span');leagueFallback.className='nico300-emblem nico300-league-emblem';leagueFallback.textContent='🏆';leagueFallback.setAttribute('aria-hidden','true');
+   if(leagueLogo){
+    const leagueImg=document.createElement('img');leagueImg.loading='lazy';leagueImg.src=leagueLogo;leagueImg.alt='';leagueImg.onerror=()=>{leagueImg.remove();competition.prepend(leagueFallback);};competition.append(leagueImg);
+   }else competition.append(leagueFallback);
+   const leagueName=document.createElement('span');leagueName.textContent=(game.league||'Competição não informada')+' · '+(game.country||'');competition.append(leagueName);
+   const match=document.createElement('div');match.className='nico299-match';
+   const home=document.createElement('div');home.className='nico299-team';const away=document.createElement('div');away.className='nico299-team';
+   function team(el,name,url){
+    const src=nicoFootballLogo(url);
+    const mark=document.createElement('span');mark.className='nico300-emblem nico300-team-emblem';
+    mark.textContent=String(name||'?').trim().split(/\s+/).filter(Boolean).slice(0,2).map(word=>word[0]).join('').toLocaleUpperCase('pt-BR')||'?';
+    mark.setAttribute('aria-hidden','true');
+    if(src){
+     const im=document.createElement('img');im.src=src;im.loading='lazy';im.alt='';
+     im.onerror=()=>{im.remove();el.prepend(mark);};el.append(im);
+    }else el.append(mark);
+    const t=document.createElement('span');t.textContent=name;el.append(t);
+   }
+   team(home,game.home,game.homeLogo);team(away,game.away,game.awayLogo);
+   const mid=document.createElement('div');mid.className='nico299-result';
+   const [status,kind]=nicoFootballStatus(game.status);mid.classList.add('nico299-'+kind);
+   const hasScore=game.homeGoals!==null&&game.homeGoals!==undefined&&game.awayGoals!==null&&game.awayGoals!==undefined;
+   const score=document.createElement('strong');score.textContent=hasScore?game.homeGoals+' × '+game.awayGoals:nicoFootballTime(game.date);
+   const sub=document.createElement('small');
+   sub.textContent=kind==='live'?'Ao vivo · início '+nicoFootballTime(game.date):kind==='done'?'Encerrado':kind==='scheduled'?'Horário de Brasília':status;
+   mid.append(score,sub);match.append(home,mid,away);line.append(match);
+   const details=document.createElement('button');details.type='button';details.className='nico303-game-detail';details.textContent='Detalhes da partida';details.setAttribute('aria-label','Detalhes de '+game.home+' contra '+game.away);details.onclick=()=>nico303MatchDetails(game);line.append(details);
+   section.append(line);
+  }
+  }
+ }
+ for(const [key,title] of modes){const btn=document.createElement('button');btn.type='button';btn.dataset.filter=key;btn.textContent=title;btn.onclick=()=>{filter=key;draw();};toolbar.append(btn);}
+ const refresh=document.createElement('button');refresh.type='button';refresh.className='nico299-refresh';refresh.textContent='↻ Atualizar';toolbar.append(refresh);
+ panel.append(toolbar,summary,list,foot);overlay.append(panel);document.body.append(overlay);
+ overlay.addEventListener('click',e=>{if(e.target===overlay)finish();});
+ overlay.addEventListener('keydown',e=>{
+  if(e.key==='Escape'||e.key==='Backspace'||e.keyCode===4){e.preventDefault();e.stopPropagation();finish();return;}
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){
+   const buttons=[...overlay.querySelectorAll('button:not([disabled])')],i=buttons.indexOf(document.activeElement);
+   if(i>=0){e.preventDefault();e.stopPropagation();buttons[(i+(e.key==='ArrowDown'||e.key==='ArrowRight'?1:-1)+buttons.length)%buttons.length]?.focus();}
+  }
+ },true);
+ async function load(force){
+  summary.textContent='Consultando os jogos do dia…';list.replaceChildren();refresh.disabled=true;
+  try{games=await nicoFootballLoad(force);draw();}
+  catch(err){if(!alive)return;summary.textContent='Não foi possível consultar a agenda.';
+   const empty=document.createElement('div');empty.className='nico294-games-empty';
+   empty.textContent='Verifique a conexão e o Worker de futebol. '+(err?.message||'Erro desconhecido');list.append(empty);
+  }finally{refresh.disabled=false;}
+ }
+ refresh.onclick=()=>load(true);
+ close.focus({preventScroll:true});load(false);
+}
+
+/* Nico TV 2.9.3 — vitrine editorial de canais por categorias reais da lista. */
+const nico293LiveSections=[
+ {id:'sports',label:'Esportes',test:/esport|sport|futebol|futbol|soccer|premiere|combate|ufc|nba|espn/i},
+ {id:'cinema',label:'Filmes',test:/filme|cinema|movie|cine|hbo|telecine/i},
+ {id:'news',label:'Notícias',test:/not[ií]cia|news|jornal|informativ|cnn|bandnews/i},
+ {id:'kids',label:'Infantil',test:/infantil|kids|crian[cç]a|cartoon|desenho|disney|nick/i},
+ {id:'music',label:'Música',test:/m[uú]sica|music|show|mtv|clipe/i},
+ {id:'documentary',label:'Documentários',test:/document|nature|hist[oó]ria|discovery|national geographic/i},
+ {id:'variety',label:'Variedades',test:/variedad|entretenimento|entreten|geral|abert|tv aberta/i}
+];
+function nico293LiveGroups(c){return String(c?.group||'')+' '+String(c?.name||'');}
+function nico293LiveCategory(c){const text=nico293LiveGroups(c);return nico293LiveSections.find(sec=>sec.test.test(text))||null;}
+function nico293LivePicks(){
+ const channels=state.channels||[];
+ const used=new Set();const result=[];
+ // Um canal representativo com logo por categoria existente, sem inventar itens.
+ for(const sec of nico293LiveSections){
+  const c=channels.find(ch=>ch&&ch.name&&ch.logo&&!used.has(nico283HeroKey(ch))&&nico293LiveCategory(ch)?.id===sec.id);
+  if(c){used.add(nico283HeroKey(c));result.push(c);}
+ }
+ // Se a lista não possuir todas as categorias, completar com outras categorias reais.
+ if(result.length<8){
+  const groups=new Set(result.map(x=>String(x.group||'')));
+  for(const c of channels){
+   if(result.length>=8)break;
+   if(!c?.name||!c.logo||used.has(nico283HeroKey(c)))continue;
+   if(groups.has(String(c.group||'')))continue;
+   used.add(nico283HeroKey(c));groups.add(String(c.group||''));result.push(c);
+  }
+ }
+ return result;
+}
+function nico296LiveCategoryEntries(){
+ const groups=groupBy(state.channels||[]);
+ return [['all','Todas as categorias',(state.channels||[]).length],...[...groups].sort((a,b)=>a[0].localeCompare(b[0],'pt-BR')).map(([name,list])=>[name,name,list.length])];
+}
+function nico296OpenLiveCategories(){
+ document.getElementById('nico296CategoriesOverlay')?.remove();
+ const overlay=document.createElement('div');overlay.id='nico296CategoriesOverlay';overlay.className='nico296-categories-overlay';
+ overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Escolher categoria ao vivo');
+ const panel=document.createElement('section');panel.className='nico296-categories-panel';
+ const head=document.createElement('div');head.className='nico296-categories-head';
+ const copy=document.createElement('div');copy.innerHTML='<h2>Escolher categoria</h2><p>Selecione uma categoria de canais ao vivo.</p>';
+ const close=document.createElement('button');close.type='button';close.className='nico296-categories-close';close.textContent='Fechar';
+ const prev=document.activeElement; function finish(){overlay.remove(); try{prev?.focus({preventScroll:true})}catch(_){}}
+ close.onclick=finish; head.append(copy,close); panel.append(head);
+ const grid=document.createElement('div');grid.className='nico296-categories-grid';
+ nico296LiveCategoryEntries().forEach(([key,name,count])=>{
+   const b=document.createElement('button');b.type='button';b.className='nico296-cat-btn'+(state.liveGroup===key?' active':'');
+   b.innerHTML='<strong>'+escapeHtml(nicoFilterLabel(name))+'</strong><small>'+count.toLocaleString('pt-BR')+' títulos</small>';
+   b.onclick=()=>{state.liveGroup=key;overlay.remove();render();setTimeout(()=>document.querySelector('.nico296-category-trigger')?.focus({preventScroll:true}),10);};
+   grid.append(b);
+ });
+ panel.append(grid); overlay.append(panel); document.body.append(overlay);
+ overlay.addEventListener('click',e=>{if(e.target===overlay)finish()});
+ overlay.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='Backspace'||e.keyCode===4){e.preventDefault();e.stopPropagation();finish();return;}} ,true);
+ close.focus({preventScroll:true});
+}
+
+function nico293LiveShowSection(app,hero,item){
+ if(!hero||!app||state.mode!=='live'||state.homeView)return;
+ hero.classList.add('nico293-live-hero');
+ const copy=hero.querySelector('.hero-copy');if(!copy)return;
+ const feature=copy.querySelector('.nico2-feature');
+ if(feature)feature.textContent='● CANAL AO VIVO';
+ const original=copy.querySelector('p');
+ if(original)original.textContent='Selecione Assistir agora para abrir o canal. Categorias e disponibilidade vêm da sua lista IPTV.';
+ const featureBlock=copy.querySelector('.nico2-feature'); if(featureBlock) featureBlock.style.marginBottom='4px';
+ const category=nico293LiveCategory(item);
+ const badges=copy.querySelector('.hero-meta');
+ if(badges){badges.innerHTML='';const t=document.createElement('span');t.className='chip';t.textContent=item.group||'TV Ao Vivo';badges.append(t);}
+ const picks=nico283Candidates('live');
+ const labels=[]; const seenLabels=new Set();
+ picks.forEach((x,idx)=>{ const label=nico293LiveCategory(x)?.label||nicoFilterLabel(x.group||'Outros'); const key=String(label).toLocaleLowerCase('pt-BR'); if(seenLabels.has(key)) return; seenLabels.add(key); labels.push({item:x,label,index:idx}); });
+ const nav=document.createElement('div');nav.className='nico293-live-topics';nav.setAttribute('role','group');nav.setAttribute('aria-label','Explorar ao vivo');
+ labels.forEach(({item:channel,label,index})=>{
+   const b=document.createElement('button');b.type='button';b.className='nico293-topic';b.textContent=label;
+   b.setAttribute('aria-pressed',String(nico283HeroKey(channel)===nico283HeroKey(item)));
+   b.title='Mostrar canal de '+label;
+   b.onclick=()=>nico283HeroSet('live',index,'category'+index);
+   nav.append(b);
+ });
+ // Opção independente dos temas, com programação real do guia XMLTV.
+ const games=document.createElement('button');games.type='button';games.className='nico293-topic nico294-games-button';
+ games.textContent='⚽ Jogos do Dia';games.setAttribute('aria-label','Consultar jogos de futebol de hoje');
+ games.onclick=nico294ShowGamesToday;nav.append(games);
+ const epgButton=document.createElement('button');epgButton.type='button';epgButton.className='nico293-topic nico297-epg-button';epgButton.textContent='▦ Guia EPG';epgButton.setAttribute('aria-label','Configurar guia de programação EPG');epgButton.onclick=nico297OpenEpgSettings;nav.append(epgButton);
+ // 2.9.5: faixa temática separada do banner, sem cobrir título ou controles.
+ const previousTopics=app.querySelector(':scope > .nico293-live-topics');
+ if(previousTopics)previousTopics.remove();
+ if(nav.childElementCount){
+   const caption=document.createElement('span');
+   caption.className='nico295-topics-caption';
+   caption.textContent='EXPLORAR AO VIVO';
+   nav.prepend(caption);
+   const picker=document.createElement('button'); picker.type='button'; picker.className='nico296-category-trigger';
+   const current = nico296LiveCategoryEntries().find(([key])=>key===state.liveGroup);
+   picker.textContent=(current&&state.liveGroup!=='all'?'▦ '+nicoFilterLabel(current[1]):'▦ Escolher categoria');
+   picker.setAttribute('aria-label','Escolher categoria de canais ao vivo');
+   picker.onclick=nico296OpenLiveCategories;
+   nav.append(picker);
+   hero.after(nav);
+ }
+ const staleTrailer=copy.querySelector('#nico29HeroTrailer');
+ if(staleTrailer)staleTrailer.remove();
+ const poster=hero.querySelector('.nico2-hero-poster');
+ if(poster){poster.classList.add('nico293-live-logo-panel');}
+ // A logomarca não deve virar um backdrop ampliado e desfocado.
+ hero.classList.remove('nico29-live-backdrop','nico2-portrait');
+ const bg=hero.querySelector('.nico2-hero-backdrop');if(bg)bg.style.backgroundImage='none';
+}
+function nico283Candidates(mode){
+ const base=mode==='movies'?(state.movies||[]):mode==='series'?(state.series||[]):mode==='live'?(state.channels||[]):[...(state.movies||[]),...(state.series||[])];
+ const cache=nico283HeroCache[mode];
+ const cacheKey=mode==='live'?state.channels:(mode==='movies'?state.movies:mode==='series'?state.series:[state.movies,state.series]);
+ if(cache&&cache.key===cacheKey)return cache.items;
+ if(mode==='live'){
+  const items=nico293LivePicks();
+  nico283HeroCache.live={key:state.channels,items};
+  return items;
+ }
+ const sorted=[];const seen=new Set();
+ for(const c of base){
+  if(!c||!c.name||!c.logo||!(c.kind==='movie'||c.kind==='series'))continue;
+  const simple=nicoTmdbCleanTitle(c.name).toLocaleLowerCase('pt-BR').replace(/\s+/g,' ').trim();
+  if(!simple||seen.has(simple))continue;
+  seen.add(simple);
+  const score=nico283Score(c);let idx=sorted.findIndex(e=>score>e.score);
+  if(idx<0&&sorted.length>=30)continue;
+  if(idx<0)idx=sorted.length;
+  sorted.splice(idx,0,{c,score});if(sorted.length>30)sorted.pop();
+ }
+ const chosen=[];const nameSeen=new Set();
+ for(const e of sorted){
+   const n=nicoTmdbCleanTitle(e.c.name).toLocaleLowerCase('pt-BR');
+   if(nameSeen.has(n))continue;nameSeen.add(n);chosen.push(e.c);
+   if(chosen.length>=8)break;
+ }
+ nico283HeroCache[mode]={key:cacheKey,items:chosen};
+ return chosen;
+}
+function nico283HeroSet(mode,next,restoreFocus){
+ const items=nico283Candidates(mode);if(!items.length)return;
+ const index=(next+items.length)%items.length;
+ nico283HeroState[mode]=index;
+ const app=document.getElementById('app');
+ if(!app||state.detail||state.view||state.query)return;
+ const isHome=!!(state.homeView&&!state.favoriteOnly&&!state.recentOnly);
+ if((mode==='home')!==isHome)return;
+ if(!isHome&&state.mode!==mode)return;
+ const current=app.querySelector('.nico2-hero');if(!current)return;
+ nico2Hero(app,items[index],0,'destaques',mode,items);
+ if(restoreFocus){
+   const btn=restoreFocus.startsWith('category')?app.querySelectorAll('.nico293-topic')[Number(restoreFocus.slice(8))]:app.querySelector('.nico283-feature-nav [data-nico283="'+restoreFocus+'"]');
+   if(btn)try{btn.focus({preventScroll:true});}catch(_){btn.focus();}
+ }
+}
+function nico283HeroSelected(c){
+ const mode=state.homeView?'home':state.mode;
+ if(!['home','movies','series','live'].includes(mode))return;
+ if(mode==='live'&&c?.kind==='live'){}
+ else if(!(c?.kind==='movie'||c?.kind==='series'))return;
+ if(mode!=='home'&&mode!=='live'&&c.kind!== (mode==='movies'?'movie':'series'))return;
+ if(nico283HeroChangeTimer)clearTimeout(nico283HeroChangeTimer);
+ nico283HeroChangeTimer=setTimeout(()=>{
+   if(!document.getElementById('app')?.querySelector('.nico2-hero'))return;
+   const original=nico283Candidates(mode);
+   // Navegar num pôster mostra esse título sem alterar a seleção editorial padrão.
+   const items=original.some(x=>nico283HeroKey(x)===nico283HeroKey(c))?original:[c,...original].slice(0,9);
+   const selected=items.findIndex(x=>nico283HeroKey(x)===nico283HeroKey(c));
+   const app=document.getElementById('app');
+   if(!app||state.detail||state.view)return;
+   nico2Hero(app,c,0,'selecionado',mode,items,selected);
+ },220);
+}
+document.addEventListener('focusin',function(ev){
+ const el=ev.target?.closest?.('#app .nico2-card,#app .nico-f2-tile');
+ if(!el)return;
+ const key=el.dataset.nicoItemKey;
+ if(!key)return;
+ const all=[...(state.movies||[]),...(state.series||[]),...(state.channels||[])];
+ const c=all.find(x=>keyOf(x)===key);
+ if(c)nico283HeroSelected(c);
+});
 function heroFor(item,count,label){
  const c=item||{};const isSeries=c.kind==='series';const isMovie=c.kind==='movie';const kind=isSeries?'SÉRIE':isMovie?'FILME':'CANAL';
  const desc=c.description||c.plot||(isMovie||isSeries?'Explore este título no catálogo da Nico TV.':'Acompanhe seus canais favoritos em uma experiência feita para televisão.');
  const tags=[c.year,c.genre,c.group,c.rating?`★ ${c.rating}`:''].filter(Boolean).slice(0,4);
  return `<section class="hero nico2-hero" aria-label="Destaque Nico TV">
-  ${c.logo?`<div class="nico2-hero-backdrop" style="background-image:url('${escapeHtml(c.logo).replace(/'/g,'%27')}')"></div>`:''}
+  <div class="nico2-hero-backdrop"></div>
   <div class="nico2-hero-shade"></div>
   <div class="hero-copy"><div class="kicker">✦ NICO TV · SELEÇÃO EM DESTAQUE</div><div class="nico2-feature">★ ${kind} EM DESTAQUE</div>
    <h1>${escapeHtml(c.name||'Nico TV')}</h1><p>${escapeHtml(desc)}</p>
    <div class="hero-meta">${tags.map(t=>`<span class="chip">${escapeHtml(String(t))}</span>`).join('')}</div>
-   <div class="hero-actions"><button class="btn main" id="heroPlayBtn">▶ ${isSeries?'Explorar episódios':isMovie?'Ver detalhes':'Assistir agora'}</button><button class="btn" id="heroFavBtn">${isFav(c)?'★ Na minha lista':'☆ Minha Lista'}</button></div>
+   <div class="hero-actions"><button class="btn main" id="heroPlayBtn">▶ ${isSeries?'Explorar episódios':isMovie?'Ver detalhes':'Assistir agora'}</button><button class="btn" id="nico29HeroTrailer" hidden>▷ Trailer</button><button class="btn" id="heroFavBtn">${isFav(c)?'★ Na minha lista':'☆ Minha Lista'}</button></div>
   </div>
   <div class="nico2-hero-poster">${c.logo?`<img src="${escapeHtml(c.logo)}" alt="" onerror="this.style.display='none'">`:''}</div>
  </section>`;
@@ -2417,20 +4190,76 @@ async function nico2LoadHomeCatalog(){
   if(state.series===null)await loadSeries({silent:true});
  }finally{nico2LoadingHome=false;render();}
 }
-function nico2Hero(app,item,count,label){
+function nico2Hero(app,item,count,label,mode=null,featured=null,selectedIndex=null){
  if(!item)return;
- app.insertAdjacentHTML('beforeend',heroFor(item,count,label));
+ const old=app.querySelector('.nico2-hero');
+ // 2.9.0: antes de substituir o banner, preservar os elementos funcionais
+ // para que a busca e o cabeçalho não desapareçam ao trocar os destaques.
+ const preservedHeading=old?.querySelector(':scope > .nico2-page-heading');
+ const preservedSearch=old?.querySelector(':scope > .searchwrap.nico-search-on-banner');
+ if(preservedHeading)old.removeChild(preservedHeading);
+ if(preservedSearch)old.removeChild(preservedSearch);
+ if(old)old.outerHTML=heroFor(item,count,label);
+ else app.insertAdjacentHTML('beforeend',heroFor(item,count,label));
  const hero=app.querySelector('.nico2-hero');
+ if(hero && preservedHeading)hero.appendChild(preservedHeading);
+ if(hero && preservedSearch)hero.appendChild(preservedSearch);
+ // Seleção editorial por controle remoto: ações reais, sem interferir no player.
+ if(mode&&Array.isArray(featured)&&featured.length>1){
+   const ix=selectedIndex===null?nico283HeroState[mode]:selectedIndex;
+   const nav=document.createElement('div');nav.className='nico283-feature-nav';
+   nav.setAttribute('aria-label','Títulos em destaque');
+   const prev=document.createElement('button');prev.type='button';prev.textContent='‹';prev.dataset.nico283='prev';prev.setAttribute('aria-label','Destaque anterior');
+   const next=document.createElement('button');next.type='button';next.textContent='›';next.dataset.nico283='next';next.setAttribute('aria-label','Próximo destaque');
+   const number=document.createElement('span');number.className='nico283-count';number.textContent=(ix+1)+' / '+featured.length;
+   prev.onclick=()=>nico283HeroSet(mode,(nico283HeroState[mode]-1+featured.length)%featured.length,'prev');
+   next.onclick=()=>nico283HeroSet(mode,(nico283HeroState[mode]+1)%featured.length,'next');
+   nav.append(prev);
+   featured.forEach((_,i)=>{
+     const dot=document.createElement('button');dot.type='button';dot.className='nico283-dot';dot.dataset.nico283='dot'+i;
+     dot.setAttribute('aria-label','Mostrar destaque '+(i+1));dot.setAttribute('aria-current',String(i===ix));
+     dot.onclick=()=>nico283HeroSet(mode,i,'dot'+i);nav.append(dot);
+   });
+   nav.append(next,number);hero.querySelector('.hero-copy')?.append(nav);
+ }
  if(hero&&item.logo){
    const check=new Image();check.onload=()=>{
       if(!hero.isConnected)return;
       hero.classList.toggle('nico2-portrait',check.naturalWidth/check.naturalHeight<1.32);
+      if(state.mode!=='live'&&!(item.kind==='movie'||item.kind==='series')){
+        const bg=hero.querySelector('.nico2-hero-backdrop');
+        if(bg){bg.style.backgroundImage='url('+JSON.stringify(item.logo)+')';hero.classList.add('nico29-live-backdrop');}
+      }
    };check.src=item.logo;
  }
 
  const btn=$('#heroPlayBtn'),fav=$('#heroFavBtn');
  if(btn)btn.onclick=()=>openItem(item,[item]);
- if(fav)fav.onclick=()=>toggleFav(item);
+  if(fav)fav.onclick=()=>toggleFav(item);
+  if(mode==='live')nico293LiveShowSection(app,hero,item);
+  // Enriquecimento visual assíncrono: não altera item, url, id nem ação Assistir.
+  if((item.kind==='movie'||item.kind==='series')&&nicoTmdbEndpoint()){
+    const originalItem=item;
+    nicoTmdbGet(originalItem,originalItem.kind==='series'?'tv':'movie').then(d=>{
+      if(!d||!hero.isConnected||!app.contains(hero))return;
+      const backdrop=nicoTmdbSafeUrl(d.backdrop||d.backdropUrl||d.backdrop_path||d.backdropImage||d.backdrop_url||d.images?.backdrop||d.images?.backdropUrl||'');
+      if(backdrop){
+        const image=new Image();image.onload=()=>{
+          if(!hero.isConnected||image.naturalWidth<image.naturalHeight*1.3)return;
+          const bg=hero.querySelector('.nico2-hero-backdrop');
+          if(bg){bg.style.backgroundImage='url('+JSON.stringify(backdrop)+')';hero.classList.remove('nico2-portrait');hero.classList.add('nico29-tmdb-backdrop');}
+        };image.src=backdrop;
+      }
+      if(d.overview){const p=hero.querySelector('.hero-copy>p');if(p){p.textContent=d.overview;p.title=d.overview;}}
+      const trailer=nicoTmdbSafeUrl(d.trailerUrl||'');
+      const trailerBtn=hero.querySelector('#nico29HeroTrailer');
+      if(trailerBtn&&/^https:\/\/(?:www\.)?youtube\.com\/watch\?/.test(trailer)){
+        trailerBtn.hidden=false;
+        trailerBtn.onclick=()=>{if(NATIVE&&typeof Android.openExternal==='function')Android.openExternal(trailer);else window.open(trailer,'_blank','noopener,noreferrer');};
+      }
+      if(d.voteAverage){const meta=hero.querySelector('.hero-meta');if(meta&&!meta.querySelector('.nico29-tmdb-score')){const score=document.createElement('span');score.className='chip nico29-tmdb-score';score.textContent='TMDB ★ '+Number(d.voteAverage).toFixed(1);meta.append(score);}}
+    }).catch(()=>{});
+  }
 }
 
 /* Home Fase 2 — structural components, distinct from traditional category cards. */
@@ -2457,11 +4286,11 @@ function nicoF2Rail(app,title,items,variant='wide',opts={}){
   const rail=document.createElement('div');rail.className='nico-f2-rail strip';
   const limit=variant==='progress'?12:variant==='live'?10:15;
   items.slice(0,limit).forEach(c=>{
-    const b=document.createElement('div');b.className='card nico-f2-tile';b.tabIndex=0;b.setAttribute('role','button');
+    const b=document.createElement('div');b.className='card nico-f2-tile'+((variant==='poster'||variant==='wide')&&(c.kind==='movie'||c.kind==='series')?' nico304-poster-tile':'');b.tabIndex=0;b.setAttribute('role','button');
     b.dataset.nicoItemKey=keyOf(c);b.setAttribute('aria-label',c.name+' — OK para abrir; segure OK para favoritos');
     const art=document.createElement('div');art.className='nico-f2-art';
-    if(c.logo){const img=document.createElement('img');img.src=c.logo;img.loading='lazy';img.alt='';img.onerror=()=>{img.remove();art.classList.add('nico-f2-missing');};art.append(img);}
-    else art.classList.add('nico-f2-missing');
+    if(c.logo){const img=document.createElement('img');img.loading='lazy';img.alt='';art.append(img);nico302WatchArtwork(img,art,c);img.src=c.logo;}
+    else nico284MissingArt(art,c);
     const label=document.createElement('div');label.className='nico-f2-info';
     const entry=opts.historyMap?.get(keyOf(c));
     label.innerHTML='<strong>'+escapeHtml(c.name)+'</strong>'+(entry?'<small>'+Math.max(0,Math.round((entry.duration-entry.position)/60))+' min restantes</small><i class="nico-f2-track"><i style="width:'+watchPercent(entry)+'%"></i></i>':variant==='live'?'<small>'+escapeHtml(c.group||'Ao vivo')+'</small>':'');
@@ -2503,12 +4332,25 @@ function renderNicoFase2HomeRails(app){
   nicoF2ContinueRail(app);
   const catalog=[...(state.movies||[]),...(state.series||[]),...state.channels];
   const fav=catalog.filter(isFav);
-  if(fav.length)nicoF2Rail(app,'★ Minha Lista',fav,'wide');
-  if(state.movies?.length)nicoF2Rail(app,'🔥 Filmes em Alta',state.movies,'wide');
-  if(state.series?.length)nicoF2Rail(app,'▣ Séries Populares',state.series,'wide');
+  // Minha Lista pode misturar cinema e TV: cada mídia conserva sua proporção.
+  const favMedia=fav.filter(c=>c.kind==='movie'||c.kind==='series');
+  const favChannels=fav.filter(c=>c.kind!=='movie'&&c.kind!=='series');
+  if(favMedia.length)nicoF2Rail(app,favChannels.length?'★ Minha Lista · Filmes e Séries':'★ Minha Lista',favMedia,'poster');
+  if(favChannels.length)nicoF2Rail(app,favMedia.length?'★ Minha Lista · Canais':'★ Minha Lista',favChannels,'live');
+  if(state.movies?.length)nicoF2Rail(app,'🔥 Filmes em Alta',state.movies,'poster');
+  if(state.series?.length)nicoF2Rail(app,'▣ Séries Populares',state.series,'poster');
   if(state.channels.length)nicoF2Rail(app,'▤ TV Ao Vivo',state.channels,'live');
 }
 function render(){
+  // 2.8.9: devolve a busca ao cabeçalho ANTES de recriar a página.
+  // A mesma instância de input é movida, preservando os ouvintes de eventos.
+  const nicoTopbar=document.querySelector('.main > .topbar');
+  const nicoSearchwrap=document.querySelector('.searchwrap');
+  if(nicoTopbar&&nicoSearchwrap&&nicoSearchwrap.parentElement!==nicoTopbar){
+    nicoTopbar.appendChild(nicoSearchwrap);
+    nicoSearchwrap.classList.remove('nico-search-on-banner');
+  }
+  document.querySelector('.main')?.classList.remove('nico286-integrated');
  updateNav();const app=$('#app');app.innerHTML='';app.classList.toggle('nico2-home',!!(state.homeView&&!state.query&&!state.favoriteOnly&&!state.recentOnly&&!state.detail&&!state.view));
  const baseList=currentList(),all=searchFiltered(baseList);$('#counter').textContent=`${all.length} itens`;
  if(state.loading){empty(app,'Carregando…','Preparando seu catálogo.');return;}
@@ -2516,8 +4358,9 @@ function render(){
  if(state.view){renderSingleView(app,all);return;}
  if(state.homeView&&!state.query&&!state.favoriteOnly&&!state.recentOnly){
   app.classList.add('nico2-home');
-  const featured=(state.movies||[]).find(x=>x.logo)||(state.series||[]).find(x=>x.logo)||state.channels.find(x=>x.logo)||state.channels[0];
-  if(featured){nico2Hero(app,featured,0,'conteúdos');}else{
+  const picks=nico283Candidates('home');
+  const featured=picks[nico283HeroState.home%Math.max(1,picks.length)]||state.channels.find(x=>x.logo)||state.channels[0];
+  if(featured){nico2Hero(app,featured,0,'conteúdos','home',picks);}else{
    app.innerHTML='<section class="nico2-welcome"><span>✦ NICO TV 2.0</span><h1>Seu entretenimento, em outro nível.</h1><p>Importe sua lista Xtream ou M3U para acessar seus conteúdos.</p><button id="nico2ImportStart" class="btn main">＋ Importar lista</button></section>';
    $('#nico2ImportStart').onclick=openImport;
   }
@@ -2525,11 +4368,28 @@ function render(){
   if(state.xt&&(state.movies===null||state.series===null)&&!nico2LoadingHome)nico2LoadHomeCatalog();
   return;
  }
- app.classList.remove('nico2-home');
+ app.classList.remove('nico2-home');app.classList.remove('nico283-catalog');
  if(state.mode==='live')liveFilterPanel(app,selectList(state.channels));else catalogFilterPanel(app,baseList);
  const modeName=state.mode==='movies'?'Filmes':state.mode==='series'?'Séries':'Ao Vivo';
  const heading=document.createElement('div');heading.className='nico2-page-heading';heading.innerHTML=`<span>EXPLORE O CATÁLOGO</span><h2>${modeName}</h2><p>${all.length.toLocaleString('pt-BR')} títulos disponíveis</p>`;
  app.prepend(heading);
+ if((state.mode==='movies'||state.mode==='series'||state.mode==='live')&&!state.query&&!state.favoriteOnly&&!state.recentOnly){
+   const mode=state.mode,picks=nico283Candidates(mode);
+   const featured=picks[nico283HeroState[mode]%Math.max(1,picks.length)]||all.find(x=>x.logo);
+   if(featured){app.classList.add('nico283-catalog');nico2Hero(app,featured,0,'destaques',mode,picks);const hero=app.querySelector('.nico2-hero');if(hero){
+     // Cabeçalho e busca pertencem ao banner, não a camadas separadas.
+     hero.appendChild(heading);
+     // A faixa de categorias fica logo abaixo do banner, nunca acima dele.
+     const categoryBar=app.querySelector('.nico-category-picker');
+     if(categoryBar){
+       const topics=state.mode==='live'?app.querySelector(':scope > .nico293-live-topics'):null;
+       if(topics)topics.after(categoryBar);
+       else hero.after(categoryBar);
+     }
+     document.querySelector('.main')?.classList.add('nico286-integrated');
+     if(nicoSearchwrap){nicoSearchwrap.classList.add('nico-search-on-banner');hero.appendChild(nicoSearchwrap);}
+   }}
+ }else app.classList.remove('nico283-catalog');
  if(!all.length){const msg=document.createElement('div');msg.className='empty';msg.innerHTML='<h2>Nenhum resultado</h2><p>Confira a busca ou selecione outra categoria.</p>';app.append(msg);return;}
  if(state.mode==='live'){
   const groups=groupBy(all);appendRow(app,'📺 Todos os canais',all,{more:true,limit:16});
@@ -2608,6 +4468,48 @@ async function openMovieInfo(c){
   }
   showInfo(metadata,()=>play([c],0,true));
 }
+/* Nico TV — alternativa segura FHD/HD: nunca altera URL IPTV ou metadados TMDB.
+   Correspondência exata de título; para episódios também exige temporada e número. */
+function nicoVODBaseTitle(value){
+ return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+   .replace(/\b(?:4k|uhd|2160p|fhd|full\s*hd|1080p|720p|480p|hd|sd|hdr10\+?|dolby\s*vision|dublado|legendado|dual\s*audio|bluray|web[- ]?dl|h265|hevc)\b/gi,' ')
+   .replace(/[\[\]{}()|:_.,+\-]+/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+}
+function nicoVODQuality(name){
+ const s=String(name||'').toUpperCase();
+ if(/(^|[^A-Z0-9])(?:FHD|FULL[ -]?HD|1080P)(?=$|[^A-Z0-9])/.test(s))return 2;
+ if(/(^|[^A-Z0-9])(?:HD|720P)(?=$|[^A-Z0-9])/.test(s))return 1;
+ return 0;
+}
+function nicoVODYear(c){return (String(c?.year||c?.name||'').match(/(?:19|20)\d{2}/)||[])[0]||'';}
+async function nicoVODFindAlternates(c){
+ if(!c||!c.url||!state.xt)return [];
+ const title=nicoVODBaseTitle(c.kind==='ep'?c.seriesName:c.name);
+ if(title.length<4)return [];
+ const year=nicoVODYear(c),pool=(c.kind==='ep'?state.series:state.movies)||[];
+ const matches=pool.filter(x=>{
+   if(x.id===c.id||!nicoVODQuality(x.name))return false;
+   if(nicoVODBaseTitle(x.name)!==title)return false;
+   const y=nicoVODYear(x);
+   return !(year&&y&&year!==y);
+ }).sort((a,b)=>nicoVODQuality(b.name)-nicoVODQuality(a.name));
+ if(c.kind!=='ep')return matches.filter(x=>x.url&&x.url!==c.url).slice(0,3);
+ // Não sugerir episódio errado: validar temporada + número em outra série Xtream.
+ const candidates=matches.slice(0,3);
+ const results=await Promise.all(candidates.map(async x=>{
+   try{
+     const req=getJSON(`${state.xt.api}&action=get_series_info&series_id=${encodeURIComponent(x.id)}`);
+     const d=await Promise.race([req,new Promise((_,reject)=>setTimeout(()=>reject(Error('timeout')),2700))]);
+     const eps=(d.episodes||{})[String(c.season)]||[];
+     const ep=eps.find(e=>Number(e.episode_num)===Number(c.episode));
+     if(!ep||!ep.id)return null;
+     const url=`${state.xt.base}/series/${encodeURIComponent(state.xt.user)}/${encodeURIComponent(state.xt.pass)}/${ep.id}.${ep.container_extension||'mp4'}`;
+     return url!==c.url?{name:`${x.name} • T${c.season}E${c.episode}`,url}:null;
+   }catch(_){return null;}
+ }));
+ return results.filter(Boolean).slice(0,3);
+}
+
 /* Player premium — navegador; o Android usa ExoPlayer nativo. */
 function play(list,i,vod){
   if(!vod && list[i])markLiveRecent(list[i]);
@@ -2615,7 +4517,17 @@ function play(list,i,vod){
     if(list[i]) markRecent(list[i]);
     const a=Math.max(0,i-250);
     const j=JSON.stringify(list.slice(a,i+250).map(c=>[c.name,c.url,currentProgramText(c),c.kind||'',c.logo||'',c.seriesName||'',String(c.seriesId||''),String(c.season||''),String(c.episode||'')]));
-    if(vod&&list[i]?.kind==='ep'&&Android.playEpisodes) Android.playEpisodes(j,i-a); else if(vod&&Android.playVod) Android.playVod(j,i-a); else Android.play(j,i-a);
+    // O conteúdo original permanece inalterado. Alternativas só são oferecidas APÓS erro VOD.
+    if(vod && typeof Android.playVodWithAlternates==='function'){
+      nicoVODFindAlternates(list[i]).then(alternates=>{
+        const safe=JSON.stringify(alternates.map(c=>[c.name,c.url]));
+        if(list[i]?.kind==='ep' && typeof Android.playEpisodesWithAlternates==='function') Android.playEpisodesWithAlternates(j,i-a,safe);
+        else Android.playVodWithAlternates(j,i-a,safe);
+      }).catch(()=>{
+        if(list[i]?.kind==='ep'&&Android.playEpisodes) Android.playEpisodes(j,i-a);
+        else if(Android.playVod) Android.playVod(j,i-a);
+      });
+    }else if(vod&&list[i]?.kind==='ep'&&Android.playEpisodes) Android.playEpisodes(j,i-a); else if(vod&&Android.playVod) Android.playVod(j,i-a); else Android.play(j,i-a);
     return;
   }
   state.queue=list; state.qi=Math.max(0,i); state.vod=!!vod; state.drawer=false;
@@ -3106,7 +5018,7 @@ function nico21Focus(el){
   return true;
 }
 function nico21PageKey(){return [state.homeView?'home':state.mode,state.view||'',state.detail?.name||'',state.favoriteOnly?'fav':'',state.recentOnly?'recent':''].join('|');}
-const nico21ContentSelector='.nico-category-option,.nico-category-trigger,.nico-category-panel:not([hidden]) .nico-category-tile,.nico2-hero button,.nico2-welcome button,.nico2-shelf .row-title-btn,.nico2-shelf .card,.continue-card,.live-filter-chip,#app .season-btn,#app .btn,#app .ep-item,#app .card,#app [role=button]';
+const nico21ContentSelector='.nico293-topic,.nico-category-option,.nico-category-trigger,.nico-category-panel:not([hidden]) .nico-category-tile,.nico2-hero button,.nico2-welcome button,.nico2-shelf .row-title-btn,.nico2-shelf .card,.continue-card,.live-filter-chip,#app .season-btn,#app .btn,#app .ep-item,#app .card,#app [role=button]';
 function nico21Content(){return nico21Elements(nico21ContentSelector,document.getElementById('app'));}
 function nico21FirstContent(){return nico21Content()[0]||document.getElementById('importBtn');}
 function nico21Sidebar(){return nico21Elements('.sidebar .navbtn');}
