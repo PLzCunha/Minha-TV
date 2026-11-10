@@ -436,7 +436,6 @@ jobs:
           import androidx.media3.datasource.DefaultHttpDataSource;
           import androidx.media3.datasource.HttpDataSource;
           import androidx.media3.exoplayer.ExoPlayer;
-          import androidx.media3.exoplayer.DefaultRenderersFactory;
           import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
           import androidx.media3.ui.PlayerView;
           import androidx.media3.ui.AspectRatioFrameLayout;
@@ -454,6 +453,21 @@ jobs:
             boolean resumedCurrentItem = false;
             boolean trackDialogVisible = false;
             boolean liveTsFallbackTried = false;
+            // VOD: não deixar carregamento sem término; canais ao vivo não são afetados.
+            Runnable vodBufferGuard;
+            void cancelVodBufferGuard(){if(vodBufferGuard!=null){h.removeCallbacks(vodBufferGuard);vodBufferGuard=null;}}
+            void armVodBufferGuard(){
+              cancelVodBufferGuard();if(!vod)return;
+              final int item=i;
+              vodBufferGuard=()->{
+                if(p==null||item!=i||!vod||p.getPlaybackState()!=Player.STATE_BUFFERING)return;
+                status.setText("Vídeo não iniciou após 35 segundos.\nO servidor ou o decodificador não respondeu.\nOK: tentar novamente • ↑ ↓: trocar");
+                status.setVisibility(View.VISIBLE);
+                p.pause();p.stop();
+                show(nm());
+              };
+              h.postDelayed(vodBufferGuard,35000);
+            }
 
             Runnable hide = () -> {
               if (selectedControl >= 0 || seekBarSelected || (p != null && vod && !p.getPlayWhenReady())) return;
@@ -614,16 +628,14 @@ jobs:
               DefaultHttpDataSource.Factory df = new DefaultHttpDataSource.Factory()
                 .setUserAgent("NicoTV/1.2 (Android)")
                 .setAllowCrossProtocolRedirects(true);
-              // 2.7.6: quando o primeiro codec falhar na inicialização,
-              // tentar outros decodificadores anunciados pelo Android.
-              // Não limita a resolução nem altera URLs de filmes.
-              DefaultRenderersFactory renderers = new DefaultRenderersFactory(this)
-                .setEnableDecoderFallback(true);
-              p = new ExoPlayer.Builder(this, renderers)
+              // 2.8: retorna à inicialização padrão anterior ao fallback 2.7.6.
+              // Mantém formatos e URLs Xtream; não força codec nem reduz resolução.
+              p = new ExoPlayer.Builder(this)
                 .setMediaSourceFactory(new DefaultMediaSourceFactory(df)).build();
               pv.setPlayer(p);
               p.addListener(new Player.Listener() {
                 @Override public void onPlayerError(PlaybackException e) {
+                  cancelVodBufferGuard();
                   int httpCode = 0;
                   Throwable cause = e;
                   for (int depth=0; cause!=null && depth<8; depth++,cause=cause.getCause()) {
@@ -693,13 +705,16 @@ jobs:
                 }
                 @Override public void onPlaybackStateChanged(int state) {
                   if (state == Player.STATE_BUFFERING) {
+                    armVodBufferGuard();
                     status.setText("Carregando transmissão…");
                     status.setVisibility(android.view.View.VISIBLE);
                   } else if (state == Player.STATE_READY) {
+                    cancelVodBufferGuard();
                     status.setVisibility(android.view.View.GONE);
                     if(!resumedCurrentItem){resumedCurrentItem=true;restorePosition();}
                     refreshTimeline();
                   } else if (state == Player.STATE_ENDED && episodes) {
+                    cancelVodBufferGuard();
                     savePosition(true);clearPosition();offerNext();
                   } else if (state == Player.STATE_ENDED && vod) {
                     savePosition(true);
@@ -935,6 +950,7 @@ jobs:
               go(previousChannel-i);
             }
             void go(int d) {
+              cancelVodBufferGuard();
               resumedCurrentItem=false;
               selectedControl=-1;seekBarSelected=false;
               savePosition(true);cancelNext();
