@@ -161,6 +161,11 @@ jobs:
               w.loadUrl("file:///android_asset/index.html");
             }
             class Bridge {
+              @JavascriptInterface public String getInstalledVersion() {
+                try {
+                  return getPackageManager().getPackageInfo(getPackageName(),0).versionName;
+                } catch (Exception ignored) { return "Indisponível"; }
+              }
               @JavascriptInterface public void showKeyboard() {
                 runOnUiThread(() -> {
                   w.requestFocus();
@@ -643,6 +648,15 @@ jobs:
                   else if(e.errorCode==PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED || e.errorCode==PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT)
                     detail="Falha de conexão com o servidor de vídeo";
                   else detail="Erro do player: código "+e.errorCode;
+                  // Diagnóstico 2.7.4 — não muda o pipeline de decodificação.
+                  // Informa a mídia recebida e o dispositivo, sem expor URLs nem credenciais Xtream.
+                  if(e.errorCode==PlaybackException.ERROR_CODE_DECODING_FAILED || e.errorCode==PlaybackException.ERROR_CODE_DECODER_INIT_FAILED){
+                    Format vf=p.getVideoFormat();
+                    String codec=vf==null?"não identificado":(vf.codecs!=null?vf.codecs:(vf.sampleMimeType!=null?vf.sampleMimeType:"não identificado"));
+                    String res=vf!=null && vf.width>0 && vf.height>0?vf.width+"x"+vf.height:"não identificada";
+                    detail += "\nCodec: "+codec+" | Resolução: "+res+"\nModelo: "+android.os.Build.MODEL+" | Código: "+e.errorCode;
+                    android.util.Log.e("NicoTV-Codec", "Falha de decodificação codec="+codec+" resolução="+res+" dispositivo="+android.os.Build.MODEL+" código="+e.errorCode);
+                  }
                   status.setText("Não foi possível reproduzir.\n"+detail+"\nOK: tentar novamente  •  ↑ ↓: trocar");
                   status.setVisibility(android.view.View.VISIBLE);
                   android.util.Log.e("NicoTV-Playback", "ExoPlayer "+detail, e);
