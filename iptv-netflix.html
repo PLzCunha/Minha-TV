@@ -1696,6 +1696,11 @@ html body.nico-expanded .sidebar .logo img {
 #infoDialog #nico273Hint{font-size:13px;color:#dbbe7d;padding:4px 0 14px}
 #nicoTmdbSeries:focus{outline:3px solid #f2c95e;outline-offset:3px}
 #nicoSeriesTmdbJump{margin-top:12px;display:block;padding:12px 16px}
+
+/* Nico TV 2.7.4 — versão instalada no rodapé fixo da lateral */
+.nico-installed-version{flex-shrink:0;align-self:stretch;text-align:center;padding:8px 2px 7px;margin-top:0;border-top:1px solid rgba(228,193,109,.25);font:600 9px/1.25 Arial,sans-serif;color:#baad93;letter-spacing:0;overflow-wrap:anywhere}
+.nico-installed-version span{display:block;color:#f5ce76;font-size:10px;margin-top:4px;letter-spacing:0}
+@media(max-width:780px){.nico-installed-version{display:none}}
 </style>
 </head>
 <body>
@@ -1718,6 +1723,7 @@ html body.nico-expanded .sidebar .logo img {
     <div class="spacer"></div>
     <button class="navbtn soft" id="updateNav"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></span><span class="navlabel">Verificar atualizações</span></button>
     <button class="navbtn soft" id="importNav2"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8"/><path d="M10.4 2h3.2l.5 2.1 1.9.8 1.8-1.1 2.3 2.3-1.1 1.8.8 1.9 2.1.5v3.2l-2.1.5-.8 1.9 1.1 1.8-2.3 2.3-1.8-1.1-1.9.8-.5 2.1h-3.2l-.5-2.1-1.9-.8-1.8 1.1-2.3-2.3 1.1-1.8-.8-1.9-2.1-.5v-3.2l2.1-.5.8-1.9-1.1-1.8 2.3-2.3 1.8 1.1 1.9-.8z"/></svg></span><span class="navlabel">Gerenciar listas</span></button>
+    <div id="nicoInstalledVersion" class="nico-installed-version" aria-label="Versão instalada" title="Versão do APK instalado">Versão instalada<span id="nicoVersionValue">Consultando…</span></div>
   </aside>
 
   <main class="main">
@@ -3330,6 +3336,21 @@ function escapeAttr(s){ return String(s??'').replace(/[^\w\-]+/g,'_'); }
   };
   setExpanded(false);
   trigger.addEventListener('click',()=>setExpanded(!document.body.classList.contains('nico-expanded')));
+})();
+</script>
+<script>
+/* Valor fornecido pelo APK compilado, nunca inferido da versão do HTML. */
+(function nicoShowInstalledVersion(){
+  const target=document.getElementById('nicoVersionValue');
+  if(!target)return;
+  try{
+    if(window.Android && typeof Android.getInstalledVersion==='function'){
+      const version=String(Android.getInstalledVersion()||'').trim();
+      target.textContent=version||'Não identificada';
+      return;
+    }
+  }catch(e){console.warn('Nico TV: versão não disponível',e);}
+  target.textContent='Versão web';
 })();
 </script>
 </body>
