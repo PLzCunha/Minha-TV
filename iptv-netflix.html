@@ -2999,6 +2999,14 @@ body.nico-collapsed .shell .sidebar #nicoInstalledVersion span{font-size:9px!imp
 #nico297EpgOverlay :is(button,input):focus,#nico294GamesOverlay button:focus,#nico303MatchOverlay button:focus{outline:3px solid #ffcf63!important;outline-offset:3px!important;box-shadow:0 0 0 5px #d9a63355!important;}
 #player.controls-hidden :is(#webcontrols,#playbackTimeline,#playerBar){opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
 </style>
+
+<style id="nico309-live-topics-focus-fix">
+/* Nico TV 3.0.9 — faixa Ao Vivo acessível por D-pad, sem alterar o player. */
+#app.nico283-catalog > .nico293-live-topics{scroll-behavior:auto!important;scrollbar-width:thin;scrollbar-color:#b58b42 transparent;}
+#app.nico283-catalog > .nico293-live-topics > button:focus{outline:3px solid #ffdc77!important;outline-offset:-3px!important;box-shadow:0 0 0 3px rgba(235,184,79,.25)!important;position:relative;z-index:1;}
+#app.nico283-catalog > .nico293-live-topics > .nico296-category-trigger{margin-left:6px!important;}
+.nico296-categories-overlay button:focus{outline:3px solid #ffdc77!important;outline-offset:2px!important;box-shadow:0 0 0 4px rgba(235,184,79,.22)!important;}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -4147,7 +4155,18 @@ function nico296OpenLiveCategories(){
  });
  panel.append(grid); overlay.append(panel); document.body.append(overlay);
  overlay.addEventListener('click',e=>{if(e.target===overlay)finish()});
- overlay.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='Backspace'||e.keyCode===4){e.preventDefault();e.stopPropagation();finish();return;}} ,true);
+ overlay.addEventListener('keydown',e=>{
+   const key=({'19':'ArrowUp','20':'ArrowDown','21':'ArrowLeft','22':'ArrowRight','4':'Backspace'})[String(e.keyCode)]||e.key;
+   if(['Escape','Backspace','GoBack'].includes(key)){e.preventDefault();e.stopImmediatePropagation();finish();return;}
+   if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))return;
+   const items=[close,...nico21Elements('.nico296-cat-btn',grid)];
+   let at=items.indexOf(document.activeElement);if(at<0)at=0;
+   const cols=Math.max(1,Math.round(grid.clientWidth/Math.max(1,items[1]?.getBoundingClientRect().width||180)));
+   const delta=key==='ArrowRight'?1:key==='ArrowLeft'?-1:key==='ArrowDown'?cols:-cols;
+   const dest=items[Math.max(0,Math.min(items.length-1,at+delta))];
+   e.preventDefault();e.stopImmediatePropagation();
+   if(dest){dest.focus({preventScroll:true});dest.scrollIntoView({block:'nearest',inline:'nearest'});}
+ },true);
  close.focus({preventScroll:true});
 }
 
@@ -5166,7 +5185,7 @@ function nico21Focus(el){
   return true;
 }
 function nico21PageKey(){return [state.homeView?'home':state.mode,state.view||'',state.detail?.name||'',state.favoriteOnly?'fav':'',state.recentOnly?'recent':''].join('|');}
-const nico21ContentSelector='.nico293-topic,.nico-category-option,.nico-category-trigger,.nico-category-panel:not([hidden]) .nico-category-tile,.nico2-hero button,.nico2-welcome button,.nico2-shelf .row-title-btn,.nico2-shelf .card,.continue-card,.live-filter-chip,#app .season-btn,#app .btn,#app .ep-item,#app .card,#app [role=button]';
+const nico21ContentSelector='.nico293-topic,.nico296-category-trigger,.nico-category-option,.nico-category-trigger,.nico-category-panel:not([hidden]) .nico-category-tile,.nico2-hero button,.nico2-welcome button,.nico2-shelf .row-title-btn,.nico2-shelf .card,.continue-card,.live-filter-chip,#app .season-btn,#app .btn,#app .ep-item,#app .card,#app [role=button]';
 function nico21Content(){return nico21Elements(nico21ContentSelector,document.getElementById('app'));}
 function nico21FirstContent(){return nico21Content()[0]||document.getElementById('importBtn');}
 function nico21Sidebar(){return nico21Elements('.sidebar .navbtn');}
@@ -5289,7 +5308,7 @@ document.addEventListener('keydown',e=>{
 },true);
 document.addEventListener('keydown',e=>{
  if($('#player').classList.contains('on'))return;
- if($('#dlg').open || $('#guideDialog').open || $('#infoDialog').open)return;
+ if($('#dlg').open || $('#guideDialog').open || $('#infoDialog').open || document.getElementById('nico296CategoriesOverlay'))return;
  const key={'19':'ArrowUp','20':'ArrowDown','21':'ArrowLeft','22':'ArrowRight'}[String(e.keyCode)]||e.key;
  // Fire Stick 3.0.8: subir do card de Continuar Assistindo foca o X, descer retorna.
  // O evento e consumido ANTES do navegador global de prateleiras.
@@ -5313,6 +5332,33 @@ document.addEventListener('keydown',e=>{
  // Key-based navigation on TV; leave mouse/desktop behavior unchanged.
  if(!window.Android && nico21DesktopMouseActive)return;
  const el=document.activeElement,sidebar=nico21Sidebar(),content=nico21Content();
+ // Fire Stick: navegar toda a faixa Ao Vivo, inclusive o botão Escolher categoria,
+ // sem perder foco nos controles da página ou na barra lateral.
+ const liveTopics=state.mode==='live'&&!state.homeView?el?.closest?.('#app > .nico293-live-topics'):null;
+ if(liveTopics){
+   const buttons=nico21Elements('button',liveTopics);
+   const pos=buttons.indexOf(el);
+   if(pos>=0 && (key==='ArrowLeft'||key==='ArrowRight')){
+     const next=buttons[Math.max(0,Math.min(buttons.length-1,pos+(key==='ArrowRight'?1:-1)))];
+     e.preventDefault();e.stopImmediatePropagation();
+     if(next!==el){
+       nico21Focus(next);
+       // O alvo pode estar fora da viewport horizontal, mas ainda ser focável.
+       const left=next.getBoundingClientRect().left-liveTopics.getBoundingClientRect().left+liveTopics.scrollLeft;
+       if(left<liveTopics.scrollLeft+12)liveTopics.scrollLeft=Math.max(0,left-12);
+       else if(left+next.offsetWidth>liveTopics.scrollLeft+liveTopics.clientWidth-12)
+         liveTopics.scrollLeft=left+next.offsetWidth-liveTopics.clientWidth+12;
+     }
+     return;
+   }
+   if(pos>=0 && key==='ArrowDown'){
+     const root=document.getElementById('app');
+     const pickerBelow=root.querySelector(':scope > .nico-category-picker');
+     const target=nico21Elements('.nico-category-option,.nico-category-trigger',pickerBelow||root)[0]||
+       nico21Directional(content.filter(x=>!x.closest('.nico293-live-topics')),el,key);
+     if(target){e.preventDefault();e.stopImmediatePropagation();nico21Focus(target);return;}
+   }
+ }
  const picker=el?.closest?.('.nico-category-picker');
  if(picker){
   const quick=nico21Elements('.nico-category-option,.nico-category-trigger',picker);
@@ -5394,7 +5440,7 @@ document.addEventListener('keydown',e=>{
     else if(k==='s'||k==='S'){e.preventDefault();showTracks('subtitle');}
     return;
   }
-  if($('#dlg').open||$('#guideDialog').open||$('#infoDialog').open) return;
+  if($('#dlg').open||$('#guideDialog').open||$('#infoDialog').open||document.getElementById('nico296CategoriesOverlay')) return;
   const el=document.activeElement;
   if(desktopPointerMode && (k==='ArrowDown'||k==='ArrowUp') && !(el && /INPUT|TEXTAREA/.test(el.tagName))){
     e.preventDefault(); window.scrollBy({top:(k==='ArrowDown'?1:-1)*Math.max(160,window.innerHeight*.4),behavior:'smooth'}); return;
